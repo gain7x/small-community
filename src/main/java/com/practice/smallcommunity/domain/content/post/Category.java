@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.domain.post;
+package com.practice.smallcommunity.domain.content.post;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
