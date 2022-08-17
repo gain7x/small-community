@@ -18,21 +18,19 @@ class ContentRepositoryTest {
     @Autowired
     ContentRepository contentRepository;
 
+    Content content = Content.builder()
+        .text("컨텐츠")
+        .build();
+
     @Test
     void 저장_및_조회() {
-        // given
-        Content content = Content.builder()
-            .text("컨텐츠")
-            .build();
-
-        // when
+        //when
         contentRepository.save(content);
         em.flush();
         em.clear();
-
         Content findItem = contentRepository.findById(content.getId()).get();
 
-        // then
+        //then
         assertThat(content.getId()).isEqualTo(findItem.getId());
         assertThat(content.getText()).isEqualTo(content.getText());
     }
@@ -40,9 +38,6 @@ class ContentRepositoryTest {
     @Test
     void 여러개_저장_및_조회() {
         //given
-        Content content = Content.builder()
-            .text("컨텐츠")
-            .build();
         Content content2 = Content.builder()
             .text("컨텐츠2")
             .build();
@@ -62,12 +57,9 @@ class ContentRepositoryTest {
     @Test
     void 삭제() {
         //given
-        Content content = Content.builder()
-            .text("컨텐츠")
-            .build();
+        contentRepository.save(content);
 
         //when
-        contentRepository.save(content);
         Content findItem = contentRepository.findById(content.getId()).get();
         contentRepository.delete(findItem);
 
