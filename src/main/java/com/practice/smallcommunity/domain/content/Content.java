@@ -33,4 +33,8 @@ public class Content extends BaseTimeEntity {
         this.text = text;
         this.totalVote = totalVote;
     }
+
+    public void vote(boolean positive) {
+        totalVote += positive ? 1 : -1;
+    }
 }
