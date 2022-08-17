@@ -3,9 +3,9 @@ package com.practice.smallcommunity.repository.content.post;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.content.post.Category;
-import com.practice.smallcommunity.repository.content.post.CategoryRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class CategoryRepositoryTest {
 
-    @Autowired
+    @PersistenceContext
     EntityManager em;
 
     @Autowired
@@ -36,7 +36,7 @@ class CategoryRepositoryTest {
 
         // then
         assertThat(category.getId()).isEqualTo(findItem.getId());
-        assertThat(category.getName()).isEqualTo(category.getName());
+        assertThat(category.getName()).isEqualTo(findItem.getName());
     }
 
     @Test
