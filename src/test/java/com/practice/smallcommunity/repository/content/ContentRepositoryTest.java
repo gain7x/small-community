@@ -1,9 +1,8 @@
 package com.practice.smallcommunity.repository.content;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.content.Content;
-import com.practice.smallcommunity.domain.content.post.Category;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
