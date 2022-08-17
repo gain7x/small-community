@@ -1,10 +1,14 @@
 package com.practice.smallcommunity.domain.content;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,15 +28,9 @@ public class Content extends BaseTimeEntity {
     private int totalVote;
 
     @Builder
-    private Content(Long id, String text, int totalVote) {
+    public Content(Long id, String text, int totalVote) {
         this.id = id;
         this.text = text;
         this.totalVote = totalVote;
-    }
-
-    public static Content createContent(String text) {
-        return Content.builder()
-            .text(text)
-            .build();
     }
 }
