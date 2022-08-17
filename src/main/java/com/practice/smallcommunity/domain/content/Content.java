@@ -21,9 +21,18 @@ public class Content extends BaseTimeEntity {
 
     private String text;
 
+    private int totalVote;
+
     @Builder
-    private Content(Long id, String text) {
+    private Content(Long id, String text, int totalVote) {
         this.id = id;
         this.text = text;
+        this.totalVote = totalVote;
+    }
+
+    public static Content createContent(String text) {
+        return Content.builder()
+            .text(text)
+            .build();
     }
 }
