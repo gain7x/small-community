@@ -27,6 +27,9 @@ public class Content extends BaseTimeEntity {
 
     private int totalVote;
 
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    private final Set<VoteHistory> votes = new HashSet<>();
+
     @Builder
     public Content(Long id, String text, int totalVote) {
         this.id = id;
