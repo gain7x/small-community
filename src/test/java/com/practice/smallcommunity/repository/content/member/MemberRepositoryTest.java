@@ -4,14 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.repository.member.MemberRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @DataJpaTest
 class MemberRepositoryTest {
 
@@ -24,7 +26,7 @@ class MemberRepositoryTest {
     Member member = Member.builder()
         .username("userA")
         .password("password")
-        .lastPasswordChange(LocalDateTime.now())
+        .email("userA@mail.com")
         .build();
 
     @Test
@@ -46,7 +48,7 @@ class MemberRepositoryTest {
         Member member2 = Member.builder()
             .username("userB")
             .password("password")
-            .lastPasswordChange(LocalDateTime.now())
+            .email("userB@mail.com")
             .build();
 
         //when
