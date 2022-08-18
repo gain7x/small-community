@@ -27,6 +27,9 @@ public class Member extends BaseTimeEntity {
     @Column(length = 20, nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private LocalDateTime lastPasswordChange;
 
