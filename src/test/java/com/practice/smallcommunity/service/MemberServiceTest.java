@@ -28,12 +28,12 @@ class MemberServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-    MemberMapper memberMapper = new MemberMapperImpl();
-    PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     MemberService memberService;
 
     @BeforeEach()
     void beforeEach() {
+        MemberMapper memberMapper = new MemberMapperImpl();
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         memberService = new MemberService(memberRepository, memberMapper, passwordEncoder);
     }
 
