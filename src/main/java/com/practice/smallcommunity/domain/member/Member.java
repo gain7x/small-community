@@ -34,10 +34,16 @@ public class Member extends BaseTimeEntity {
     private LocalDateTime lastPasswordChange;
 
     @Builder
-    public Member(Long id, String username, String password, LocalDateTime lastPasswordChange) {
+    public Member(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
+        this.email = email;
+
+        changePassword(password);
+    }
+
+    public void changePassword(String password) {
         this.password = password;
-        this.lastPasswordChange = lastPasswordChange;
+        lastPasswordChange = LocalDateTime.now();
     }
 }
