@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.repository.member.MemberRepository;
+import com.practice.smallcommunity.security.JwtTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -26,12 +27,14 @@ class LoginTokenServiceTest {
     MemberRepository memberRepository;
 
     PasswordEncoder passwordEncoder;
+    JwtTokenService jwtTokenService;
     LoginTokenService loginTokenService;
 
     @BeforeEach
     void beforeEach() {
         passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        loginTokenService = new LoginTokenService(memberRepository, passwordEncoder);
+        jwtTokenService = new JwtTokenService();
+        loginTokenService = new LoginTokenService(memberRepository, passwordEncoder, jwtTokenService);
     }
 
     @Test
