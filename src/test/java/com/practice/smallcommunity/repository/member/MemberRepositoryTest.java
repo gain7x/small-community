@@ -34,7 +34,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
         em.flush();
         em.clear();
-        Member findItem = memberRepository.findById(member.getId()).get();
+        Member findItem = memberRepository.findById(member.getId()).orElseThrow();
 
         //then
         assertThat(member.getId()).isEqualTo(findItem.getId());
@@ -68,7 +68,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member findItem = memberRepository.findById(member.getId()).get();
+        Member findItem = memberRepository.findById(member.getId()).orElseThrow();
         memberRepository.delete(findItem);
 
         //then
@@ -81,7 +81,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member findItem = memberRepository.findByUsername(member.getUsername()).get();
+        Member findItem = memberRepository.findByUsername(member.getUsername()).orElseThrow();
 
         assertThat(findItem.getId()).isEqualTo(member.getId());
         assertThat(findItem.getUsername()).isEqualTo(findItem.getUsername());
@@ -93,7 +93,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member findItem = memberRepository.findByEmail(this.member.getEmail()).get();
+        Member findItem = memberRepository.findByEmail(this.member.getEmail()).orElseThrow();
 
         //then
         assertThat(findItem.getId()).isEqualTo(member.getId());

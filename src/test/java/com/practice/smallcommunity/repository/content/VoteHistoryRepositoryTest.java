@@ -48,7 +48,7 @@ class VoteHistoryRepositoryTest {
         voteHistoryRepository.save(voteHistory);
         em.flush();
         em.clear();
-        VoteHistory findItem = voteHistoryRepository.findById(voteHistory.getId()).get();
+        VoteHistory findItem = voteHistoryRepository.findById(voteHistory.getId()).orElseThrow();
 
         //then
         assertThat(voteHistory.getId()).isEqualTo(findItem.getId());
@@ -82,7 +82,7 @@ class VoteHistoryRepositoryTest {
         voteHistoryRepository.save(voteHistory);
 
         //when
-        VoteHistory findItem = voteHistoryRepository.findById(voteHistory.getId()).get();
+        VoteHistory findItem = voteHistoryRepository.findById(voteHistory.getId()).orElseThrow();
         voteHistoryRepository.delete(findItem);
 
         //then

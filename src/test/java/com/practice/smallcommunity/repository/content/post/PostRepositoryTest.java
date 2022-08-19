@@ -48,7 +48,7 @@ class PostRepositoryTest {
         postRepository.save(post);
         em.flush();
         em.clear();
-        Post findItem = postRepository.findById(post.getId()).get();
+        Post findItem = postRepository.findById(post.getId()).orElseThrow();
 
         //then
         assertThat(post.getId()).isEqualTo(findItem.getId());
@@ -86,7 +86,7 @@ class PostRepositoryTest {
         postRepository.save(post);
 
         //when
-        Post findItem = postRepository.findById(post.getId()).get();
+        Post findItem = postRepository.findById(post.getId()).orElseThrow();
         postRepository.delete(findItem);
 
         //then

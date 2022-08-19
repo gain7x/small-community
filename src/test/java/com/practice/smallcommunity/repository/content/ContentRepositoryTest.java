@@ -32,7 +32,7 @@ class ContentRepositoryTest {
         contentRepository.save(content);
         em.flush();
         em.clear();
-        Content findItem = contentRepository.findById(content.getId()).get();
+        Content findItem = contentRepository.findById(content.getId()).orElseThrow();
 
         //then
         assertThat(content.getId()).isEqualTo(findItem.getId());
@@ -64,7 +64,7 @@ class ContentRepositoryTest {
         contentRepository.save(content);
 
         //when
-        Content findItem = contentRepository.findById(content.getId()).get();
+        Content findItem = contentRepository.findById(content.getId()).orElseThrow();
         contentRepository.delete(findItem);
 
         //then

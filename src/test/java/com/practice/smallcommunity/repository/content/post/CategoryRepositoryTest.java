@@ -35,7 +35,7 @@ class CategoryRepositoryTest {
         em.flush();
         em.clear();
 
-        Category findItem = categoryRepository.findById(category.getId()).get();
+        Category findItem = categoryRepository.findById(category.getId()).orElseThrow();
 
         // then
         assertThat(category.getId()).isEqualTo(findItem.getId());
@@ -76,7 +76,7 @@ class CategoryRepositoryTest {
 
         //when
         categoryRepository.save(category);
-        Category findItem = categoryRepository.findById(category.getId()).get();
+        Category findItem = categoryRepository.findById(category.getId()).orElseThrow();
         categoryRepository.delete(findItem);
 
         //then
