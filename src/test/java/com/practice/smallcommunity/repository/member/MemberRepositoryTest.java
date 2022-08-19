@@ -1,9 +1,8 @@
-package com.practice.smallcommunity.repository.content.member;
+package com.practice.smallcommunity.repository.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.repository.member.MemberRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -74,5 +73,30 @@ class MemberRepositoryTest {
 
         //then
         assertThat(memberRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void 회원명으로_조회() {
+        //given
+        memberRepository.save(member);
+
+        //when
+        Member findItem = memberRepository.findByUsername(member.getUsername()).get();
+
+        assertThat(findItem.getId()).isEqualTo(member.getId());
+        assertThat(findItem.getUsername()).isEqualTo(findItem.getUsername());
+    }
+
+    @Test
+    void 이메일로_조회() {
+        //given
+        memberRepository.save(member);
+
+        //when
+        Member findItem = memberRepository.findByEmail(this.member.getEmail()).get();
+
+        //then
+        assertThat(findItem.getId()).isEqualTo(member.getId());
+        assertThat(findItem.getEmail()).isEqualTo(member.getEmail());
     }
 }
