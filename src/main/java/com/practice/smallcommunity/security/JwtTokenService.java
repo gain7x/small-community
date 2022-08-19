@@ -25,7 +25,7 @@ public class JwtTokenService {
     public String createToken(Member member) {
 
         return Jwts.builder()
-            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes(StandardCharsets.UTF_8))
             .setIssuer("S-Community")
             .setIssuedAt(new Date())
             .setSubject(member.getUsername())
@@ -40,7 +40,7 @@ public class JwtTokenService {
     public Authentication getAuthentication(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(jwtToken);
             Claims body = claims.getBody();
 
