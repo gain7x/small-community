@@ -2,11 +2,15 @@ package com.practice.smallcommunity.domain.member;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +37,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime lastPasswordChange;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<MemberRole> memberRoles = new HashSet<>();
+
     @Builder
     public Member(Long id, String username, String email, String password) {
         this.id = id;
@@ -45,5 +52,18 @@ public class Member extends BaseTimeEntity {
     public void changePassword(String password) {
         this.password = password;
         lastPasswordChange = LocalDateTime.now();
+    }
+
+    public void addRole(Role role) {
+        MemberRole memberRole = MemberRole.builder()
+            .role(role)
+            .member(this)
+            .build();
+
+        memberRoles.add(memberRole);
+    }
+
+    public void removeRole(Role role) {
+        memberRoles.removeIf(item -> item.getRole().equals(role));
     }
 }
