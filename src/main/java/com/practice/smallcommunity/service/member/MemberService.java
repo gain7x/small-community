@@ -21,4 +21,9 @@ public class MemberService {
 
         return memberRepository.save(member);
     }
+
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. username: " + username));
+    }
 }
