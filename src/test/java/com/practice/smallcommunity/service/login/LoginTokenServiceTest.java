@@ -8,9 +8,6 @@ import static org.mockito.Mockito.when;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.repository.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,14 +23,15 @@ class LoginTokenServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-    PasswordEncoder passwordEncoder;
+    @Mock
     JwtTokenService jwtTokenService;
+
+    PasswordEncoder passwordEncoder;
     LoginTokenService loginTokenService;
 
     @BeforeEach
     void beforeEach() {
         passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        jwtTokenService = new JwtTokenService();
         loginTokenService = new LoginTokenService(memberRepository, passwordEncoder, jwtTokenService);
     }
 
@@ -48,14 +46,16 @@ class LoginTokenServiceTest {
         when(memberRepository.findByUsername("userA"))
             .thenReturn(Optional.of(mockMember));
 
+        String expected = "jwt-token";
+
+        when(jwtTokenService.createToken(mockMember))
+            .thenReturn(expected);
+
         //when
         String token = loginTokenService.issuance("userA", "userPass");
-        Jws<Claims> claims = Jwts.parser()
-            .setSigningKey("dummy")
-            .parseClaimsJws(token);
 
         //then
-        assertThat(claims.getBody().getSubject()).isEqualTo("userA");
+        assertThat(token).isEqualTo(expected);
     }
 
     @Test

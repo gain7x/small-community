@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.controller.login.dto.LoginRequest;
+import com.practice.smallcommunity.security.JwtTokenService;
 import com.practice.smallcommunity.service.login.LoginTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,15 @@ class LoginControllerTest {
     @Autowired
     MockMvc mvc;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Test
     void 로그인_성공() throws Exception {
+        String expected = "jwt-token";
+
         when(loginTokenService.issuance("userA", "pass"))
-            .thenReturn("jwt-token");
+            .thenReturn(expected);
 
         LoginRequest request = new LoginRequest("userA", "pass");
 
@@ -43,7 +47,7 @@ class LoginControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.accessToken", "jwt-token").exists());
+            .andExpect(jsonPath("$.accessToken", expected).exists());
     }
 
     @TestConfiguration
