@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.domain.member.Role;
+import com.practice.smallcommunity.domain.member.RoleType;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
@@ -39,7 +40,7 @@ class MemberRoleRepositoryTest {
         .build();
 
     Role role = Role.builder()
-        .name("ROLE_USER")
+        .roleType(RoleType.ROLE_USER)
         .desc("사용자 권한")
         .build();
 
@@ -71,7 +72,7 @@ class MemberRoleRepositoryTest {
     void 여러개_저장_및_조회() {
         //given
         Role role2 = Role.builder()
-            .name("ROLE_ADMIN")
+            .roleType(RoleType.ROLE_ADMIN)
             .desc("관리자 권한")
             .build();
 

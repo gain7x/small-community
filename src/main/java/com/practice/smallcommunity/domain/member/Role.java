@@ -3,6 +3,8 @@ package com.practice.smallcommunity.domain.member;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,15 +22,16 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private String name;
+    private RoleType roleType;
 
     private String desc;
 
     @Builder
-    public Role(Long id, String name, String desc) {
+    public Role(Long id, RoleType roleType, String desc) {
         this.id = id;
-        this.name = name;
+        this.roleType = roleType;
         this.desc = desc;
     }
 
@@ -41,11 +44,11 @@ public class Role {
             return false;
         }
         Role role = (Role) o;
-        return name.equals(role.name);
+        return roleType == role.roleType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(roleType);
     }
 }
