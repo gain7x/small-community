@@ -1,6 +1,8 @@
 package com.practice.smallcommunity.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
+import com.practice.smallcommunity.security.JwtTokenService;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,6 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
     SecurityFilterChain web(HttpSecurity http) throws Exception {
         http
@@ -28,7 +28,7 @@ public class SecurityConfig {
             .formLogin().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterAfter(jwtAuthenticationFilter, CorsFilter.class)
+            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
             .authorizeRequests().anyRequest().permitAll();
 
         return http.build();
@@ -42,5 +42,15 @@ public class SecurityConfig {
         encoders.put(idForEncode, new BCryptPasswordEncoder());
 
         return new DelegatingPasswordEncoder(idForEncode, encoders);
+    }
+
+    @Bean
+    JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenService());
+    }
+
+    @Bean
+    JwtTokenService jwtTokenService() {
+        return new JwtTokenService();
     }
 }
