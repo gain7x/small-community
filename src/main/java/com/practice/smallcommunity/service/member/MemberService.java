@@ -2,7 +2,6 @@ package com.practice.smallcommunity.service.member;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.repository.member.MemberRepository;
-import com.practice.smallcommunity.service.member.dto.MemberRegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
-    public Member registerMember(MemberRegisterDto dto) {
-        Member member = mapper.toEntity(dto);
+    public Member registerMember(Member member) {
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.changePassword(encodePassword);
 

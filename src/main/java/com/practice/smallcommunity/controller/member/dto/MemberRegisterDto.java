@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.service.member.dto;
+package com.practice.smallcommunity.controller.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;

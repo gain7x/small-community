@@ -1,7 +1,8 @@
-package com.practice.smallcommunity.service.member;
+package com.practice.smallcommunity.controller.member;
 
+import com.practice.smallcommunity.controller.member.dto.MemberDto;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.service.member.dto.MemberRegisterDto;
+import com.practice.smallcommunity.controller.member.dto.MemberRegisterDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
@@ -11,4 +12,6 @@ public interface MemberMapper {
 
     @Mapping(target = "id", ignore = true)
     Member toEntity(MemberRegisterDto dto);
+
+    MemberDto toDto(Member member);
 }
