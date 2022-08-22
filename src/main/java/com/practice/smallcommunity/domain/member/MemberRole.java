@@ -12,6 +12,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 회원 권한 엔티티입니다.
+ *
+ * 회원 엔티티와 권한 엔티티의 N:M 관계를 N:1로 만들기 위해 존재합니다.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

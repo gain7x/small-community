@@ -1,6 +1,5 @@
 package com.practice.smallcommunity.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
 import com.practice.smallcommunity.security.JwtTokenService;
 import java.util.HashMap;
@@ -16,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * 보안 관련 구성 클래스입니다.
+ */
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {

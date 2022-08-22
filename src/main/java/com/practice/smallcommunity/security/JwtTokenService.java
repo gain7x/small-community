@@ -22,6 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+/**
+ * JWT 토큰 발급 및 검증 서비스입니다.
+ */
 @RequiredArgsConstructor
 public class JwtTokenService {
 
@@ -33,6 +36,11 @@ public class JwtTokenService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * 회원 정보를 기반으로 토큰을 생성하여 반환합니다.
+     * @param member 회원
+     * @return JWT 토큰
+     */
     public String createToken(Member member) {
         String roleClaim = getRoleClaim(member);
 
@@ -50,6 +58,11 @@ public class JwtTokenService {
             .compact();
     }
 
+    /**
+     * JWT 토큰 검증이 성공하면 토큰 데이터를 기반으로 인증 객체를 생성하여 반환합니다.
+     * @param jwtToken 발급했던 JWT 토큰
+     * @return 검증 성공 시 인증 객체, 실패 시 null
+     */
     public Authentication getAuthentication(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
@@ -69,6 +82,13 @@ public class JwtTokenService {
         }
     }
 
+    /**
+     * 회원이 가진 권한 목록을 JSON 형식으로 반환합니다.
+     * @param member 회원
+     * @return JSON 문자열 형식으로 변환된 회원 권한 목록
+     * @throws IllegalArgumentException
+     *          권한을 JSON 형식으로 변환하지 못한 경우
+     */
     private String getRoleClaim(Member member) {
         List<RoleType> roleTypes = member.getMemberRoles().stream()
             .map(memberRole -> memberRole.getRole().getRoleType())
@@ -81,6 +101,13 @@ public class JwtTokenService {
         }
     }
 
+    /**
+     * JWT 클레임에서 권한 정보를 추출하고, 스프링 시큐리티가 지원하는 권한 타입으로 반환합니다.
+     * @param body JWT 클레임
+     * @return 권한 목록
+     * @throws IllegalArgumentException
+     *          권한 정보 추출을 실패한 경우
+     */
     private List<GrantedAuthority> getAuthoritiesFromClaims(Claims body) {
         try {
             String roleClaim = body.get(ROLE_CLAIM, String.class);

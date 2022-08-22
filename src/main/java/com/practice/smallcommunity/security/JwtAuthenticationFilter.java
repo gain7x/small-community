@@ -12,11 +12,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * JWT 토큰 검증 후 인증 객체를 저장하는 필터입니다.
+ */
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
+    /**
+     * 클라이언트 요청에 토큰이 있으면 검증을 진행하고, 성공 시 인증 객체를 보안 컨텍스트에 저장합니다.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
@@ -31,6 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 클라이언트 요청에 Bearer 토큰이 있으면 토큰을 반환합니다.
+     * @param request 클라이언트 요청
+     * @return 토큰( 'Bearer ' 문자열은 제외 )
+     */
     private String getJwtToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 

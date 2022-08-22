@@ -16,6 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 회원 엔티티입니다.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -49,6 +52,10 @@ public class Member extends BaseTimeEntity {
         changePassword(password);
     }
 
+    /**
+     * 암호를 변경합니다. 이때, 암호 변경일도 갱신됩니다.
+     * @param password 새로운 암호
+     */
     public void changePassword(String password) {
         this.password = password;
         lastPasswordChange = LocalDateTime.now();
