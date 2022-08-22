@@ -1,7 +1,13 @@
 package com.practice.smallcommunity.controller.member;
 
+import static com.practice.smallcommunity.controller.RestDocsHelper.generateDocument;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,19 +18,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.controller.member.dto.MemberRegisterDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+@AutoConfigureRestDocs
 @WebMvcTest(MemberController.class)
 class MemberControllerTest {
 
@@ -58,13 +69,20 @@ class MemberControllerTest {
             .build();
 
         //when
+        ResultActions result = mvc.perform(post("/members/register")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto))
+            .accept(MediaType.APPLICATION_JSON)
+            .with(csrf()));
+
         //then
-        mvc.perform(post("/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()))
-            .andExpect(status().isCreated());
+        result.andExpect(status().isCreated())
+            .andDo(generateDocument("members",
+                requestFields(
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
+                    fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                )));
     }
 
     @Test
@@ -86,13 +104,26 @@ class MemberControllerTest {
             new UsernamePasswordAuthenticationToken(target, null, null));
 
         //when
-        //then
-        mvc.perform(get("/members")
+        ResultActions result = mvc.perform(get("/members")
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer jwt-token")
                 .with(csrf()))
-            .andExpect(status().isOk())
+            .andExpect(status().isOk());
+
+        //then
+        result.andExpect(status().isOk())
             .andExpect(jsonPath("$.username", "userA").exists())
-            .andExpect(jsonPath("$.email", "userA@mail.com").exists());
+            .andExpect(jsonPath("$.email", "userA@mail.com").exists())
+            .andDo(generateDocument("members",
+                requestHeaders(
+                    headerWithName("Authorization").description("JWT 토큰")
+                ),
+                responseFields(
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("lastPasswordChange").type(LocalDateTime.class.getName())
+                        .description("마지막 비밀번호 변경일")
+                )));
     }
 
     @TestConfiguration
