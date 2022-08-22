@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.service.member;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,12 +21,15 @@ public class MemberService {
 
     /**
      * 회원 등록을 시도하고, 성공하면 등록된 회원 정보를 반환합니다.
+     *
+     * 등록되는 회원은 기본적으로 사용자 권한( ROLE_USER )을 보유합니다.
      * @param member 등록할 회원 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 회원 정보
      */
     public Member registerMember(Member member) {
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.changePassword(encodePassword);
+        member.changeMemberRole(MemberRole.ROLE_USER);
 
         return memberRepository.save(member);
     }

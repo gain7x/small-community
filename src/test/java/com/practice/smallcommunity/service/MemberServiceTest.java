@@ -6,6 +6,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.repository.member.MemberRepository;
 import com.practice.smallcommunity.service.member.MemberService;
 import java.util.Optional;
@@ -43,23 +44,44 @@ class MemberServiceTest {
 
     @Test
     void 회원가입() {
+        //given
         when(memberRepository.save(any(Member.class)))
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
+        //when
         Member registeredMember = memberService.registerMember(member);
 
+        //then
         assertThat(registeredMember).isNotNull();
         assertThat(registeredMember.getUsername()).isEqualTo(member.getUsername());
     }
 
     @Test
+    void 등록되는_회원은_사용자_권한을_가진다() {
+        //given
+        when(memberRepository.save(any(Member.class)))
+            .thenAnswer(AdditionalAnswers.returnsFirstArg());
+
+        //when
+        Member registeredMember = memberService.registerMember(member);
+
+        //then
+        assertThat(registeredMember).isNotNull();
+        assertThat(registeredMember.getMemberRole()).isEqualTo(MemberRole.ROLE_USER);
+    }
+
+    @Test
     void 회원가입하면_비밀번호는_bcrypt로_암호화된다() {
+        //given
         when(memberRepository.save(any(Member.class)))
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         String plainPassword = member.getPassword();
+
+        //when
         Member registeredMember = memberService.registerMember(member);
 
+        //then
         assertThat(registeredMember).isNotNull();
         assertThat(registeredMember.getPassword()).isNotEqualTo(plainPassword);
         // '{bcrypt}암호화된 문자열' 형식 검증

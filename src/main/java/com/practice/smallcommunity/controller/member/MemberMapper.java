@@ -11,6 +11,7 @@ import org.mapstruct.MappingConstants.ComponentModel;
 public interface MemberMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "memberRole", ignore = true)
     Member toEntity(MemberRegisterDto dto);
 
     MemberDto toDto(Member member);

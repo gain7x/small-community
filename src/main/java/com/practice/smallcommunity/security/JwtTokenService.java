@@ -1,9 +1,7 @@
 package com.practice.smallcommunity.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.domain.member.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -11,10 +9,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,8 +38,6 @@ public class JwtTokenService {
      * @return JWT 토큰
      */
     public String createToken(Member member) {
-        String roleClaim = getRoleClaim(member);
-
         return Jwts.builder()
             .signWith(SignatureAlgorithm.HS512, secretKey.getBytes(StandardCharsets.UTF_8))
             .setIssuer(ISSUER)
@@ -54,7 +48,7 @@ public class JwtTokenService {
                     Instant.now()
                         .plus(1, ChronoUnit.DAYS))
             )
-            .claim(ROLE_CLAIM, roleClaim)
+            .claim(ROLE_CLAIM, member.getMemberRole().name())
             .compact();
     }
 
@@ -83,40 +77,14 @@ public class JwtTokenService {
     }
 
     /**
-     * 회원이 가진 권한 목록을 JSON 형식으로 반환합니다.
-     * @param member 회원
-     * @return JSON 문자열 형식으로 변환된 회원 권한 목록
-     * @throws IllegalArgumentException
-     *          권한을 JSON 형식으로 변환하지 못한 경우
-     */
-    private String getRoleClaim(Member member) {
-        List<RoleType> roleTypes = member.getMemberRoles().stream()
-            .map(memberRole -> memberRole.getRole().getRoleType())
-            .collect(Collectors.toList());
-
-        try {
-            return objectMapper.writeValueAsString(roleTypes);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("회원 권한 토큰화에 실패했습니다.", e);
-        }
-    }
-
-    /**
      * JWT 클레임에서 권한 정보를 추출하고, 스프링 시큐리티가 지원하는 권한 타입으로 반환합니다.
      * @param body JWT 클레임
-     * @return 권한 목록
+     * @return 스프링 시큐리티 권한 타입
      * @throws IllegalArgumentException
-     *          권한 정보 추출을 실패한 경우
+     *          권한 정보 변환에 실패한 경우
      */
     private List<GrantedAuthority> getAuthoritiesFromClaims(Claims body) {
-        try {
-            String roleClaim = body.get(ROLE_CLAIM, String.class);
-
-            return Arrays.stream(objectMapper.readValue(roleClaim, RoleType[].class))
-                .map(roleType -> new SimpleGrantedAuthority(roleType.name()))
-                .collect(Collectors.toList());
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("회원 권한 정보 추출에 실패했습니다.", e);
-        }
+        String memberRole = body.get(ROLE_CLAIM, String.class);
+        return List.of(new SimpleGrantedAuthority(memberRole));
     }
 }

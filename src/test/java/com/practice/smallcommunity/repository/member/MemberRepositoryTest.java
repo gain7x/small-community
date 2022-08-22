@@ -3,6 +3,7 @@ package com.practice.smallcommunity.repository.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +27,7 @@ class MemberRepositoryTest {
         .username("userA")
         .password("password")
         .email("userA@mail.com")
+        .memberRole(MemberRole.ROLE_USER)
         .build();
 
     @Test
@@ -48,6 +50,7 @@ class MemberRepositoryTest {
             .username("userB")
             .password("password")
             .email("userB@mail.com")
+            .memberRole(MemberRole.ROLE_USER)
             .build();
 
         //when
