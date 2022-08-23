@@ -69,7 +69,7 @@ class MemberControllerTest {
             .build();
 
         //when
-        ResultActions result = mvc.perform(post("/members")
+        ResultActions result = mvc.perform(post("/api/v1/members")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto))
             .accept(MediaType.APPLICATION_JSON)
@@ -105,7 +105,7 @@ class MemberControllerTest {
             new UsernamePasswordAuthenticationToken(target, null, null));
 
         //when
-        ResultActions result = mvc.perform(get("/members")
+        ResultActions result = mvc.perform(get("/api/v1/members")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer jwt-token")
                 .with(csrf()))

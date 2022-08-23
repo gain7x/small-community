@@ -48,7 +48,7 @@ class LoginControllerTest {
 
         LoginRequest request = new LoginRequest("userA", "password");
 
-        mvc.perform(post("/auth")
+        mvc.perform(post("/api/v1/auth")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
