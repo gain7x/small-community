@@ -1,8 +1,9 @@
 package com.practice.smallcommunity.controller.login;
 
 import com.practice.smallcommunity.controller.login.dto.LoginRequest;
-import com.practice.smallcommunity.controller.login.dto.LoginResponse;
+import com.practice.smallcommunity.controller.login.dto.LoginDto;
 import com.practice.smallcommunity.service.login.LoginTokenService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +16,10 @@ public class LoginController {
     private final LoginTokenService loginTokenService;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
+    public LoginDto login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = loginTokenService.issuance(loginRequest.getUsername(),
             loginRequest.getPassword());
 
-        return new LoginResponse(token);
+        return new LoginDto(token);
     }
 }
