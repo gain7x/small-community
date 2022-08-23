@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.controller.member;
 
 import static com.practice.smallcommunity.controller.RestDocsHelper.generateDocument;
+import static com.practice.smallcommunity.controller.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.smallcommunity.controller.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
@@ -78,12 +80,14 @@ class MemberControllerTest {
             .with(csrf()));
 
         //then
+        ConstrainedFields fields = getConstrainedFields(MemberRegisterRequest.class);
+
         result.andExpect(status().isCreated())
             .andDo(generateDocument("members",
                 requestFields(
-                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
-                    fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
-                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                    fields.withPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
+                    fields.withPath("password").type(JsonFieldType.STRING).description("비밀번호"),
+                    fields.withPath("email").type(JsonFieldType.STRING).description("이메일")
                 )));
     }
 

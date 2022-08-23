@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.controller.login;
 
 import static com.practice.smallcommunity.controller.RestDocsHelper.generateDocument;
+import static com.practice.smallcommunity.controller.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.smallcommunity.controller.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.controller.login.dto.LoginRequest;
 import com.practice.smallcommunity.service.login.LoginTokenService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @AutoConfigureRestDocs
@@ -41,6 +44,7 @@ class LoginControllerTest {
 
     @Test
     void 로그인() throws Exception {
+        //given
         String expected = "jwt-token";
 
         when(loginTokenService.issuance("userA", "password"))
@@ -48,17 +52,22 @@ class LoginControllerTest {
 
         LoginRequest request = new LoginRequest("userA", "password");
 
-        mvc.perform(post("/api/v1/auth")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()))
-            .andExpect(status().isOk())
+        //when
+        ResultActions result = mvc.perform(post("/api/v1/auth")
+            .content(objectMapper.writeValueAsString(request))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(csrf()));
+
+        //then
+        ConstrainedFields fields = getConstrainedFields(LoginRequest.class);
+
+        result.andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken", expected).exists())
             .andDo(generateDocument("login",
                 requestFields(
-                    fieldWithPath("username").description("회원 아이디"),
-                    fieldWithPath("password").description("비밀번호")
+                    fields.withPath("username").description("회원 아이디"),
+                    fields.withPath("password").description("비밀번호")
                 ), responseFields(
                     fieldWithPath("accessToken").description("인증 토큰")
                 )));
