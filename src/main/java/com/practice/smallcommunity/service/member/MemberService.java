@@ -2,6 +2,8 @@ package com.practice.smallcommunity.service.member;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.exception.ValidationError;
+import com.practice.smallcommunity.exception.ValidationErrorException;
 import com.practice.smallcommunity.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +27,12 @@ public class MemberService {
      * 등록되는 회원은 기본적으로 사용자 권한( ROLE_USER )을 보유합니다.
      * @param member 등록할 회원 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 회원 정보
+     * @throws ValidationErrorException
+     *          등록하려는 회원 정보가 유효하지 않은 경우( 아이디 중복, 이메일 중복, ... )
      */
     public Member registerMember(Member member) {
+        validateRegisterMember(member);
+
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.changePassword(encodePassword);
         member.changeMemberRole(MemberRole.ROLE_USER);
@@ -56,5 +62,19 @@ public class MemberService {
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. username: " + username));
+    }
+
+    private void validateRegisterMember(Member member) {
+        boolean existsByUsername = memberRepository.existsByUsername(member.getUsername());
+        if (existsByUsername) {
+            throw new ValidationErrorException("이미 사용 중인 아이디입니다.",
+                ValidationError.of("duplicate", "username"));
+        }
+
+        boolean existsByEmail = memberRepository.existsByEmail(member.getEmail());
+        if (existsByEmail) {
+            throw new ValidationErrorException("이미 사용 중인 이메일입니다.",
+                ValidationError.of("duplicate", "email"));
+        }
     }
 }

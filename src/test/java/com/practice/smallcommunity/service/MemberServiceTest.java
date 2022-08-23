@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.exception.ValidationErrorException;
 import com.practice.smallcommunity.repository.member.MemberRepository;
 import com.practice.smallcommunity.service.member.MemberService;
 import java.util.Optional;
@@ -36,7 +37,8 @@ class MemberServiceTest {
         memberService = new MemberService(memberRepository, passwordEncoder);
     }
 
-    Member member = Member.builder()
+    Member targetMember = Member.builder()
+        .id(1L)
         .username("userA")
         .password("pass")
         .email("userA@mail.com")
@@ -49,11 +51,11 @@ class MemberServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Member registeredMember = memberService.registerMember(member);
+        Member registeredMember = memberService.registerMember(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
-        assertThat(registeredMember.getUsername()).isEqualTo(member.getUsername());
+        assertThat(registeredMember.getUsername()).isEqualTo(targetMember.getUsername());
     }
 
     @Test
@@ -63,7 +65,7 @@ class MemberServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Member registeredMember = memberService.registerMember(member);
+        Member registeredMember = memberService.registerMember(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
@@ -76,10 +78,10 @@ class MemberServiceTest {
         when(memberRepository.save(any(Member.class)))
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
-        String plainPassword = member.getPassword();
+        String plainPassword = targetMember.getPassword();
 
         //when
-        Member registeredMember = memberService.registerMember(member);
+        Member registeredMember = memberService.registerMember(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
@@ -89,39 +91,76 @@ class MemberServiceTest {
     }
 
     @Test
-    void 회원정보_조회() {
+    void 회원가입_시_아이디가_중복되면_예외를_던진다() {
         //given
-        Member targetMember = Member.builder()
-            .username("userA")
-            .password("pass")
-            .email("userA@mail.com")
-            .build();
+        when(memberRepository.existsByUsername(targetMember.getUsername()))
+            .thenReturn(true);
 
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.registerMember(targetMember))
+            .isInstanceOf(ValidationErrorException.class);
+    }
+
+    @Test
+    void 회원가입_시_이메일이_중복되면_예외를_던진다() {
+        //given
+        when(memberRepository.existsByEmail(targetMember.getEmail()))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.registerMember(targetMember))
+            .isInstanceOf(ValidationErrorException.class);
+    }
+
+    @Test
+    void 회원을_이름으로_조회한다() {
+        //given
         when(memberRepository.findByUsername(targetMember.getUsername()))
             .thenReturn(Optional.of(targetMember));
 
         //when
-        Member member = memberService.findByUsername(targetMember.getUsername());
+        Member findMember = memberService.findByUsername(targetMember.getUsername());
 
         //then
-        assertThat(member.getUsername()).isEqualTo(targetMember.getUsername());
+        assertThat(findMember.getUsername()).isEqualTo(targetMember.getUsername());
     }
 
     @Test
-    void 회원정보_없으면_조회실패() {
+    void 이름으로_조회_시_동일한_이름의_회원이_없으면_예외를_던진다() {
         //given
-        Member targetMember = Member.builder()
-            .username("userA")
-            .password("pass")
-            .email("userA@mail.com")
-            .build();
-
-        when(memberRepository.findByUsername(any()))
+        when(memberRepository.findByUsername(targetMember.getUsername()))
             .thenReturn(Optional.empty());
 
         //when
         //then
         assertThatThrownBy(() -> memberService.findByUsername(targetMember.getUsername()))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 회원을_식별자로_조회한다() {
+        //given
+        when(memberRepository.findById(targetMember.getId()))
+            .thenReturn(Optional.of(targetMember));
+
+        //when
+        Member findMember = memberService.findByUserId(targetMember.getId());
+
+        //then
+        assertThat(findMember.getId()).isEqualTo(targetMember.getId());
+    }
+
+    @Test
+    void 식별자로_조회_시_동일한_식별자가_없으면_예외를_던진다() {
+        //given
+        when(memberRepository.findById(targetMember.getId()))
+            .thenReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.findByUserId(targetMember.getId()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }
