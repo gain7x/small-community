@@ -25,3 +25,6 @@ operation::members/회원가입[snippets='http-request,request-fields,http-respo
 
 === 회원정보
 operation::members/회원정보_조회[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 회원 상세정보
+operation::members/회원_상세정보_조회[snippets='http-request,request-headers,http-response,response-fields']

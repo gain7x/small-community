@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.controller.member;
 
 import com.practice.smallcommunity.controller.CurrentUser;
+import com.practice.smallcommunity.controller.member.dto.MemberDetailsDto;
 import com.practice.smallcommunity.controller.member.dto.MemberDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +32,15 @@ public class MemberController {
         memberService.registerMember(member);
     }
 
-    @GetMapping
-    public MemberDto find(@CurrentUser Long userId) {
+    @GetMapping("/{userId}")
+    public MemberDto find(@PathVariable Long userId) {
         Member member = memberService.findByUserId(userId);
         return mapper.toDto(member);
+    }
+
+    @GetMapping("/details")
+    public MemberDetailsDto details(@CurrentUser Long currentUserId) {
+        Member member = memberService.findByUserId(currentUserId);
+        return mapper.toDetailsDto(member);
     }
 }

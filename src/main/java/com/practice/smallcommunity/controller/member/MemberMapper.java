@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.controller.member;
 
+import com.practice.smallcommunity.controller.member.dto.MemberDetailsDto;
 import com.practice.smallcommunity.controller.member.dto.MemberDto;
 import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
@@ -15,4 +16,6 @@ public interface MemberMapper {
     Member toEntity(MemberRegisterRequest dto);
 
     MemberDto toDto(Member member);
+
+    MemberDetailsDto toDetailsDto(Member member);
 }

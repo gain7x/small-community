@@ -8,10 +8,11 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,11 +103,46 @@ class MemberControllerTest {
         when(memberService.findByUserId(target))
             .thenReturn(member);
 
+        //when
+        ResultActions result = mvc.perform(
+                RestDocumentationRequestBuilders.get("/api/v1/members/{userId}", target)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .with(csrf()))
+            .andExpect(status().isOk());
+
+        //then
+        result.andExpect(status().isOk())
+            .andDo(generateDocument("members",
+                pathParameters(
+                    parameterWithName("userId").description("회원 번호")
+                ),
+                responseFields(
+                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                )));
+    }
+
+    @Test
+    @WithMockUser
+    void 회원_상세정보_조회() throws Exception {
+        //given
+        Long target = 1L;
+
+        Member member = Member.builder()
+            .id(1L)
+            .username("userA")
+            .password("pass")
+            .email("userA@mail.com")
+            .build();
+
+        when(memberService.findByUserId(target))
+            .thenReturn(member);
+
         SecurityContextHolder.getContext().setAuthentication(
             new UsernamePasswordAuthenticationToken(target, null, null));
 
         //when
-        ResultActions result = mvc.perform(get("/api/v1/members")
+        ResultActions result = mvc.perform(get("/api/v1/members/details")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer jwt-token")
                 .with(csrf()))
@@ -113,8 +150,6 @@ class MemberControllerTest {
 
         //then
         result.andExpect(status().isOk())
-            .andExpect(jsonPath("$.username", "userA").exists())
-            .andExpect(jsonPath("$.email", "userA@mail.com").exists())
             .andDo(generateDocument("members",
                 requestHeaders(
                     headerWithName("Authorization").description("JWT 토큰")
