@@ -24,13 +24,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
-    private static final String ISSUER = "S-Community";
     private static final String ROLE_CLAIM = "ROLE";
 
     @Value("${jwt.secret-key}")
     private String secretKey = "dummy";
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 회원 정보를 기반으로 토큰을 생성하여 반환합니다.
@@ -40,9 +37,8 @@ public class JwtTokenService {
     public String createToken(Member member) {
         return Jwts.builder()
             .signWith(SignatureAlgorithm.HS512, secretKey.getBytes(StandardCharsets.UTF_8))
-            .setIssuer(ISSUER)
             .setIssuedAt(new Date())
-            .setSubject(member.getUsername())
+            .setSubject(member.getId().toString())
             .setExpiration(
                 Date.from(
                     Instant.now()

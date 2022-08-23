@@ -89,15 +89,16 @@ class MemberControllerTest {
     @WithMockUser
     void 회원정보_조회() throws Exception {
         //given
-        String target = "userA";
+        Long target = 1L;
 
         Member member = Member.builder()
+            .id(1L)
             .username("userA")
             .password("pass")
             .email("userA@mail.com")
             .build();
 
-        when(memberService.findByUsername(target))
+        when(memberService.findByUserId(target))
             .thenReturn(member);
 
         SecurityContextHolder.getContext().setAuthentication(

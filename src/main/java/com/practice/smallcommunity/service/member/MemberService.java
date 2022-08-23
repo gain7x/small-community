@@ -35,11 +35,23 @@ public class MemberService {
     }
 
     /**
+     * 회원 번호에 해당하는 회원 정보를 반환합니다.
+     * @param userId 회원 번호
+     * @return 회원 정보
+     * @throws IllegalArgumentException
+     *          회원 번호에 해당하는 회원이 존재하지 않는 경우
+     */
+    public Member findByUserId(Long userId) {
+        return memberRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id: " + userId));
+    }
+
+    /**
      * 회원명과 일치하는 회원 정보를 반환합니다.
      * @param username 회원명( ID )
      * @return 회원 정보
      * @throws IllegalArgumentException
-     *          회원이 존재하지 않는 경우
+     *          회원명이 일치하는 회원이 존재하지 않는 경우
      */
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)

@@ -31,8 +31,8 @@ public class MemberController {
     }
 
     @GetMapping
-    public MemberDto find(@CurrentUser String username) {
-        Member member = memberService.findByUsername(username);
+    public MemberDto find(@CurrentUser Long userId) {
+        Member member = memberService.findByUserId(userId);
         return mapper.toDto(member);
     }
 }
