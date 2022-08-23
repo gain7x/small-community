@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Builder
-public class MemberRegisterDto {
+public class MemberRegisterRequest {
 
     @NotBlank
     @Length(min = 4, max = 15)

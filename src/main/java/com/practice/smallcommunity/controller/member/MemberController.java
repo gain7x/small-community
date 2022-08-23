@@ -4,7 +4,7 @@ import com.practice.smallcommunity.controller.CurrentUser;
 import com.practice.smallcommunity.controller.member.dto.MemberDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
-import com.practice.smallcommunity.controller.member.dto.MemberRegisterDto;
+import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public void register(@Valid @RequestBody MemberRegisterDto dto) {
+    public void register(@Valid @RequestBody MemberRegisterRequest dto) {
         Member member = mapper.toEntity(dto);
         memberService.registerMember(member);
     }

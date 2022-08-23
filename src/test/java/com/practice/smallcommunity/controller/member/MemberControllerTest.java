@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.controller.member.dto.MemberRegisterDto;
+import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
 import java.time.LocalDateTime;
@@ -62,7 +62,7 @@ class MemberControllerTest {
         when(memberService.registerMember(any(Member.class)))
             .thenReturn(registeredMember);
 
-        MemberRegisterDto dto = MemberRegisterDto.builder()
+        MemberRegisterRequest dto = MemberRegisterRequest.builder()
             .username("userA")
             .password("some")
             .email("userA@mail.com")
