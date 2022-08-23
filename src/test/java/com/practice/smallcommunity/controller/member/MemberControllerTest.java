@@ -55,7 +55,7 @@ class MemberControllerTest {
         Member registeredMember = Member.builder()
             .id(1L)
             .username("userA")
-            .password("some")
+            .password("password")
             .email("userA@mail.com")
             .build();
 
@@ -64,12 +64,12 @@ class MemberControllerTest {
 
         MemberRegisterRequest dto = MemberRegisterRequest.builder()
             .username("userA")
-            .password("some")
+            .password("password")
             .email("userA@mail.com")
             .build();
 
         //when
-        ResultActions result = mvc.perform(post("/members/register")
+        ResultActions result = mvc.perform(post("/members")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto))
             .accept(MediaType.APPLICATION_JSON)

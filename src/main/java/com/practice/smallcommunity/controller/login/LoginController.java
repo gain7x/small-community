@@ -15,8 +15,8 @@ public class LoginController {
 
     private final LoginTokenService loginTokenService;
 
-    @PostMapping("/login")
-    public LoginDto login(@Valid @RequestBody LoginRequest loginRequest) {
+    @PostMapping("/auth")
+    public LoginDto auth(@Valid @RequestBody LoginRequest loginRequest) {
         String token = loginTokenService.issuance(loginRequest.getUsername(),
             loginRequest.getPassword());
 

@@ -24,7 +24,7 @@ public class MemberController {
     private final MemberMapper mapper;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
+    @PostMapping
     public void register(@Valid @RequestBody MemberRegisterRequest dto) {
         Member member = mapper.toEntity(dto);
         memberService.registerMember(member);

@@ -43,12 +43,12 @@ class LoginControllerTest {
     void 로그인() throws Exception {
         String expected = "jwt-token";
 
-        when(loginTokenService.issuance("userA", "pass"))
+        when(loginTokenService.issuance("userA", "password"))
             .thenReturn(expected);
 
-        LoginRequest request = new LoginRequest("userA", "pass");
+        LoginRequest request = new LoginRequest("userA", "password");
 
-        mvc.perform(post("/login")
+        mvc.perform(post("/auth")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
