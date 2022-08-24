@@ -27,6 +27,7 @@ class MemberRepositoryTest {
         .username("userA")
         .password("password")
         .email("userA@mail.com")
+        .nickname("firstUser")
         .memberRole(MemberRole.ROLE_USER)
         .build();
 
@@ -50,6 +51,7 @@ class MemberRepositoryTest {
             .username("userB")
             .password("password")
             .email("userB@mail.com")
+            .nickname("secondUser")
             .memberRole(MemberRole.ROLE_USER)
             .build();
 

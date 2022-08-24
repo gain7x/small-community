@@ -33,6 +33,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(length = 12, nullable = false, unique = true)
+    private String nickname;
+
     @Column(nullable = false)
     private LocalDateTime lastPasswordChange;
 
@@ -40,10 +43,11 @@ public class Member extends BaseTimeEntity {
     private MemberRole memberRole;
 
     @Builder
-    public Member(Long id, String username, String email, String password, MemberRole memberRole) {
+    public Member(Long id, String username, String email, String password, String nickname, MemberRole memberRole) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.nickname = nickname;
         this.memberRole = memberRole;
 
         changePassword(password);

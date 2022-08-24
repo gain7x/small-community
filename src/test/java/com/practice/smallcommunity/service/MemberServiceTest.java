@@ -42,6 +42,7 @@ class MemberServiceTest {
         .username("userA")
         .password("pass")
         .email("userA@mail.com")
+        .nickname("firstUser")
         .build();
 
     @Test
@@ -106,6 +107,18 @@ class MemberServiceTest {
     void 회원가입_시_이메일이_중복되면_예외를_던진다() {
         //given
         when(memberRepository.existsByEmail(targetMember.getEmail()))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.registerMember(targetMember))
+            .isInstanceOf(ValidationErrorException.class);
+    }
+
+    @Test
+    void 회원가입_시_별명이_중복되면_예외를_던진다() {
+        //given
+        when(memberRepository.existsByNickname(targetMember.getNickname()))
             .thenReturn(true);
 
         //when

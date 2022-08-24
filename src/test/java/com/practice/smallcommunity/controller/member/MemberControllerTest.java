@@ -52,24 +52,26 @@ class MemberControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    Member targetMember = Member.builder()
+        .id(1L)
+        .username("userA")
+        .password("password")
+        .email("userA@mail.com")
+        .nickname("firstUser")
+        .build();
+
     @Test
     @WithMockUser
     void 회원가입() throws Exception {
         //given
-        Member registeredMember = Member.builder()
-            .id(1L)
-            .username("userA")
-            .password("password")
-            .email("userA@mail.com")
-            .build();
-
         when(memberService.registerMember(any(Member.class)))
-            .thenReturn(registeredMember);
+            .thenReturn(targetMember);
 
         MemberRegisterRequest dto = MemberRegisterRequest.builder()
             .username("userA")
             .password("password")
             .email("userA@mail.com")
+            .nickname("firstUser")
             .build();
 
         //when
@@ -87,7 +89,8 @@ class MemberControllerTest {
                 requestFields(
                     fields.withPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
                     fields.withPath("password").type(JsonFieldType.STRING).description("비밀번호"),
-                    fields.withPath("email").type(JsonFieldType.STRING).description("이메일")
+                    fields.withPath("email").type(JsonFieldType.STRING).description("이메일"),
+                    fields.withPath("nickname").type(JsonFieldType.STRING).description("별명")
                 )));
     }
 
@@ -95,21 +98,12 @@ class MemberControllerTest {
     @WithMockUser
     void 회원정보_조회() throws Exception {
         //given
-        Long target = 1L;
-
-        Member member = Member.builder()
-            .id(1L)
-            .username("userA")
-            .password("pass")
-            .email("userA@mail.com")
-            .build();
-
-        when(memberService.findByUserId(target))
-            .thenReturn(member);
+        when(memberService.findByUserId(targetMember.getId()))
+            .thenReturn(targetMember);
 
         //when
         ResultActions result = mvc.perform(
-                RestDocumentationRequestBuilders.get("/api/v1/members/{userId}", target)
+                RestDocumentationRequestBuilders.get("/api/v1/members/{userId}", targetMember.getId())
                     .accept(MediaType.APPLICATION_JSON)
                     .with(csrf()))
             .andExpect(status().isOk());
@@ -121,8 +115,7 @@ class MemberControllerTest {
                     parameterWithName("userId").description("회원 번호")
                 ),
                 responseFields(
-                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
-                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 별명")
                 )));
     }
 
@@ -130,20 +123,11 @@ class MemberControllerTest {
     @WithMockUser
     void 회원_상세정보_조회() throws Exception {
         //given
-        Long target = 1L;
-
-        Member member = Member.builder()
-            .id(1L)
-            .username("userA")
-            .password("pass")
-            .email("userA@mail.com")
-            .build();
-
-        when(memberService.findByUserId(target))
-            .thenReturn(member);
+        when(memberService.findByUserId(targetMember.getId()))
+            .thenReturn(targetMember);
 
         SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(target, null, null));
+            new UsernamePasswordAuthenticationToken(targetMember.getId(), null, null));
 
         //when
         ResultActions result = mvc.perform(get("/api/v1/members/details")
@@ -161,6 +145,7 @@ class MemberControllerTest {
                 responseFields(
                     fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
                     fieldWithPath("lastPasswordChange").type(LocalDateTime.class.getName())
                         .description("마지막 비밀번호 변경일")
                 )));

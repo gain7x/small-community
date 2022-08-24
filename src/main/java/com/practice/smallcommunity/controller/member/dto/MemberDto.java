@@ -9,6 +9,5 @@ import lombok.Getter;
 @Builder
 public class MemberDto {
 
-    private String username;
-    private String email;
+    private String nickname;
 }

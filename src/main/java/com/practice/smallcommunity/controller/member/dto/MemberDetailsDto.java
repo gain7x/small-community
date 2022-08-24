@@ -12,5 +12,6 @@ public class MemberDetailsDto {
 
     private String username;
     private String email;
+    private String nickname;
     private LocalDateTime lastPasswordChange;
 }

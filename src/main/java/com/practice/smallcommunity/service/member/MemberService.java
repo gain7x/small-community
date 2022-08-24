@@ -76,5 +76,11 @@ public class MemberService {
             throw new ValidationErrorException("이미 사용 중인 이메일입니다.",
                 ValidationError.of("duplicate", "email"));
         }
+
+        boolean existsByNickname = memberRepository.existsByNickname(member.getNickname());
+        if (existsByNickname) {
+            throw new ValidationErrorException("이미 사용 중인 별명입니다.",
+                ValidationError.of("duplicate", "nickname"));
+        }
     }
 }

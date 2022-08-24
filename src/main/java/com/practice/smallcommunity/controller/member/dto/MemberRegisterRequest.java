@@ -22,4 +22,8 @@ public class MemberRegisterRequest {
 
     @Email
     private String email;
+
+    @NotBlank
+    @Length(min = 2, max = 12)
+    private String nickname;
 }
