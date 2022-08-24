@@ -13,9 +13,8 @@ class JwtTokenServiceTest {
 
     Member member = Member.builder()
         .id(1L)
-        .username("userA")
-        .password("pass")
         .email("userA@email.com")
+        .password("pass")
         .memberRole(MemberRole.ROLE_USER)
         .build();
 

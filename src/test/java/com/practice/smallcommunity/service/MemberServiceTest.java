@@ -39,9 +39,8 @@ class MemberServiceTest {
 
     Member targetMember = Member.builder()
         .id(1L)
-        .username("userA")
-        .password("pass")
         .email("userA@mail.com")
+        .password("pass")
         .nickname("firstUser")
         .build();
 
@@ -56,7 +55,7 @@ class MemberServiceTest {
 
         //then
         assertThat(registeredMember).isNotNull();
-        assertThat(registeredMember.getUsername()).isEqualTo(targetMember.getUsername());
+        assertThat(registeredMember.getEmail()).isEqualTo(targetMember.getEmail());
     }
 
     @Test
@@ -92,18 +91,6 @@ class MemberServiceTest {
     }
 
     @Test
-    void 회원가입_시_아이디가_중복되면_예외를_던진다() {
-        //given
-        when(memberRepository.existsByUsername(targetMember.getUsername()))
-            .thenReturn(true);
-
-        //when
-        //then
-        assertThatThrownBy(() -> memberService.registerMember(targetMember))
-            .isInstanceOf(ValidationErrorException.class);
-    }
-
-    @Test
     void 회원가입_시_이메일이_중복되면_예외를_던진다() {
         //given
         when(memberRepository.existsByEmail(targetMember.getEmail()))
@@ -125,31 +112,6 @@ class MemberServiceTest {
         //then
         assertThatThrownBy(() -> memberService.registerMember(targetMember))
             .isInstanceOf(ValidationErrorException.class);
-    }
-
-    @Test
-    void 회원을_이름으로_조회한다() {
-        //given
-        when(memberRepository.findByUsername(targetMember.getUsername()))
-            .thenReturn(Optional.of(targetMember));
-
-        //when
-        Member findMember = memberService.findByUsername(targetMember.getUsername());
-
-        //then
-        assertThat(findMember.getUsername()).isEqualTo(targetMember.getUsername());
-    }
-
-    @Test
-    void 이름으로_조회_시_동일한_이름의_회원이_없으면_예외를_던진다() {
-        //given
-        when(memberRepository.findByUsername(targetMember.getUsername()))
-            .thenReturn(Optional.empty());
-
-        //when
-        //then
-        assertThatThrownBy(() -> memberService.findByUsername(targetMember.getUsername()))
-            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

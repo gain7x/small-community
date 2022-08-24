@@ -54,7 +54,6 @@ class MemberControllerTest {
 
     Member targetMember = Member.builder()
         .id(1L)
-        .username("userA")
         .password("password")
         .email("userA@mail.com")
         .nickname("firstUser")
@@ -68,7 +67,6 @@ class MemberControllerTest {
             .thenReturn(targetMember);
 
         MemberRegisterRequest dto = MemberRegisterRequest.builder()
-            .username("userA")
             .password("password")
             .email("userA@mail.com")
             .nickname("firstUser")
@@ -87,9 +85,8 @@ class MemberControllerTest {
         result.andExpect(status().isCreated())
             .andDo(generateDocument("members",
                 requestFields(
-                    fields.withPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
-                    fields.withPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                     fields.withPath("email").type(JsonFieldType.STRING).description("이메일"),
+                    fields.withPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                     fields.withPath("nickname").type(JsonFieldType.STRING).description("별명")
                 )));
     }
@@ -143,7 +140,6 @@ class MemberControllerTest {
                     headerWithName("Authorization").description("JWT 토큰")
                 ),
                 responseFields(
-                    fieldWithPath("username").type(JsonFieldType.STRING).description("회원 아이디"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
                     fieldWithPath("lastPasswordChange").type(LocalDateTime.class.getName())

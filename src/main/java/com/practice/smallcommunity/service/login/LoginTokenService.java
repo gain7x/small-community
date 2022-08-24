@@ -22,14 +22,14 @@ public class LoginTokenService {
 
     /**
      * 회원 정보를 전달받고, 일치하면 JWT 토큰을 반환합니다.
-     * @param username 회원명( ID )
+     * @param email 이메일
      * @param password 암호
      * @return JWT 토큰
      * @throws IllegalArgumentException
      *          회원이 존재하지 않거나, 암호가 다른 경우
      */
-    public String issuance(String username, String password) {
-        Member findMember = memberRepository.findByUsername(username)
+    public String issuance(String email, String password) {
+        Member findMember = memberRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
 
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());

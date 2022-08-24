@@ -39,11 +39,11 @@ class LoginTokenServiceTest {
     void 로그인_성공하면_토큰발행() {
         //given
         Member mockMember = Member.builder()
-            .username("userA")
+            .email("userA@mail.com")
             .password(passwordEncoder.encode("userPass"))
             .build();
 
-        when(memberRepository.findByUsername("userA"))
+        when(memberRepository.findByEmail("userA@mail.com"))
             .thenReturn(Optional.of(mockMember));
 
         String expected = "jwt-token";
@@ -52,7 +52,7 @@ class LoginTokenServiceTest {
             .thenReturn(expected);
 
         //when
-        String token = loginTokenService.issuance("userA", "userPass");
+        String token = loginTokenService.issuance("userA@mail.com", "userPass");
 
         //then
         assertThat(token).isEqualTo(expected);
@@ -61,12 +61,12 @@ class LoginTokenServiceTest {
     @Test
     void 회원정보_없으면_예외발생() {
         //given
-        when(memberRepository.findByUsername(any(String.class)))
+        when(memberRepository.findByEmail(any(String.class)))
             .thenReturn(Optional.empty());
 
         //when
         //then
-        assertThatThrownBy(() -> loginTokenService.issuance("some", "userPass"))
+        assertThatThrownBy(() -> loginTokenService.issuance("some@mail.com", "userPass"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("회원 정보가 없습니다.");
     }
@@ -75,16 +75,16 @@ class LoginTokenServiceTest {
     void 비밀번호_틀리면_예외발생() {
         //given
         Member mockMember = Member.builder()
-            .username("userA")
+            .email("userA@mail.com")
             .password(passwordEncoder.encode("userPass"))
             .build();
 
-        when(memberRepository.findByUsername("userA"))
+        when(memberRepository.findByEmail("userA@mail.com"))
             .thenReturn(Optional.of(mockMember));
 
         //when
         //then
-        assertThatThrownBy(() -> loginTokenService.issuance("userA", "other"))
+        assertThatThrownBy(() -> loginTokenService.issuance("userA@mail.com", "other"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("회원 정보가 다릅니다.");
     }

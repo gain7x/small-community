@@ -24,14 +24,11 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(length = 15, nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @Column(length = 12, nullable = false, unique = true)
     private String nickname;
@@ -43,9 +40,8 @@ public class Member extends BaseTimeEntity {
     private MemberRole memberRole;
 
     @Builder
-    public Member(Long id, String username, String email, String password, String nickname, MemberRole memberRole) {
+    public Member(Long id, String email, String password, String nickname, MemberRole memberRole) {
         this.id = id;
-        this.username = username;
         this.email = email;
         this.nickname = nickname;
         this.memberRole = memberRole;

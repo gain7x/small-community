@@ -52,25 +52,7 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id: " + userId));
     }
 
-    /**
-     * 회원명과 일치하는 회원 정보를 반환합니다.
-     * @param username 회원명( ID )
-     * @return 회원 정보
-     * @throws IllegalArgumentException
-     *          회원명이 일치하는 회원이 존재하지 않는 경우
-     */
-    public Member findByUsername(String username) {
-        return memberRepository.findByUsername(username)
-            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. username: " + username));
-    }
-
     private void validateRegisterMember(Member member) {
-        boolean existsByUsername = memberRepository.existsByUsername(member.getUsername());
-        if (existsByUsername) {
-            throw new ValidationErrorException("이미 사용 중인 아이디입니다.",
-                ValidationError.of("duplicate", "username"));
-        }
-
         boolean existsByEmail = memberRepository.existsByEmail(member.getEmail());
         if (existsByEmail) {
             throw new ValidationErrorException("이미 사용 중인 이메일입니다.",

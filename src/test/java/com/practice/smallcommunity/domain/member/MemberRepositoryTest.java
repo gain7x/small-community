@@ -22,9 +22,8 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     Member member = Member.builder()
-        .username("userA")
-        .password("password")
         .email("userA@mail.com")
+        .password("password")
         .nickname("firstUser")
         .memberRole(MemberRole.ROLE_USER)
         .build();
@@ -39,16 +38,15 @@ class MemberRepositoryTest {
 
         //then
         assertThat(member.getId()).isEqualTo(findItem.getId());
-        assertThat(member.getUsername()).isEqualTo(findItem.getUsername());
+        assertThat(member.getEmail()).isEqualTo(findItem.getEmail());
     }
 
     @Test
     void 여러개_저장_및_조회() {
         //given
         Member member2 = Member.builder()
-            .username("userB")
-            .password("password")
             .email("userB@mail.com")
+            .password("password")
             .nickname("secondUser")
             .memberRole(MemberRole.ROLE_USER)
             .build();
@@ -84,10 +82,10 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //when
-        Member findItem = memberRepository.findByUsername(member.getUsername()).orElseThrow();
+        Member findItem = memberRepository.findByEmail(member.getEmail()).orElseThrow();
 
         assertThat(findItem.getId()).isEqualTo(member.getId());
-        assertThat(findItem.getUsername()).isEqualTo(findItem.getUsername());
+        assertThat(findItem.getEmail()).isEqualTo(findItem.getEmail());
     }
 
     @Test

@@ -12,16 +12,12 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 public class MemberRegisterRequest {
 
-    @NotBlank
-    @Length(min = 4, max = 15)
-    private String username;
+    @Email
+    private String email;
 
     @NotBlank
     @Length(min = 8, max = 15)
     private String password;
-
-    @Email
-    private String email;
 
     @NotBlank
     @Length(min = 2, max = 12)

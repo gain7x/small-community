@@ -32,9 +32,8 @@ class JwtAuthenticationFilterTest {
 
     Member member = Member.builder()
         .id(1L)
-        .username("userA")
-        .password("pass")
         .email("userA@mail.com")
+        .password("pass")
         .build();
 
     @BeforeEach
