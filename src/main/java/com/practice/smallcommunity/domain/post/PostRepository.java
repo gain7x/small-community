@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.domain.content.post;
+package com.practice.smallcommunity.domain.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

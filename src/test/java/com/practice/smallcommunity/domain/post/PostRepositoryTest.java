@@ -1,9 +1,12 @@
-package com.practice.smallcommunity.domain.content.post;
+package com.practice.smallcommunity.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.domain.content.Content;
-import com.practice.smallcommunity.domain.content.ContentRepository;
+import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.board.BoardRepository;
+import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,23 +25,38 @@ class PostRepositoryTest {
     EntityManager em;
 
     @Autowired
-    ContentRepository contentRepository;
+    BoardRepository boardRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     PostRepository postRepository;
 
-    Content content = Content.builder()
-        .text("컨텐츠")
+    Board board = Board.builder()
+        .name("개발")
+        .code("DEV")
+        .enable(true)
+        .build();
+
+    Member member = Member.builder()
+        .email("userA@mail.com")
+        .password("password")
+        .nickname("nickname")
+        .memberRole(MemberRole.ROLE_USER)
         .build();
 
     Post post = Post.builder()
+        .board(board)
+        .writer(member)
         .title("제목")
-        .content(content)
+        .content("내용")
         .build();
 
     @BeforeEach
     void beforeEach() {
-        contentRepository.save(content);
+        boardRepository.save(board);
+        memberRepository.save(member);
     }
 
     @Test
@@ -57,18 +75,15 @@ class PostRepositoryTest {
     @Test
     void 여러개_저장_및_조회() {
         //given
-        Content content2 = Content.builder()
-            .text("컨텐츠2")
-            .build();
         Post post2 = Post.builder()
+            .board(board)
+            .writer(member)
             .title("제목2")
-            .content(content2)
+            .content("내용2")
             .build();
 
         //when
         postRepository.save(post);
-
-        contentRepository.save(content2);
         postRepository.save(post2);
 
         long count = postRepository.count();
