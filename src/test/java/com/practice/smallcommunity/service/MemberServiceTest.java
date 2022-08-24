@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.exception.ValidationErrorException;
-import com.practice.smallcommunity.repository.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.service.member.MemberService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

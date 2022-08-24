@@ -4,7 +4,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.exception.ValidationError;
 import com.practice.smallcommunity.exception.ValidationErrorException;
-import com.practice.smallcommunity.repository.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

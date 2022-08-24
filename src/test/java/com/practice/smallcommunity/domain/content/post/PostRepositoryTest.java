@@ -1,10 +1,9 @@
-package com.practice.smallcommunity.repository.content.post;
+package com.practice.smallcommunity.domain.content.post;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.content.Content;
-import com.practice.smallcommunity.domain.content.post.Post;
-import com.practice.smallcommunity.repository.content.ContentRepository;
+import com.practice.smallcommunity.domain.content.ContentRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

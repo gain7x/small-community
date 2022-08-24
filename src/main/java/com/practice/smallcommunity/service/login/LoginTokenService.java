@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.service.login;
 
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.repository.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,9 +1,7 @@
-package com.practice.smallcommunity.repository.member;
+package com.practice.smallcommunity.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.domain.member.MemberRole;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

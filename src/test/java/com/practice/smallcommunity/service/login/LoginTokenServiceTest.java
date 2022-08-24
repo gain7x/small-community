@@ -6,7 +6,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.repository.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

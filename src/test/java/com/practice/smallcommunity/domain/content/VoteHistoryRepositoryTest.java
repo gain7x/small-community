@@ -1,9 +1,7 @@
-package com.practice.smallcommunity.repository.content;
+package com.practice.smallcommunity.domain.content;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.domain.content.Content;
-import com.practice.smallcommunity.domain.content.VoteHistory;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -1,6 +1,5 @@
-package com.practice.smallcommunity.repository.member;
+package com.practice.smallcommunity.domain.member;
 
-import com.practice.smallcommunity.domain.member.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
