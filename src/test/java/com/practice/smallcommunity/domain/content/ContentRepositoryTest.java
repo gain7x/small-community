@@ -2,9 +2,13 @@ package com.practice.smallcommunity.domain.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,11 +20,27 @@ class ContentRepositoryTest {
     EntityManager em;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     ContentRepository contentRepository;
 
+    Member member = Member.builder()
+        .email("user@mail.com")
+        .password("password")
+        .nickname("nickname")
+        .memberRole(MemberRole.ROLE_USER)
+        .build();
+
     Content content = Content.builder()
+        .writer(member)
         .text("컨텐츠")
         .build();
+
+    @BeforeEach
+    void setUp() {
+        memberRepository.save(member);
+    }
 
     @Test
     void 저장_및_조회() {
@@ -39,6 +59,7 @@ class ContentRepositoryTest {
     void 여러개_저장_및_조회() {
         //given
         Content content2 = Content.builder()
+            .writer(member)
             .text("컨텐츠2")
             .build();
 
