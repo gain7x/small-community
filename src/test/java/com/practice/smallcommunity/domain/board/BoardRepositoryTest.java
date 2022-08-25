@@ -2,9 +2,12 @@ package com.practice.smallcommunity.domain.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.domain.category.CategoryRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,13 +19,26 @@ class BoardRepositoryTest {
     EntityManager em;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     BoardRepository boardRepository;
 
+    Category category = Category.builder()
+            .name("개발")
+            .enable(true)
+            .build();
+
     Board board = Board.builder()
-        .name("개발")
-        .code("DEV")
+        .category(category)
+        .name("Java")
         .enable(true)
         .build();
+
+    @BeforeEach
+    void setup() {
+        categoryRepository.save(category);
+    }
 
     @Test
     void 저장_및_조회() {
@@ -42,8 +58,8 @@ class BoardRepositoryTest {
     void 여러개_저장_및_조회() {
         //given
         Board board2 = Board.builder()
-            .name("일반")
-            .code("NORMAL")
+            .category(category)
+            .name("C++")
             .enable(true)
             .build();
 

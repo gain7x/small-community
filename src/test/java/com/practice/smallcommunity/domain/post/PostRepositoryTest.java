@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.board.BoardRepository;
+import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.domain.member.MemberRole;
@@ -22,6 +24,9 @@ class PostRepositoryTest {
     EntityManager em;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     BoardRepository boardRepository;
 
     @Autowired
@@ -30,9 +35,14 @@ class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
-    Board board = Board.builder()
+    Category category = Category.builder()
         .name("개발")
-        .code("DEV")
+        .enable(true)
+        .build();
+
+    Board board = Board.builder()
+        .category(category)
+        .name("Java")
         .enable(true)
         .build();
 
@@ -52,6 +62,7 @@ class PostRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
+        categoryRepository.save(category);
         boardRepository.save(board);
         memberRepository.save(member);
     }

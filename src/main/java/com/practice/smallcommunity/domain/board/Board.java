@@ -1,11 +1,14 @@
 package com.practice.smallcommunity.domain.board;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
+import com.practice.smallcommunity.domain.category.Category;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,19 +23,18 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Category category;
 
     @Column(nullable = false)
-    private String code;
+    private String name;
 
     private boolean enable;
 
     @Builder
-    public Board(Long id, String name, String code, boolean enable) {
-        this.id = id;
+    public Board(Category category, String name, boolean enable) {
+        this.category = category;
         this.name = name;
-        this.code = code;
         this.enable = enable;
     }
 }
