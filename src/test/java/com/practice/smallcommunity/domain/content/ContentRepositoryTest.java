@@ -25,7 +25,7 @@ class ContentRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    Member member = DomainGenerator.createMember(1L, "A");
+    Member member = DomainGenerator.createMember("A");
 
     Content content = Content.builder()
         .writer(member)

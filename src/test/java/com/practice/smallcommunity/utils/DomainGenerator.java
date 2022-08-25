@@ -40,9 +40,8 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Member createMember(Long id, String divider) {
+    public static Member createMember(String divider) {
         return Member.builder()
-            .id(id)
             .email("user" + divider + "@mail.com")
             .password("password" + divider)
             .nickname("nickname" + divider)

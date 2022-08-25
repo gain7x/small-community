@@ -10,12 +10,14 @@ import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.service.exception.ValidationErrorException;
 import com.practice.smallcommunity.service.member.MemberService;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,12 +36,8 @@ class MemberServiceTest {
         memberService = new MemberService(memberRepository, passwordEncoder);
     }
 
-    Member targetMember = Member.builder()
-        .id(1L)
-        .email("userA@mail.com")
-        .password("pass")
-        .nickname("firstUser")
-        .build();
+    @Spy
+    Member targetMember = DomainGenerator.createMember("A");
 
     @Test
     void 회원가입() {

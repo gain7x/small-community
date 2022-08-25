@@ -21,8 +21,12 @@ import com.practice.smallcommunity.controller.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.service.member.MemberService;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,12 +56,13 @@ class MemberControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    Member targetMember = Member.builder()
-        .id(1L)
-        .password("password")
-        .email("userA@mail.com")
-        .nickname("firstUser")
-        .build();
+    @Spy
+    Member targetMember = DomainGenerator.createMember("A");
+
+    @BeforeEach
+    void setUp() {
+        when(targetMember.getId()).thenReturn(1L);
+    }
 
     @Test
     @WithMockUser

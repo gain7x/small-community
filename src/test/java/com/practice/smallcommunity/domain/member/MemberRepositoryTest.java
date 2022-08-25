@@ -19,7 +19,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    Member member = DomainGenerator.createMember(1L, "A");
+    Member member = DomainGenerator.createMember("A");
 
     @Test
     void 저장_및_조회() {

@@ -28,7 +28,7 @@ class VoteHistoryRepositoryTest {
     @Autowired
     VoteHistoryRepository voteHistoryRepository;
 
-    Member member = DomainGenerator.createMember(1L, "A");
+    Member member = DomainGenerator.createMember("A");
     Content content = DomainGenerator.createContent(member, "A");
     VoteHistory voteHistory = DomainGenerator.createVoteHistory(member, content, true);
 

@@ -37,7 +37,7 @@ class PostRepositoryTest {
 
     Category category = DomainGenerator.createCategory("개발");
     Board board = DomainGenerator.createBoard(category, "Java");
-    Member member = DomainGenerator.createMember(1L, "A");
+    Member member = DomainGenerator.createMember("A");
     Post post = DomainGenerator.createPost(board, member);
 
     @BeforeEach

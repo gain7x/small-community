@@ -11,7 +11,6 @@ import org.mapstruct.MappingConstants.ComponentModel;
 @Mapper(componentModel = ComponentModel.SPRING)
 public interface MemberMapper {
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "memberRole", ignore = true)
     Member toEntity(MemberRegisterRequest dto);
 

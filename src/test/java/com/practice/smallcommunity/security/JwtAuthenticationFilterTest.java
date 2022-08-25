@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,11 +31,7 @@ class JwtAuthenticationFilterTest {
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockFilterChain filterChain = new MockFilterChain();
 
-    Member member = Member.builder()
-        .id(1L)
-        .email("userA@mail.com")
-        .password("pass")
-        .build();
+    Member member = DomainGenerator.createMember("A");
 
     @BeforeEach
     void beforeEach() {
