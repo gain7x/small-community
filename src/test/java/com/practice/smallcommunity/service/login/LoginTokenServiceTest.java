@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
+import com.practice.smallcommunity.service.exception.ValidationErrorException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ class LoginTokenServiceTest {
     }
 
     @Test
-    void 회원정보_없으면_예외발생() {
+    void 회원정보_없으면_검증예외발생() {
         //given
         when(memberRepository.findByEmail(any(String.class)))
             .thenReturn(Optional.empty());
@@ -67,12 +68,11 @@ class LoginTokenServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginTokenService.issuance("some@mail.com", "userPass"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("회원 정보가 없습니다.");
+            .isInstanceOf(ValidationErrorException.class);
     }
 
     @Test
-    void 비밀번호_틀리면_예외발생() {
+    void 비밀번호_틀리면_검증예외발생() {
         //given
         Member mockMember = Member.builder()
             .email("userA@mail.com")
@@ -85,7 +85,6 @@ class LoginTokenServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginTokenService.issuance("userA@mail.com", "other"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("회원 정보가 다릅니다.");
+            .isInstanceOf(ValidationErrorException.class);
     }
 }

@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.exception;
+package com.practice.smallcommunity.service.exception;
 
 /**
  * 유효성 검증이 실패한 정보를 담는 클래스입니다.

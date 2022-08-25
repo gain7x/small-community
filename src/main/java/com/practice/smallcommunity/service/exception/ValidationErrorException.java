@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.exception;
+package com.practice.smallcommunity.service.exception;
 
 import java.util.List;
 

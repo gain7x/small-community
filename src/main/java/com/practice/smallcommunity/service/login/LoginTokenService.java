@@ -1,8 +1,13 @@
 package com.practice.smallcommunity.service.login;
 
+import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.NOT_FOUND;
+import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.NOT_MATCH;
+
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
+import com.practice.smallcommunity.service.exception.ValidationError;
+import com.practice.smallcommunity.service.exception.ValidationErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,16 +30,18 @@ public class LoginTokenService {
      * @param email 이메일
      * @param password 암호
      * @return JWT 토큰
-     * @throws IllegalArgumentException
+     * @throws ValidationErrorException
      *          회원이 존재하지 않거나, 암호가 다른 경우
      */
     public String issuance(String email, String password) {
         Member findMember = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
+            .orElseThrow(() -> new ValidationErrorException("회원 정보가 없습니다.",
+                ValidationError.of(NOT_FOUND, "email")));
 
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());
         if (!matches) {
-            throw new IllegalArgumentException("회원 정보가 다릅니다.");
+            throw new ValidationErrorException("회원 정보가 다릅니다.",
+                ValidationError.of(NOT_MATCH));
         }
 
         return jwtTokenService.createToken(findMember);

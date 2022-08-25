@@ -1,10 +1,13 @@
 package com.practice.smallcommunity.service.member;
 
+import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.DUPLICATED;
+import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.NOT_FOUND;
+
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.domain.member.MemberRole;
-import com.practice.smallcommunity.exception.ValidationError;
-import com.practice.smallcommunity.exception.ValidationErrorException;
 import com.practice.smallcommunity.domain.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.service.exception.ValidationError;
+import com.practice.smallcommunity.service.exception.ValidationErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,25 +47,26 @@ public class MemberService {
      * 회원 번호에 해당하는 회원 정보를 반환합니다.
      * @param userId 회원 번호
      * @return 회원 정보
-     * @throws IllegalArgumentException
+     * @throws ValidationErrorException
      *          회원 번호에 해당하는 회원이 존재하지 않는 경우
      */
     public Member findByUserId(Long userId) {
         return memberRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id: " + userId));
+            .orElseThrow(() -> new ValidationErrorException("회원을 찾을 수 없습니다",
+                ValidationError.of(NOT_FOUND, "userId")));
     }
 
     private void validateRegisterMember(Member member) {
         boolean existsByEmail = memberRepository.existsByEmail(member.getEmail());
         if (existsByEmail) {
             throw new ValidationErrorException("이미 사용 중인 이메일입니다.",
-                ValidationError.of("duplicate", "email"));
+                ValidationError.of(DUPLICATED, "email"));
         }
 
         boolean existsByNickname = memberRepository.existsByNickname(member.getNickname());
         if (existsByNickname) {
             throw new ValidationErrorException("이미 사용 중인 별명입니다.",
-                ValidationError.of("duplicate", "nickname"));
+                ValidationError.of(DUPLICATED, "nickname"));
         }
     }
 }

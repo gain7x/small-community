@@ -6,14 +6,12 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.domain.member.MemberRole;
-import com.practice.smallcommunity.exception.ValidationErrorException;
 import com.practice.smallcommunity.domain.member.MemberRepository;
+import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.service.exception.ValidationErrorException;
 import com.practice.smallcommunity.service.member.MemberService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
@@ -22,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
@@ -136,6 +133,6 @@ class MemberServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.findByUserId(targetMember.getId()))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ValidationErrorException.class);
     }
 }
