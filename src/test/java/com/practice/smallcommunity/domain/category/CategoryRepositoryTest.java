@@ -2,6 +2,7 @@ package com.practice.smallcommunity.domain.category;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,10 +19,7 @@ class CategoryRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    Category category = Category.builder()
-        .name("개발")
-        .enable(true)
-        .build();
+    Category category = DomainGenerator.createCategory("개발");
 
     @Test
     void 저장_및_조회() {

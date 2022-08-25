@@ -2,6 +2,7 @@ package com.practice.smallcommunity.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,12 +19,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    Member member = Member.builder()
-        .email("userA@mail.com")
-        .password("password")
-        .nickname("firstUser")
-        .memberRole(MemberRole.ROLE_USER)
-        .build();
+    Member member = DomainGenerator.createMember(1L, "A");
 
     @Test
     void 저장_및_조회() {

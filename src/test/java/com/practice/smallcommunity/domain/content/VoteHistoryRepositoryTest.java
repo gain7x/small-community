@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
-import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,23 +28,9 @@ class VoteHistoryRepositoryTest {
     @Autowired
     VoteHistoryRepository voteHistoryRepository;
 
-    Member member = Member.builder()
-        .email("user@mail.com")
-        .password("password")
-        .nickname("nickname")
-        .memberRole(MemberRole.ROLE_USER)
-        .build();
-
-    Content content = Content.builder()
-        .writer(member)
-        .text("컨텐츠")
-        .build();
-
-    VoteHistory voteHistory = VoteHistory.builder()
-        .voter(member)
-        .content(content)
-        .positive(true)
-        .build();
+    Member member = DomainGenerator.createMember(1L, "A");
+    Content content = DomainGenerator.createContent(member, "A");
+    VoteHistory voteHistory = DomainGenerator.createVoteHistory(member, content, true);
 
     @BeforeEach
     void beforeEach() {

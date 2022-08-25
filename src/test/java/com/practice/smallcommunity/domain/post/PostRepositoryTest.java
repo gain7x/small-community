@@ -8,7 +8,7 @@ import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
-import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,30 +35,10 @@ class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
 
-    Category category = Category.builder()
-        .name("개발")
-        .enable(true)
-        .build();
-
-    Board board = Board.builder()
-        .category(category)
-        .name("Java")
-        .enable(true)
-        .build();
-
-    Member member = Member.builder()
-        .email("userA@mail.com")
-        .password("password")
-        .nickname("nickname")
-        .memberRole(MemberRole.ROLE_USER)
-        .build();
-
-    Post post = Post.builder()
-        .board(board)
-        .writer(member)
-        .title("제목")
-        .content("내용")
-        .build();
+    Category category = DomainGenerator.createCategory("개발");
+    Board board = DomainGenerator.createBoard(category, "Java");
+    Member member = DomainGenerator.createMember(1L, "A");
+    Post post = DomainGenerator.createPost(board, member);
 
     @BeforeEach
     void beforeEach() {

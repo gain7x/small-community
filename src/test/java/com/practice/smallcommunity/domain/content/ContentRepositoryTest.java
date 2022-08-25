@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
-import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,17 +20,12 @@ class ContentRepositoryTest {
     EntityManager em;
 
     @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
     ContentRepository contentRepository;
 
-    Member member = Member.builder()
-        .email("user@mail.com")
-        .password("password")
-        .nickname("nickname")
-        .memberRole(MemberRole.ROLE_USER)
-        .build();
+    @Autowired
+    MemberRepository memberRepository;
+
+    Member member = DomainGenerator.createMember(1L, "A");
 
     Content content = Content.builder()
         .writer(member)
