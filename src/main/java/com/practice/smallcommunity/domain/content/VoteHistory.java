@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.domain.content;
 
+import com.practice.smallcommunity.domain.BaseTimeEntity;
 import com.practice.smallcommunity.domain.member.Member;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class VoteHistory {
+public class VoteHistory extends BaseTimeEntity {
 
     @EmbeddedId
     private VoteHistoryId id;
