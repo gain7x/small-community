@@ -96,28 +96,12 @@ class CategoryServiceTest {
     }
 
     @Test
-    void 카테고리를_사용상태로_변경한다() {
+    void 카테고리를_삭제한다() {
         //given
         when(categoryRepository.findById(1L))
             .thenReturn(Optional.of(category));
 
         //when
-        categoryService.enable(1L);
-
-        //then
-        assertThat(category.isEnable()).isEqualTo(true);
-    }
-
-    @Test
-    void 카테고리를_삭제상태로_변경한다() {
-        //given
-        when(categoryRepository.findById(1L))
-            .thenReturn(Optional.of(category));
-
-        //when
-        categoryService.delete(1L);
-
-        //then
-        assertThat(category.isEnable()).isEqualTo(false);
+        assertThatNoException().isThrownBy(() -> categoryService.delete(1L));
     }
 }

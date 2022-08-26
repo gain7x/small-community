@@ -58,30 +58,19 @@ public class CategoryService {
      */
     public Category update(Long categoryId, String name, boolean enable) {
         Category findCategory = findOne(categoryId);
-        findCategory.setEnable(enable);
         findCategory.changeName(name);
+        findCategory.setEnable(enable);
         return findCategory;
     }
 
     /**
-     * 카테고리를 삭제 상태로 변경합니다.
+     * 카테고리를 삭제합니다.
      * @param categoryId 카테고리 ID
      * @throws ValidationErrorException
      *          ID에 해당하는 카테고리가 없는 경우
      */
     public void delete(Long categoryId) {
         Category findCategory = findOne(categoryId);
-        findCategory.setEnable(false);
-    }
-
-    /**
-     * 카테고리를 사용 상태로 변경합니다.
-     * @param categoryId 카테고리 ID
-     * @throws ValidationErrorException
-     *          ID에 해당하는 카테고리가 없는 경우
-     */
-    public void enable(Long categoryId) {
-        Category findCategory = findOne(categoryId);
-        findCategory.setEnable(true);
+        categoryRepository.delete(findCategory);
     }
 }
