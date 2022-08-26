@@ -77,7 +77,7 @@ class PostServiceTest {
             .thenReturn(Optional.of(post));
 
         //when
-        postService.delete(1L);
+        postService.disable(1L);
 
         //then
         assertThat(post.isEnable()).isFalse();

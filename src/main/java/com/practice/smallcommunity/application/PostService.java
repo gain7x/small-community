@@ -78,7 +78,7 @@ public class PostService {
      * 게시글을 삭제 상태로 변경합니다.
      * @param postId 게시글 ID
      */
-    public void delete(Long postId) {
+    public void disable(Long postId) {
         Post findPost = findEnabledPost(postId);
         findPost.delete();
     }
