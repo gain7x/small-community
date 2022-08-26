@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.board.BoardRepository;
@@ -23,9 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class BoardServiceTest {
 
     @Mock
-    CategoryService categoryService;
-
-    @Mock
     BoardRepository boardRepository;
 
     BoardService boardService;
@@ -34,36 +30,20 @@ class BoardServiceTest {
 
     @BeforeEach
     void setUp() {
-        boardService = new BoardService(categoryService, boardRepository);
+        boardService = new BoardService(boardRepository);
     }
 
     @Test
     void 게시판을_등록한다() {
         //given
-        when(categoryService.findOne(1L))
-            .thenReturn(category);
         when(boardRepository.save(any(Board.class)))
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Board registeredBoard = boardService.register(1L, "Java", true);
+        Board registeredBoard = boardService.register(category, "Java", true);
 
         //then
         assertThat(registeredBoard).isNotNull();
-    }
-
-    @Test
-    void 등록_시_대상_카테고리가_없으면_예외를_던진다() {
-        //given
-        Long targetCategoryId = 1L;
-
-        when(categoryService.findOne(targetCategoryId))
-            .thenThrow(new ValidationErrorException("", ValidationError.of("")));
-
-        //when
-        //then
-        assertThatThrownBy(() -> boardService.register(targetCategoryId, "Java", true))
-            .isInstanceOf(ValidationErrorException.class);
     }
 
     @Test

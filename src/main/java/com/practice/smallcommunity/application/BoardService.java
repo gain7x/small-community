@@ -15,12 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BoardService {
 
-    private final CategoryService categoryService;
     private final BoardRepository boardRepository;
 
     /**
      * 게시판을 등록하고, 성공하면 등록된 게시판 정보를 반환합니다.
-     * @param categoryId 카테고리 ID
+     * @param category 카테고리
      * @param name 게시판 이름
      * @param enable 활성 여부
      * @return 등록된 게시판 정보
@@ -28,8 +27,7 @@ public class BoardService {
      *          카테고리를 찾을 수 없는 경우
      */
     @Transactional
-    public Board register(Long categoryId, String name, boolean enable) {
-        Category category = categoryService.findOne(categoryId);
+    public Board register(Category category, String name, boolean enable) {
         Board board = Board.builder()
             .category(category)
             .name(name)
