@@ -29,7 +29,7 @@ public class MemberController {
     @PostMapping
     public void register(@Valid @RequestBody MemberRegisterRequest dto) {
         Member member = mapper.toEntity(dto);
-        memberService.registerMember(member);
+        memberService.register(member);
     }
 
     @GetMapping("/{userId}")

@@ -45,7 +45,7 @@ class MemberServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Member registeredMember = memberService.registerMember(targetMember);
+        Member registeredMember = memberService.register(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
@@ -59,7 +59,7 @@ class MemberServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Member registeredMember = memberService.registerMember(targetMember);
+        Member registeredMember = memberService.register(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
@@ -75,7 +75,7 @@ class MemberServiceTest {
         String plainPassword = targetMember.getPassword();
 
         //when
-        Member registeredMember = memberService.registerMember(targetMember);
+        Member registeredMember = memberService.register(targetMember);
 
         //then
         assertThat(registeredMember).isNotNull();
@@ -92,7 +92,7 @@ class MemberServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> memberService.registerMember(targetMember))
+        assertThatThrownBy(() -> memberService.register(targetMember))
             .isInstanceOf(ValidationErrorException.class);
     }
 
@@ -104,7 +104,7 @@ class MemberServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> memberService.registerMember(targetMember))
+        assertThatThrownBy(() -> memberService.register(targetMember))
             .isInstanceOf(ValidationErrorException.class);
     }
 

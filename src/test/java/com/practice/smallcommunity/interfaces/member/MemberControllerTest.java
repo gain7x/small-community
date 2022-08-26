@@ -67,7 +67,7 @@ class MemberControllerTest {
     @WithMockUser
     void 회원가입() throws Exception {
         //given
-        when(memberService.registerMember(any(Member.class)))
+        when(memberService.register(any(Member.class)))
             .thenReturn(targetMember);
 
         MemberRegisterRequest dto = MemberRegisterRequest.builder()

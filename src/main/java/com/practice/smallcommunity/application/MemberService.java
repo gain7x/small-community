@@ -33,7 +33,7 @@ public class MemberService {
      * @throws ValidationErrorException
      *          등록하려는 회원 정보가 유효하지 않은 경우( 아이디 중복, 이메일 중복, ... )
      */
-    public Member registerMember(Member member) {
+    public Member register(Member member) {
         validateRegisterMember(member);
 
         String encodePassword = passwordEncoder.encode(member.getPassword());
