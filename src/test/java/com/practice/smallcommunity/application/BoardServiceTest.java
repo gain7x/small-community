@@ -75,4 +75,36 @@ class BoardServiceTest {
         assertThatThrownBy(() -> boardService.findOne(targetId))
             .isInstanceOf(ValidationErrorException.class);
     }
+
+    @Test
+    void 게시판을_사용상태로_변경한다() {
+        //given
+        Long targetId = 1L;
+        Board board = DomainGenerator.createBoard(category, "Java");
+
+        when(boardRepository.findById(targetId))
+            .thenReturn(Optional.of(board));
+
+        //when
+        boardService.enable(targetId);
+
+        //then
+        assertThat(board.isEnable()).isTrue();
+    }
+
+    @Test
+    void 게시판을_삭제상태로_변경한다() {
+        //given
+        Long targetId = 1L;
+        Board board = DomainGenerator.createBoard(category, "Java");
+
+        when(boardRepository.findById(targetId))
+            .thenReturn(Optional.of(board));
+
+        //when
+        boardService.delete(targetId);
+
+        //then
+        assertThat(board.isEnable()).isFalse();
+    }
 }

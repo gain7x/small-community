@@ -50,4 +50,40 @@ public class BoardService {
                 ValidationError.of(ValidationErrorStatus.NOT_FOUND, "boardId")
             ));
     }
+
+    /**
+     * 게시판을 수정합니다.
+     * @param boardId 게시판 ID
+     * @param name 게시판명
+     * @return 수정된 게시판
+     * @throws ValidationErrorException
+     *          ID에 해당하는 게시판이 없는 경우
+     */
+    public Board update(Long boardId, String name) {
+        Board findBoard = findOne(boardId);
+        findBoard.changeName(name);
+        return findBoard;
+    }
+
+    /**
+     * 게시판을 삭제 상태로 변경합니다.
+     * @param boardId 게시판 ID
+     * @throws ValidationErrorException
+     *          ID에 해당하는 게시판이 없는 경우
+     */
+    public void delete(Long boardId) {
+        Board findBoard = findOne(boardId);
+        findBoard.setEnable(false);
+    }
+
+    /**
+     * 게시판을 사용 상태로 변경합니다.
+     * @param boardId 게시판 ID
+     * @throws ValidationErrorException
+     *          ID에 해당하는 게시판이 없는 경우
+     */
+    public void enable(Long boardId) {
+        Board findBoard = findOne(boardId);
+        findBoard.setEnable(true);
+    }
 }

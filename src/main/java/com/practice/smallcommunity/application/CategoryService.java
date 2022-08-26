@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class CategoryService {
 
@@ -23,7 +23,6 @@ public class CategoryService {
      * @throws ValidationErrorException
      *          등록하려는 카테고리 정보가 유효하지 않은 경우( 카테고리명 중복, ... )
      */
-    @Transactional
     public Category register(Category category) {
         boolean existsByName = categoryRepository.existsByName(category.getName());
         if (existsByName) {
@@ -41,9 +40,48 @@ public class CategoryService {
      * @throws ValidationErrorException
      *          번호에 해당하는 카테고리가 없는 경우
      */
+    @Transactional(readOnly = true)
     public Category findOne(Long categoryId) {
         return categoryRepository.findById(categoryId)
             .orElseThrow(() -> new ValidationErrorException("카테고리를 찾을 수 없습니다.",
                 ValidationError.of(ValidationErrorStatus.NOT_FOUND, "categoryId")));
+    }
+
+    /**
+     * 기존 카테고리를 수정합니다.
+     * @param categoryId 카테고리 ID
+     * @param name 새 이름
+     * @param enable 사용상태
+     * @return 수정된 카테고리
+     * @throws ValidationErrorException
+     *          데이터가 유효하지 않은 경우( ID에 해당하는 카테고리가 존재하지 않음, ... )
+     */
+    public Category update(Long categoryId, String name, boolean enable) {
+        Category findCategory = findOne(categoryId);
+        findCategory.setEnable(enable);
+        findCategory.changeName(name);
+        return findCategory;
+    }
+
+    /**
+     * 카테고리를 삭제 상태로 변경합니다.
+     * @param categoryId 카테고리 ID
+     * @throws ValidationErrorException
+     *          ID에 해당하는 카테고리가 없는 경우
+     */
+    public void delete(Long categoryId) {
+        Category findCategory = findOne(categoryId);
+        findCategory.setEnable(false);
+    }
+
+    /**
+     * 카테고리를 사용 상태로 변경합니다.
+     * @param categoryId 카테고리 ID
+     * @throws ValidationErrorException
+     *          ID에 해당하는 카테고리가 없는 경우
+     */
+    public void enable(Long categoryId) {
+        Category findCategory = findOne(categoryId);
+        findCategory.setEnable(true);
     }
 }

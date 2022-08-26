@@ -80,4 +80,44 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.findOne(1L))
             .isInstanceOf(ValidationErrorException.class);
     }
+
+    @Test
+    void 카테고리를_수정한다() {
+        //given
+        when(categoryRepository.findById(1L))
+            .thenReturn(Optional.of(category));
+
+        //when
+        Category updatedCategory = categoryService.update(1L, "new name", false);
+
+        //then
+        assertThat(updatedCategory.getName()).isEqualTo("new name");
+        assertThat(updatedCategory.isEnable()).isEqualTo(false);
+    }
+
+    @Test
+    void 카테고리를_사용상태로_변경한다() {
+        //given
+        when(categoryRepository.findById(1L))
+            .thenReturn(Optional.of(category));
+
+        //when
+        categoryService.enable(1L);
+
+        //then
+        assertThat(category.isEnable()).isEqualTo(true);
+    }
+
+    @Test
+    void 카테고리를_삭제상태로_변경한다() {
+        //given
+        when(categoryRepository.findById(1L))
+            .thenReturn(Optional.of(category));
+
+        //when
+        categoryService.delete(1L);
+
+        //then
+        assertThat(category.isEnable()).isEqualTo(false);
+    }
 }
