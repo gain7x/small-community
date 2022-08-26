@@ -49,12 +49,12 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Post createPost(Board board, Member member) {
+    public static Post createPost(Board board, Member member, Content content) {
         return Post.builder()
             .writer(member)
             .board(board)
             .title("title")
-            .content("content")
+            .content(content)
             .build();
     }
 }

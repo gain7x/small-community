@@ -2,7 +2,9 @@ package com.practice.smallcommunity.domain.post;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
 import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,8 +39,8 @@ public class Post extends BaseTimeEntity {
     @Column(length = 20, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Content content;
 
     private boolean isNotice;
 
@@ -46,13 +49,11 @@ public class Post extends BaseTimeEntity {
     private int votes;
 
     @Builder
-    public Post(Long id, Board board, Member writer, String title, String content, boolean isNotice) {
-        this.id = id;
+    public Post(Board board, Member writer, String title, Content content) {
         this.board = board;
         this.writer = writer;
         this.nickname = writer.getNickname();
         this.title = title;
         this.content = content;
-        this.isNotice = isNotice;
     }
 }
