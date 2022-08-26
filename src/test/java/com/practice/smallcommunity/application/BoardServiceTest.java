@@ -1,10 +1,13 @@
 package com.practice.smallcommunity.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
+import com.practice.smallcommunity.application.dto.BoardDto;
+import com.practice.smallcommunity.application.dto.BoardDto.BoardDtoBuilder;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.board.BoardRepository;
@@ -40,7 +43,12 @@ class BoardServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Board registeredBoard = boardService.register(category, "Java", true);
+        BoardDto dto = BoardDto.builder()
+            .category(category)
+            .name("Java")
+            .enable(true)
+            .build();
+        Board registeredBoard = boardService.register(dto);
 
         //then
         assertThat(registeredBoard).isNotNull();
@@ -77,7 +85,7 @@ class BoardServiceTest {
     }
 
     @Test
-    void 게시판을_사용상태로_변경한다() {
+    void 게시판을_삭제한다() {
         //given
         Long targetId = 1L;
         Board board = DomainGenerator.createBoard(category, "Java");
@@ -86,25 +94,6 @@ class BoardServiceTest {
             .thenReturn(Optional.of(board));
 
         //when
-        boardService.enable(targetId);
-
-        //then
-        assertThat(board.isEnable()).isTrue();
-    }
-
-    @Test
-    void 게시판을_삭제상태로_변경한다() {
-        //given
-        Long targetId = 1L;
-        Board board = DomainGenerator.createBoard(category, "Java");
-
-        when(boardRepository.findById(targetId))
-            .thenReturn(Optional.of(board));
-
-        //when
-        boardService.delete(targetId);
-
-        //then
-        assertThat(board.isEnable()).isFalse();
+        assertThatNoException().isThrownBy(() -> boardService.delete(1L));
     }
 }

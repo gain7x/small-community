@@ -38,6 +38,10 @@ public class Board extends BaseTimeEntity {
         this.enable = enable;
     }
 
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
     public void changeName(String name) {
         this.name = name;
     }
