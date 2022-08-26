@@ -1,11 +1,11 @@
-package com.practice.smallcommunity.controller.member;
+package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.controller.CurrentUser;
-import com.practice.smallcommunity.controller.member.dto.MemberDetailsDto;
-import com.practice.smallcommunity.controller.member.dto.MemberDto;
+import com.practice.smallcommunity.interfaces.CurrentUser;
+import com.practice.smallcommunity.interfaces.member.dto.MemberDetailsDto;
+import com.practice.smallcommunity.interfaces.member.dto.MemberDto;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.service.member.MemberService;
-import com.practice.smallcommunity.controller.member.dto.MemberRegisterRequest;
+import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

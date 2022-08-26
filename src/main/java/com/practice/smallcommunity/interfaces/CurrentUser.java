@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.controller;
+package com.practice.smallcommunity.interfaces;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

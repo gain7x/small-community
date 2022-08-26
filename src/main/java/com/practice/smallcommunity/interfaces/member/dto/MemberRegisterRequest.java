@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.controller.member.dto;
+package com.practice.smallcommunity.interfaces.member.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

@@ -1,8 +1,8 @@
-package com.practice.smallcommunity.controller.login;
+package com.practice.smallcommunity.interfaces.login;
 
-import com.practice.smallcommunity.controller.login.dto.LoginRequest;
-import com.practice.smallcommunity.controller.login.dto.LoginDto;
-import com.practice.smallcommunity.service.login.LoginTokenService;
+import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
+import com.practice.smallcommunity.interfaces.login.dto.LoginDto;
+import com.practice.smallcommunity.application.LoginTokenService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

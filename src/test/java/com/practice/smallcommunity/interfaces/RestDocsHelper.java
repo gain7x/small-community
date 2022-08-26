@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.controller;
+package com.practice.smallcommunity.interfaces;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.snippet.Attributes.key;

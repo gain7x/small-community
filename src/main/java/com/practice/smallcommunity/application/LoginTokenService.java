@@ -1,13 +1,13 @@
-package com.practice.smallcommunity.service.login;
+package com.practice.smallcommunity.application;
 
-import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.NOT_FOUND;
-import static com.practice.smallcommunity.service.exception.ValidationErrorStatus.NOT_MATCH;
+import static com.practice.smallcommunity.application.exception.ValidationErrorStatus.NOT_FOUND;
+import static com.practice.smallcommunity.application.exception.ValidationErrorStatus.NOT_MATCH;
 
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
-import com.practice.smallcommunity.service.exception.ValidationError;
-import com.practice.smallcommunity.service.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.ValidationError;
+import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

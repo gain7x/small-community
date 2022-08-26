@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.service;
+package com.practice.smallcommunity.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,8 +8,7 @@ import static org.mockito.Mockito.when;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.domain.member.MemberRole;
-import com.practice.smallcommunity.service.exception.ValidationErrorException;
-import com.practice.smallcommunity.service.member.MemberService;
+import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

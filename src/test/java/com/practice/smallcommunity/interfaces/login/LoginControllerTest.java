@@ -1,7 +1,7 @@
-package com.practice.smallcommunity.controller.login;
+package com.practice.smallcommunity.interfaces.login;
 
-import static com.practice.smallcommunity.controller.RestDocsHelper.generateDocument;
-import static com.practice.smallcommunity.controller.RestDocsHelper.getConstrainedFields;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -12,9 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.controller.RestDocsHelper.ConstrainedFields;
-import com.practice.smallcommunity.controller.login.dto.LoginRequest;
-import com.practice.smallcommunity.service.login.LoginTokenService;
+import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
+import com.practice.smallcommunity.application.LoginTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;

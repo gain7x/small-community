@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.controller.login.dto;
+package com.practice.smallcommunity.interfaces.login.dto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

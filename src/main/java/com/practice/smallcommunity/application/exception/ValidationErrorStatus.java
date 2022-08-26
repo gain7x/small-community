@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.service.exception;
+package com.practice.smallcommunity.application.exception;
 
 public abstract class ValidationErrorStatus {
 

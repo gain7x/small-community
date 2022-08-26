@@ -1,14 +1,15 @@
-package com.practice.smallcommunity.service.login;
+package com.practice.smallcommunity.application.login;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
+import com.practice.smallcommunity.application.LoginTokenService;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.security.JwtTokenService;
-import com.practice.smallcommunity.service.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
