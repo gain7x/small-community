@@ -37,10 +37,7 @@ class CategoryRepositoryTest {
     @Test
     void 여러개_저장_및_조회() {
         //given
-        Category category2 = Category.builder()
-            .name("일상")
-            .enable(true)
-            .build();
+        Category category2 = DomainGenerator.createCategory("일상");
 
         //when
         categoryRepository.save(category);
@@ -65,5 +62,29 @@ class CategoryRepositoryTest {
 
         //then
         assertThat(categoryRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void 동일한_이름의_카테고리가_있으면_참을_반환한다() {
+        //given
+        categoryRepository.save(category);
+
+        //when
+        boolean existsByName = categoryRepository.existsByName(category.getName());
+
+        //then
+        assertThat(existsByName).isTrue();
+    }
+
+    @Test
+    void 동일한_이름의_카테고리가_없으면_거짓을_반환한다() {
+        //given
+        categoryRepository.save(category);
+
+        //when
+        boolean existsByName = categoryRepository.existsByName("some category");
+
+        //then
+        assertThat(existsByName).isFalse();
     }
 }
