@@ -42,7 +42,9 @@ public class Post extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     private Content content;
 
-    private boolean isNotice;
+    private boolean notice;
+
+    private boolean enable;
 
     private int views;
 
@@ -55,5 +57,30 @@ public class Post extends BaseTimeEntity {
         this.nickname = writer.getNickname();
         this.title = title;
         this.content = content;
+        enable = true;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String text) {
+        this.content.updateText(text);
+    }
+
+    public void setNotice(boolean notice) {
+        this.notice = notice;
+    }
+
+    public void increaseViewCount() {
+        views++;
+    }
+
+    public void vote(boolean positive) {
+        votes += positive ? 1 : -1;
+    }
+
+    public void delete() {
+        enable = false;
     }
 }

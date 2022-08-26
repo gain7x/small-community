@@ -1,15 +1,18 @@
 package com.practice.smallcommunity.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.domain.content.Content;
+import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,57 +24,62 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PostServiceTest {
 
     @Mock
-    BoardService boardService;
-
-    @Mock
-    MemberService memberService;
-
-    @Mock
     PostRepository postRepository;
 
     PostService postService;
 
+    Category category = DomainGenerator.createCategory("개발");
+    Board board = DomainGenerator.createBoard(category, "Java");
+    Member member = DomainGenerator.createMember("A");
+
     @BeforeEach
     void setUp() {
-        postService = new PostService(memberService, boardService, postRepository);
+        postService = new PostService(postRepository);
     }
 
     @Test
     void 게시글을_등록한다() {
         //given
-        when(memberService.findByUserId(1L))
-            .thenReturn(DomainGenerator.createMember("A"));
         when(postRepository.save(any(Post.class)))
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Post wrotePost = postService.write(1L, 1L, "제목", "내용");
+        Post wrotePost = postService.write(board, member,
+            new PostDto("제목", "내용"));
 
         //then
         assertThat(wrotePost).isNotNull();
     }
 
     @Test
-    void 게시글을_등록하려는_게시판이_없으면_예외를_던진다() {
+    void 게시글을_수정한다() {
         //given
-        when(boardService.findOne(1L))
-            .thenThrow(new ValidationErrorException("", ValidationError.of("")));
+        Post post = DomainGenerator.createPost(board, member, new Content(member, "내용"));
+
+        when(postRepository.findById(1L))
+            .thenReturn(Optional.of(post));
 
         //when
+        Post updatedPost = postService.update(1L,
+            new PostDto("new title", "new text"));
+
         //then
-        assertThatThrownBy(() -> postService.write(1L, 1L, "제목", "내용"))
-            .isInstanceOf(ValidationErrorException.class);
+        assertThat(updatedPost.getTitle()).isEqualTo("new title");
+        assertThat(updatedPost.getContent().getText()).isEqualTo("new text");
     }
 
     @Test
-    void 게시글을_작성하려는_회원이_존재하지_않으면_예외를_던진다() {
+    void 게시글을_삭제한다() {
         //given
-        when(memberService.findByUserId(1L))
-            .thenThrow(new ValidationErrorException("", ValidationError.of("")));
+        Post post = DomainGenerator.createPost(board, member, new Content(member, "내용"));
+
+        when(postRepository.findById(1L))
+            .thenReturn(Optional.of(post));
 
         //when
+        postService.delete(1L);
+
         //then
-        assertThatThrownBy(() -> postService.write(1L, 1L, "제목", "내용"))
-            .isInstanceOf(ValidationErrorException.class);
+        assertThat(post.isEnable()).isFalse();
     }
 }

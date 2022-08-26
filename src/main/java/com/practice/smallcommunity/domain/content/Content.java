@@ -43,6 +43,10 @@ public class Content extends BaseTimeEntity {
         this.text = text;
     }
 
+    public void updateText(String text) {
+        this.text = text;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
