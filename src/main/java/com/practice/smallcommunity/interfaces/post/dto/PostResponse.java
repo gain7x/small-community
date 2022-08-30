@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class PostResponse {
 
-    private Long boardId;
+    private Long categoryId;
     private Long memberId;
     private String nickname;
     private String title;

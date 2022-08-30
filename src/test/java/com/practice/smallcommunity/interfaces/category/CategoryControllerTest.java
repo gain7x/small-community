@@ -1,14 +1,20 @@
 package com.practice.smallcommunity.interfaces.category;
 
-import static com.practice.smallcommunity.interfaces.RestDocsHelper.*;
-import static org.mockito.Mockito.*;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +50,7 @@ class CategoryControllerTest {
     @Autowired
     MockMvc mvc;
 
-    Category dummy = DomainGenerator.createCategory("개발");
+    Category dummy = DomainGenerator.createCategory("dev", "개발");
 
     @Test
     @WithMockUser
@@ -53,7 +59,7 @@ class CategoryControllerTest {
         when(categoryService.register(any(Category.class)))
             .thenReturn(dummy);
 
-        CategoryRequest dto = new CategoryRequest("개발", true);
+        CategoryRequest dto = new CategoryRequest("dev", "개발", true);
 
         //when
         ResultActions result = mvc.perform(post("/api/v1/categories")
@@ -67,7 +73,8 @@ class CategoryControllerTest {
         //then
         result.andExpect(status().isCreated())
             .andDo(generateDocument("category", requestFields(
-                fields.withPath("name").type(JsonFieldType.STRING).description("카테고리명"),
+                fields.withPath("code").type(JsonFieldType.STRING).description("카테고리 코드"),
+                fields.withPath("name").type(JsonFieldType.STRING).description("카테고리 이름"),
                 fields.withPath("enable").type(JsonFieldType.BOOLEAN).description("사용여부")
             )));
     }
@@ -93,7 +100,8 @@ class CategoryControllerTest {
                     parameterWithName("categoryId").description("카테고리 번호")
                 ),
                 responseFields(
-                    fieldWithPath("name").type(JsonFieldType.STRING).description("카테고리명")
+                    fieldWithPath("code").type(JsonFieldType.STRING).description("카테고리 코드"),
+                    fieldWithPath("name").type(JsonFieldType.STRING).description("카테고리 이름")
                 )));
     }
 
@@ -105,7 +113,7 @@ class CategoryControllerTest {
             .thenReturn(dummy);
 
         //when
-        CategoryRequest dto = new CategoryRequest("개발", true);
+        CategoryRequest dto = new CategoryRequest("tech", "기술", true);
 
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.patch("/api/v1/categories/{categoryId}", 1L)
@@ -123,7 +131,8 @@ class CategoryControllerTest {
                     parameterWithName("categoryId").description("카테고리 번호")
                 ),
                 requestFields(
-                    fields.withPath("name").type(JsonFieldType.STRING).description("카테고리명"),
+                    fields.withPath("code").type(JsonFieldType.STRING).description("카테고리 코드"),
+                    fields.withPath("name").type(JsonFieldType.STRING).description("카테고리 이름"),
                     fields.withPath("enable").type(JsonFieldType.BOOLEAN).description("사용여부")
                 )));
     }

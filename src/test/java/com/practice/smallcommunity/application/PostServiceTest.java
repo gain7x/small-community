@@ -5,7 +5,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.dto.PostDto;
-import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
@@ -28,8 +27,7 @@ class PostServiceTest {
 
     PostService postService;
 
-    Category category = DomainGenerator.createCategory("개발");
-    Board board = DomainGenerator.createBoard(category, "Java");
+    Category category = DomainGenerator.createCategory("dev", "개발");
     Member member = DomainGenerator.createMember("A");
 
     @BeforeEach
@@ -44,7 +42,7 @@ class PostServiceTest {
             .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         //when
-        Post wrotePost = postService.write(board, member,
+        Post wrotePost = postService.write(category, member,
             new PostDto("제목", "내용"));
 
         //then
@@ -54,7 +52,7 @@ class PostServiceTest {
     @Test
     void 게시글을_수정한다() {
         //given
-        Post post = DomainGenerator.createPost(board, member, new Content(member, "내용"));
+        Post post = DomainGenerator.createPost(category, member, new Content(member, "내용"));
 
         when(postRepository.findById(1L))
             .thenReturn(Optional.of(post));
@@ -71,7 +69,7 @@ class PostServiceTest {
     @Test
     void 게시글을_삭제한다() {
         //given
-        Post post = DomainGenerator.createPost(board, member, new Content(member, "내용"));
+        Post post = DomainGenerator.createPost(category, member, new Content(member, "내용"));
 
         when(postRepository.findById(1L))
             .thenReturn(Optional.of(post));

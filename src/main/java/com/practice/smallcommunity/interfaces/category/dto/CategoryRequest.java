@@ -11,6 +11,9 @@ import lombok.Data;
 public class CategoryRequest {
 
     @NotBlank
+    private String code;
+
+    @NotBlank
     private String name;
 
     private boolean enable;

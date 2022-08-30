@@ -19,6 +19,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 컨텐츠 엔티티입니다.
+ *  게시글, 댓글, 질문, 답글과 같은 엔티티의 공통 항목 관리용 중간 테이블로 사용합니다.
+ *      -공통항목: 내용( text ), 투표 내역, 첨부파일
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -31,7 +36,7 @@ public class Content extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member writer;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)

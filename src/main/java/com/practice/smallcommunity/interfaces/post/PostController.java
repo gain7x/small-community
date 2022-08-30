@@ -1,10 +1,10 @@
 package com.practice.smallcommunity.interfaces.post;
 
-import com.practice.smallcommunity.application.BoardService;
+import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
 import com.practice.smallcommunity.application.dto.PostDto;
-import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    private final BoardService boardService;
+    private final CategoryService categoryService;
     private final MemberService memberService;
     private final PostService postService;
     private final PostMapper mapper;
@@ -35,14 +35,14 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void write(@RequestBody PostRequest dto) {
-        Board board = boardService.findOne(dto.getBoardId());
+        Category category = categoryService.findOne(dto.getCategoryId());
         Member member = memberService.findByUserId(dto.getMemberId());
         PostDto postDto = PostDto.builder()
             .title(dto.getTitle())
             .text(dto.getText())
             .build();
 
-        postService.write(board, member, postDto);
+        postService.write(category, member, postDto);
     }
 
     @GetMapping("/{postId}")

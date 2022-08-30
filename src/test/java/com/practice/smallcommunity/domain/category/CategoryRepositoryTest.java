@@ -19,7 +19,7 @@ class CategoryRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    Category category = DomainGenerator.createCategory("개발");
+    Category category = DomainGenerator.createCategory("dev", "개발");
 
     @Test
     void 저장_및_조회() {
@@ -37,7 +37,7 @@ class CategoryRepositoryTest {
     @Test
     void 여러개_저장_및_조회() {
         //given
-        Category category2 = DomainGenerator.createCategory("일상");
+        Category category2 = DomainGenerator.createCategory("life", "일상");
 
         //when
         categoryRepository.save(category);

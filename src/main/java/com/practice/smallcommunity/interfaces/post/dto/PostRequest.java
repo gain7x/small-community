@@ -12,7 +12,7 @@ import lombok.Data;
 public class PostRequest {
 
     @NotNull
-    private Long boardId;
+    private Long categoryId;
 
     @NotNull
     private Long memberId;

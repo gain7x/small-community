@@ -1,9 +1,12 @@
 package com.practice.smallcommunity.domain.post;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
-import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +32,7 @@ public class Post extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Board board;
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member writer;
@@ -51,8 +55,8 @@ public class Post extends BaseTimeEntity {
     private int votes;
 
     @Builder
-    public Post(Board board, Member writer, String title, Content content) {
-        this.board = board;
+    public Post(Category category, Member writer, String title, Content content) {
+        this.category = category;
         this.writer = writer;
         this.nickname = writer.getNickname();
         this.title = title;

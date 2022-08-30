@@ -4,7 +4,7 @@ import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
-import com.practice.smallcommunity.domain.board.Board;
+import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
@@ -23,16 +23,16 @@ public class PostService {
 
     /**
      * 게시글을 등록하고, 성공하면 등록된 게시글 정보를 반환합니다.
-     * @param board 게시판
+     * @param category 카테고리
      * @param writer 회원( 작성자 )
      * @param dto 게시글 정보
      * @return 등록된 게시글
      * @throws ValidationErrorException
      *          등록 정보가 유효하지 않은 경우( 존재하지 않는 카테고리 OR 회원, ... )
      */
-    public Post write(Board board, Member writer, PostDto dto) {
+    public Post write(Category category, Member writer, PostDto dto) {
         Post post = Post.builder()
-            .board(board)
+            .category(category)
             .writer(writer)
             .title(dto.getTitle())
             .content(new Content(writer, dto.getText()))

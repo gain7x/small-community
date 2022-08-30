@@ -25,7 +25,7 @@ class CategoryServiceTest {
 
     CategoryService categoryService;
 
-    Category category = DomainGenerator.createCategory("개발");
+    Category category = DomainGenerator.createCategory("dev", "개발");
 
     @BeforeEach
     void setUp() {

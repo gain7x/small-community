@@ -21,14 +21,22 @@ public class Category extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String code;
+
+    @Column(nullable = false, unique = true)
     private String name;
 
     private boolean enable;
 
     @Builder
-    public Category(String name, boolean enable) {
+    public Category(String code, String name, boolean enable) {
+        this.code = code;
         this.name = name;
         this.enable = enable;
+    }
+
+    public void changeCode(String code) {
+        this.code = code;
     }
 
     public void changeName(String name) {

@@ -1,6 +1,5 @@
 package com.practice.smallcommunity.utils;
 
-import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
@@ -10,16 +9,9 @@ import com.practice.smallcommunity.domain.post.Post;
 
 public abstract class DomainGenerator {
 
-    public static Board createBoard(Category category, String name) {
-        return Board.builder()
-            .category(category)
-            .name(name)
-            .enable(true)
-            .build();
-    }
-
-    public static Category createCategory(String name) {
+    public static Category createCategory(String code, String name) {
         return Category.builder()
+            .code(code)
             .name(name)
             .enable(true)
             .build();
@@ -49,10 +41,10 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Post createPost(Board board, Member member, Content content) {
+    public static Post createPost(Category category, Member member, Content content) {
         return Post.builder()
             .writer(member)
-            .board(board)
+            .category(category)
             .title("title")
             .content(content)
             .build();

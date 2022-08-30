@@ -9,7 +9,7 @@ import org.mapstruct.MappingConstants.ComponentModel;
 @Mapper(componentModel = ComponentModel.SPRING)
 public interface PostMapper {
 
-    @Mapping(target = "boardId", source = "board.id")
+    @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "memberId", source = "writer.id")
     @Mapping(target = "text", source = "content.text")
     PostResponse toResponse(Post post);

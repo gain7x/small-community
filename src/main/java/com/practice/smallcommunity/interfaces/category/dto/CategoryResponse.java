@@ -9,5 +9,6 @@ import lombok.Data;
 @Builder
 public class CategoryResponse {
 
+    private String code;
     private String name;
 }

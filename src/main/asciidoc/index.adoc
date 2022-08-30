@@ -44,20 +44,6 @@ operation::category/카테고리수정[snippets='http-request,path-parameters,re
 === 삭제
 operation::category/카테고리삭제[snippets='http-request,path-parameters,http-response']
 
-[[게시판-API]]
-== 게시판
-=== 등록
-operation::board/게시판등록[snippets='http-request,request-fields,http-response']
-
-=== 조회
-operation::board/게시판조회[snippets='http-request,path-parameters,http-response']
-
-=== 수정
-operation::board/게시판수정[snippets='http-request,path-parameters,request-fields,http-response']
-
-=== 삭제
-operation::board/게시판삭제[snippets='http-request,path-parameters,http-response']
-
 [[게시글-API]]
 == 게시글
 === 등록

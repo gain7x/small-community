@@ -2,8 +2,6 @@ package com.practice.smallcommunity.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.domain.board.Board;
-import com.practice.smallcommunity.domain.board.BoardRepository;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.domain.content.Content;
@@ -32,24 +30,19 @@ class PostRepositoryTest {
     CategoryRepository categoryRepository;
 
     @Autowired
-    BoardRepository boardRepository;
-
-    @Autowired
     ContentRepository contentRepository;
 
     @Autowired
     PostRepository postRepository;
 
     Member member = DomainGenerator.createMember("A");
-    Category category = DomainGenerator.createCategory("개발");
-    Board board = DomainGenerator.createBoard(category, "Java");
+    Category category = DomainGenerator.createCategory("dev", "개발");
     Content content = DomainGenerator.createContent(member, "A");
-    Post post = DomainGenerator.createPost(board, member, content);
+    Post post = DomainGenerator.createPost(category, member, content);
 
     @BeforeEach
     void beforeEach() {
         categoryRepository.save(category);
-        boardRepository.save(board);
         memberRepository.save(member);
     }
 
@@ -70,7 +63,7 @@ class PostRepositoryTest {
     void 여러개_저장_및_조회() {
         //given
         Content content2 = DomainGenerator.createContent(member, "B");
-        Post post2 = DomainGenerator.createPost(board, member, content2);
+        Post post2 = DomainGenerator.createPost(category, member, content2);
 
         //when
         postRepository.save(post);

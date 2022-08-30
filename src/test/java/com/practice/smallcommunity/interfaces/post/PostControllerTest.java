@@ -9,16 +9,14 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.application.BoardService;
+import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
 import com.practice.smallcommunity.application.dto.PostDto;
-import com.practice.smallcommunity.domain.board.Board;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
@@ -47,7 +45,7 @@ import org.springframework.test.web.servlet.ResultActions;
 class PostControllerTest {
 
     @MockBean
-    BoardService boardService;
+    CategoryService categoryService;
 
     @MockBean
     MemberService memberService;
@@ -61,29 +59,28 @@ class PostControllerTest {
     @Autowired
     MockMvc mvc;
 
-    Category category = DomainGenerator.createCategory("개발");
-    Board board = DomainGenerator.createBoard(category, "Java");
+    Category category = DomainGenerator.createCategory("dev", "개발");
     Member member = DomainGenerator.createMember("A");
     Content content = DomainGenerator.createContent(member, "내용");
-    Post dummyPost = DomainGenerator.createPost(board, member, content);
+    Post dummyPost = DomainGenerator.createPost(category, member, content);
 
     @Test
     @WithMockUser
     void 게시글등록() throws Exception {
         //given
-        when(boardService.findOne(1L))
-            .thenReturn(board);
+        when(categoryService.findOne(1L))
+            .thenReturn(category);
 
         when(memberService.findByUserId(1L))
             .thenReturn(member);
 
-        when(postService.write(eq(board), eq(member), any(PostDto.class)))
+        when(postService.write(eq(category), eq(member), any(PostDto.class)))
             .thenReturn(dummyPost);
 
         //when
         PostRequest dto = PostRequest.builder()
             .memberId(1L)
-            .boardId(1L)
+            .categoryId(1L)
             .title("제목")
             .text("내용")
             .build();
@@ -99,7 +96,7 @@ class PostControllerTest {
         //then
         result.andExpect(status().isCreated())
             .andDo(generateDocument("post", requestFields(
-                fields.withPath("boardId").type(JsonFieldType.NUMBER).description("게시판 번호"),
+                fields.withPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 번호"),
                 fields.withPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                 fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                 fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")
