@@ -58,7 +58,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void 카테고리를_번호로_찾는다() {
+    void 카테고리를_ID로_조회한다() {
         //given
         when(categoryRepository.findById(1L))
             .thenReturn(Optional.of(category));
@@ -70,7 +70,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void 번호검색_시_동일한_번호의_카테고리가_없으면_예외를_던진다() {
+    void 카테고리를_ID로_조회할_때_일치하는_ID가_없으면_예외를_던진다() {
         //given
         when(categoryRepository.findById(1L))
             .thenReturn(Optional.empty());
