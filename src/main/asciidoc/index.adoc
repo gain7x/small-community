@@ -57,3 +57,17 @@ operation::post/게시글수정[snippets='http-request,path-parameters,request-f
 
 === 삭제
 operation::post/게시글삭제[snippets='http-request,path-parameters,http-response']
+
+[[답글API]]
+== 답글
+=== 추가
+operation::reply/게시글에_답글추가[snippets='http-request,path-parameters,request-fields,http-response']
+
+=== 조회
+operation::reply/게시글의_답글목록_조회[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== 수정
+operation::reply/답글수정[snippets='http-request,path-parameters,request-fields,http-response']
+
+=== 삭제
+operation::reply/답글삭제[snippets='http-request,path-parameters,http-response']

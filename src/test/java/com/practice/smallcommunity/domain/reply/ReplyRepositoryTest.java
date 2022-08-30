@@ -11,6 +11,7 @@ import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,6 +93,66 @@ class ReplyRepositoryTest {
         //then
         assertThat(findItem.getContent()).isNotNull();
         assertThat(findItem.getContent().getId()).isNotNull();
+    }
+
+    @Test
+    void ID가_일치하고_삭제상태가_아닌_답글을_조회한다() {
+        //given
+        replyRepository.save(reply);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Reply> result = replyRepository.findByIdAndEnableIsTrue(
+            this.reply.getId());
+
+        //then
+        assertThat(result).isPresent();
+    }
+
+    @Test
+    void ID가_일치하고_삭제상태가_아닌_답글을_조회할_때_삭제상태면_조회되지_않는다() {
+        //given
+        reply.delete();
+        replyRepository.save(reply);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Reply> result = replyRepository.findByIdAndEnableIsTrue(
+            this.reply.getId());
+
+        //then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void 게시글의_삭제되지_않은_답글_목록을_조회한다() {
+        //given
+        replyRepository.save(reply);
+        em.flush();
+        em.clear();
+
+        //when
+        List<Reply> result = replyRepository.findByPostAndEnableIsTrue(post);
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Test
+    void 게시글의_삭제되지_않은_답글_목록을_조회할_때_삭제상태인_답글은_조회되지_않는다() {
+        //given
+        reply.delete();
+        replyRepository.save(reply);
+        em.flush();
+        em.clear();
+
+        //when
+        List<Reply> result = replyRepository.findByPostAndEnableIsTrue(post);
+
+        //then
+        assertThat(result).isEmpty();
     }
 
     @Test

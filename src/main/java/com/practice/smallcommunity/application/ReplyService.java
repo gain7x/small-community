@@ -3,9 +3,10 @@ package com.practice.smallcommunity.application;
 import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
+import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,8 @@ public class ReplyService {
     }
 
     /**
-     * 삭제 상태가 아닌 답글을 조회합니다.
+     * 답글을 조회합니다.
+     *  삭제 상태인 답글은 조회되지 않습니다.
      * @param replyId 답글 ID
      * @return 답글
      * @throws ValidationErrorException
@@ -35,13 +37,20 @@ public class ReplyService {
      */
     @Transactional(readOnly = true)
     public Reply findEnabledReply(Long replyId) {
-        Optional<Reply> findReply = replyRepository.findById(replyId);
-        if (findReply.isEmpty() || !findReply.get().isEnable()) {
-            throw new ValidationErrorException("답글을 찾을 수 없습니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "replyId"));
-        }
+        return replyRepository.findByIdAndEnableIsTrue(replyId)
+            .orElseThrow(() -> new ValidationErrorException("답글을 찾을 수 없습니다.",
+            ValidationError.of(ValidationErrorStatus.NOT_FOUND, "replyId")));
+    }
 
-        return findReply.get();
+    /**
+     * 게시글의 답글 목록을 조회합니다.
+     *  삭제 상태인 답글은 조회되지 않습니다.
+     * @param post 게시글
+     * @return 답글 목록
+     */
+    @Transactional(readOnly = true)
+    public List<Reply> findRepliesOnPost(Post post) {
+        return replyRepository.findByPostAndEnableIsTrue(post);
     }
 
     /**
