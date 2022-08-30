@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
-import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
@@ -52,7 +51,7 @@ class PostServiceTest {
     @Test
     void 게시글을_수정한다() {
         //given
-        Post post = DomainGenerator.createPost(category, member, new Content(member, "내용"));
+        Post post = DomainGenerator.createPost(category, member, "내용");
 
         when(postRepository.findById(1L))
             .thenReturn(Optional.of(post));
@@ -63,13 +62,13 @@ class PostServiceTest {
 
         //then
         assertThat(updatedPost.getTitle()).isEqualTo("new title");
-        assertThat(updatedPost.getContent().getText()).isEqualTo("new text");
+        assertThat(updatedPost.getMainText().getText()).isEqualTo("new text");
     }
 
     @Test
     void 게시글을_삭제한다() {
         //given
-        Post post = DomainGenerator.createPost(category, member, new Content(member, "내용"));
+        Post post = DomainGenerator.createPost(category, member, "내용");
 
         when(postRepository.findById(1L))
             .thenReturn(Optional.of(post));

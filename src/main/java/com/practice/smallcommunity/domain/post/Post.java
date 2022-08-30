@@ -2,11 +2,8 @@ package com.practice.smallcommunity.domain.post;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
 import com.practice.smallcommunity.domain.category.Category;
-import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 게시글 엔티티입니다.
+ *  본문 조회 빈도가 상대적으로 낮기 때문에 JPA 사용 편의를 위해 지연로딩으로 분리합니다.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -46,7 +46,8 @@ public class Post extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     private Content content;
 
-    private boolean notice;
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
+    private MainText mainText;
 
     private boolean enable;
 
@@ -55,12 +56,19 @@ public class Post extends BaseTimeEntity {
     private int votes;
 
     @Builder
-    public Post(Category category, Member writer, String title, Content content) {
+    public Post(Category category, Member writer, String title, String text) {
         this.category = category;
         this.writer = writer;
         this.nickname = writer.getNickname();
         this.title = title;
-        this.content = content;
+        this.content = Content.builder()
+            .member(writer)
+            .build();
+        this.mainText = MainText.builder()
+            .writer(writer)
+            .text(text)
+            .build();
+
         enable = true;
     }
 
@@ -69,11 +77,7 @@ public class Post extends BaseTimeEntity {
     }
 
     public void updateContent(String text) {
-        this.content.updateText(text);
-    }
-
-    public void setNotice(boolean notice) {
-        this.notice = notice;
+        this.mainText.updateText(text);
     }
 
     public void increaseViewCount() {

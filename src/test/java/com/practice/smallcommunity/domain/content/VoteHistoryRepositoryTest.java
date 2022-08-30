@@ -29,7 +29,7 @@ class VoteHistoryRepositoryTest {
     VoteHistoryRepository voteHistoryRepository;
 
     Member member = DomainGenerator.createMember("A");
-    Content content = DomainGenerator.createContent(member, "A");
+    Content content = DomainGenerator.createContent(member);
     VoteHistory voteHistory = DomainGenerator.createVoteHistory(member, content, true);
 
     @BeforeEach
@@ -54,8 +54,7 @@ class VoteHistoryRepositoryTest {
     void 여러개_저장_및_조회() {
         //given
         Content content2 = Content.builder()
-            .writer(member)
-            .text("내용")
+            .member(member)
             .build();
 
         contentRepository.save(content2);

@@ -18,7 +18,6 @@ import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
-import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
@@ -61,8 +60,7 @@ class PostControllerTest {
 
     Category category = DomainGenerator.createCategory("dev", "개발");
     Member member = DomainGenerator.createMember("A");
-    Content content = DomainGenerator.createContent(member, "내용");
-    Post dummyPost = DomainGenerator.createPost(category, member, content);
+    Post dummyPost = DomainGenerator.createPost(category, member, "내용");
 
     @Test
     @WithMockUser

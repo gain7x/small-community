@@ -11,6 +11,6 @@ public interface PostMapper {
 
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "memberId", source = "writer.id")
-    @Mapping(target = "text", source = "content.text")
+    @Mapping(target = "text", source = "mainText.text")
     PostResponse toResponse(Post post);
 }

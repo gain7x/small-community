@@ -5,7 +5,6 @@ import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
 import com.practice.smallcommunity.domain.category.Category;
-import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
@@ -35,7 +34,7 @@ public class PostService {
             .category(category)
             .writer(writer)
             .title(dto.getTitle())
-            .content(new Content(writer, dto.getText()))
+            .text(dto.getText())
             .build();
 
         return postRepository.save(post);

@@ -28,8 +28,7 @@ class ContentRepositoryTest {
     Member member = DomainGenerator.createMember("A");
 
     Content content = Content.builder()
-        .writer(member)
-        .text("컨텐츠")
+        .member(member)
         .build();
 
     @BeforeEach
@@ -47,15 +46,14 @@ class ContentRepositoryTest {
 
         //then
         assertThat(content.getId()).isEqualTo(findItem.getId());
-        assertThat(content.getText()).isEqualTo(findItem.getText());
+        assertThat(content.getMember().getId()).isEqualTo(findItem.getMember().getId());
     }
 
     @Test
     void 여러개_저장_및_조회() {
         //given
         Content content2 = Content.builder()
-            .writer(member)
-            .text("컨텐츠2")
+            .member(member)
             .build();
 
         //when

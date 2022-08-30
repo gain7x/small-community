@@ -17,10 +17,9 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Content createContent(Member member, String divider) {
+    public static Content createContent(Member member) {
         return Content.builder()
-            .writer(member)
-            .text("contents" + divider)
+            .member(member)
             .build();
     }
 
@@ -41,12 +40,12 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Post createPost(Category category, Member member, Content content) {
+    public static Post createPost(Category category, Member member, String text) {
         return Post.builder()
             .writer(member)
             .category(category)
             .title("title")
-            .content(content)
+            .text(text)
             .build();
     }
 }
