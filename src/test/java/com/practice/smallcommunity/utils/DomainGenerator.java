@@ -6,6 +6,7 @@ import com.practice.smallcommunity.domain.content.VoteHistory;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.reply.Reply;
 
 public abstract class DomainGenerator {
 
@@ -45,6 +46,14 @@ public abstract class DomainGenerator {
             .writer(member)
             .category(category)
             .title("title")
+            .text(text)
+            .build();
+    }
+
+    public static Reply createReply(Post post, Member writer, String text) {
+        return Reply.builder()
+            .post(post)
+            .writer(writer)
             .text(text)
             .build();
     }
