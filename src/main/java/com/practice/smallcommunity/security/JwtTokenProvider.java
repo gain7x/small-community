@@ -1,6 +1,5 @@
 package com.practice.smallcommunity.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.domain.member.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -22,9 +21,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  * JWT 토큰 발급 및 검증 서비스입니다.
  */
 @RequiredArgsConstructor
-public class JwtTokenService {
+public class JwtTokenProvider {
 
-    private static final String ROLE_CLAIM = "ROLE";
+    private static final String ROLE_CLAIM = "AUTH";
 
     @Value("${jwt.secret-key}")
     private String secretKey = "dummy";
@@ -41,9 +40,7 @@ public class JwtTokenService {
             .setSubject(member.getId().toString())
             .setExpiration(
                 Date.from(
-                    Instant.now()
-                        .plus(1, ChronoUnit.DAYS))
-            )
+                    Instant.now().plus(1, ChronoUnit.DAYS)))
             .claim(ROLE_CLAIM, member.getMemberRole().name())
             .compact();
     }
@@ -81,6 +78,10 @@ public class JwtTokenService {
      */
     private List<GrantedAuthority> getAuthoritiesFromClaims(Claims body) {
         String memberRole = body.get(ROLE_CLAIM, String.class);
-        return List.of(new SimpleGrantedAuthority(memberRole));
+        if (memberRole == null) {
+            throw new IllegalArgumentException("권한 정보가 없습니다.");
+        }
+
+        return List.of(new SimpleGrantedAuthority("ROLE_" + memberRole));
     }
 }

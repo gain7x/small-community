@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenProvider jwtTokenService;
 
     /**
      * 클라이언트 요청에 토큰이 있으면 검증을 진행하고, 성공 시 인증 객체를 보안 컨텍스트에 저장합니다.
@@ -27,11 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        String jwtToken = getJwtToken(request);
-        if (StringUtils.hasText(jwtToken)) {
-            Authentication authentication = jwtTokenService.getAuthentication(jwtToken);
-            SecurityContext context = SecurityContextHolder.getContext();
-            context.setAuthentication(authentication);
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context.getAuthentication() == null) {
+            String jwtToken = getJwtToken(request);
+            if (StringUtils.hasText(jwtToken)) {
+                Authentication authentication = jwtTokenService.getAuthentication(jwtToken);
+                context.setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);

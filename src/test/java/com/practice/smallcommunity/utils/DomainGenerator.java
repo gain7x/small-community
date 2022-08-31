@@ -37,7 +37,7 @@ public abstract class DomainGenerator {
             .email("user" + divider + "@mail.com")
             .password("password" + divider)
             .nickname("nickname" + divider)
-            .memberRole(MemberRole.ROLE_USER)
+            .memberRole(MemberRole.USER)
             .build();
     }
 

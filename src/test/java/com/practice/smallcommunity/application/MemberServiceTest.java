@@ -63,7 +63,7 @@ class MemberServiceTest {
 
         //then
         assertThat(registeredMember).isNotNull();
-        assertThat(registeredMember.getMemberRole()).isEqualTo(MemberRole.ROLE_USER);
+        assertThat(registeredMember.getMemberRole()).isEqualTo(MemberRole.USER);
     }
 
     @Test
@@ -109,13 +109,26 @@ class MemberServiceTest {
     }
 
     @Test
-    void 회원을_식별자로_조회한다() {
+    void 회원을_ID로_조회한다() {
         //given
         when(memberRepository.findById(targetMember.getId()))
             .thenReturn(Optional.of(targetMember));
 
         //when
         Member findMember = memberService.findByUserId(targetMember.getId());
+
+        //then
+        assertThat(findMember.getId()).isEqualTo(targetMember.getId());
+    }
+
+    @Test
+    void 회원을_이메일로_조회한다() {
+        //given
+        when(memberRepository.findByEmail(targetMember.getEmail()))
+            .thenReturn(Optional.of(targetMember));
+
+        //when
+        Member findMember = memberService.findByEmail(targetMember.getEmail());
 
         //then
         assertThat(findMember.getId()).isEqualTo(targetMember.getId());

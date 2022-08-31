@@ -23,7 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 class JwtAuthenticationFilterTest {
 
     @Mock
-    JwtTokenService jwtTokenService;
+    JwtTokenProvider jwtTokenService;
 
     JwtAuthenticationFilter jwtAuthenticationFilter;
 

@@ -4,20 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
-class JwtTokenServiceTest {
+class JwtTokenProviderTest {
 
-    JwtTokenService jwtTokenService = new JwtTokenService();
+    JwtTokenProvider jwtTokenService = new JwtTokenProvider();
 
     @Spy
     Member member = DomainGenerator.createMember("A");

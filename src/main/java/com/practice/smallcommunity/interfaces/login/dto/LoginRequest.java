@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.login.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +12,8 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class LoginRequest {
 
-    @NotBlank
-    @Length(min = 4, max = 15)
-    private String username;
+    @Email
+    private String email;
 
     @NotBlank
     @Length(min = 8, max = 15)

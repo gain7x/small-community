@@ -38,22 +38,35 @@ public class MemberService {
 
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.changePassword(encodePassword);
-        member.changeMemberRole(MemberRole.ROLE_USER);
+        member.changeMemberRole(MemberRole.USER);
 
         return memberRepository.save(member);
     }
 
     /**
-     * 회원 번호에 해당하는 회원 정보를 반환합니다.
+     * ID가 일치하는 회원 정보를 반환합니다.
      * @param userId 회원 번호
      * @return 회원 정보
      * @throws ValidationErrorException
-     *          회원 번호에 해당하는 회원이 존재하지 않는 경우
+     *          ID가 일치하는 회원이 존재하지 않는 경우
      */
     public Member findByUserId(Long userId) {
         return memberRepository.findById(userId)
             .orElseThrow(() -> new ValidationErrorException("회원을 찾을 수 없습니다",
                 ValidationError.of(NOT_FOUND, "userId")));
+    }
+
+    /**
+     * 이메일이 일치하는 회원 정보를 반환합니다.
+     * @param email 이메일
+     * @return 회원 정보
+     * @throws ValidationErrorException
+     *          이메일이 일치하는 회원이 존재하지 않는 경우
+     */
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new ValidationErrorException("회원을 찾을 수 없습니다.",
+                ValidationError.of(NOT_FOUND, "email")));
     }
 
     private void validateRegisterMember(Member member) {

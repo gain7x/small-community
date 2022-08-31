@@ -47,10 +47,10 @@ class LoginControllerTest {
         //given
         String expected = "jwt-token";
 
-        when(loginTokenService.issuance("userA", "password"))
+        when(loginTokenService.issuance("userA@mail.com", "password"))
             .thenReturn(expected);
 
-        LoginRequest request = new LoginRequest("userA", "password");
+        LoginRequest request = new LoginRequest("userA@mail.com", "password");
 
         //when
         ResultActions result = mvc.perform(post("/api/v1/auth")
@@ -66,7 +66,7 @@ class LoginControllerTest {
             .andExpect(jsonPath("$.accessToken", expected).exists())
             .andDo(generateDocument("login",
                 requestFields(
-                    fields.withPath("username").description("회원 아이디"),
+                    fields.withPath("email").description("회원 아이디"),
                     fields.withPath("password").description("비밀번호")
                 ), responseFields(
                     fieldWithPath("accessToken").description("인증 토큰")
