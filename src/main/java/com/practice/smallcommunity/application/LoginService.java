@@ -17,21 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class LoginTokenService {
+public class LoginService {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
     /**
-     * 입력 정보가 일치하면 JWT 토큰을 반환합니다.
+     * 이메일 및 암호가 일치하는 회원 정보를 반환합니다.
      * @param email 이메일
      * @param password 암호
-     * @return JWT 토큰
+     * @return 회원 정보
      * @throws ValidationErrorException
      *          회원이 존재하지 않거나, 암호가 다른 경우
      */
-    public String issuance(String email, String password) {
+    public Member login(String email, String password) {
         Member findMember = memberService.findByEmail(email);
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());
         if (!matches) {
@@ -39,6 +38,6 @@ public class LoginTokenService {
                 ValidationError.of(NOT_MATCH));
         }
 
-        return jwtTokenProvider.createToken(findMember);
+        return findMember;
     }
 }

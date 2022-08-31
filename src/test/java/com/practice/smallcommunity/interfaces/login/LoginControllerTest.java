@@ -11,10 +11,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.application.LoginTokenService;
+import com.practice.smallcommunity.application.LoginService;
+import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
+import com.practice.smallcommunity.security.JwtTokenProvider;
+import com.practice.smallcommunity.utils.DomainGenerator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,7 +33,10 @@ import org.springframework.test.web.servlet.ResultActions;
 class LoginControllerTest {
 
     @MockBean
-    LoginTokenService loginTokenService;
+    LoginService loginTokenService;
+
+    @MockBean
+    JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     MockMvc mvc;
@@ -37,15 +44,23 @@ class LoginControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    Member dummyMember = DomainGenerator.createMember("A");
+
+    @BeforeEach
+    void setUp() {
+        when(jwtTokenProvider.createToken(dummyMember))
+            .thenReturn("jwt-token");
+    }
+
     @Test
     void 로그인() throws Exception {
         //given
         String expected = "jwt-token";
 
-        when(loginTokenService.issuance("userA@mail.com", "password"))
-            .thenReturn(expected);
+        when(loginTokenService.login(dummyMember.getEmail(), dummyMember.getPassword()))
+            .thenReturn(dummyMember);
 
-        LoginRequest request = new LoginRequest("userA@mail.com", "password");
+        LoginRequest request = new LoginRequest(dummyMember.getEmail(), dummyMember.getPassword());
 
         //when
         ResultActions result = mvc.perform(post("/api/v1/auth")
@@ -63,7 +78,10 @@ class LoginControllerTest {
                     fields.withPath("email").description("회원 아이디"),
                     fields.withPath("password").description("비밀번호")
                 ), responseFields(
-                    fieldWithPath("accessToken").description("인증 토큰")
+                    fieldWithPath("accessToken").description("인증 토큰"),
+                    fieldWithPath("email").description("이메일"),
+                    fieldWithPath("nickname").description("별명"),
+                    fieldWithPath("lastPasswordChange").description("마지막 비밀번호 변경일")
                 )));
     }
 }

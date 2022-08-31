@@ -6,12 +6,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.LoginTokenService;
+import com.practice.smallcommunity.application.LoginService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.security.JwtTokenProvider;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,43 +20,35 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class LoginTokenServiceTest {
+class LoginServiceTest {
 
     @Mock
     MemberService memberService;
 
-    @Mock
-    JwtTokenProvider jwtTokenService;
-
     PasswordEncoder passwordEncoder;
-    LoginTokenService loginTokenService;
+    LoginService loginTokenService;
 
     Member dummyMember = DomainGenerator.createMember("A");
 
     @BeforeEach
     void beforeEach() {
         passwordEncoder = mock(PasswordEncoder.class);
-        loginTokenService = new LoginTokenService(memberService, passwordEncoder, jwtTokenService);
+        loginTokenService = new LoginService(memberService, passwordEncoder);
     }
 
     @Test
-    void 로그인_성공하면_토큰발행() {
+    void 로그인_성공하면_회원정보_반환() {
         //given
         when(memberService.findByEmail(dummyMember.getEmail()))
             .thenReturn(dummyMember);
         when(passwordEncoder.matches(anyString(), anyString()))
             .thenReturn(true);
 
-        String expected = "jwt-token";
-
-        when(jwtTokenService.createToken(dummyMember))
-            .thenReturn(expected);
-
         //when
-        String token = loginTokenService.issuance("userA@mail.com", "userPass");
+        Member result = loginTokenService.login("userA@mail.com", "userPass");
 
         //then
-        assertThat(token).isEqualTo(expected);
+        assertThat(result).isEqualTo(dummyMember);
     }
 
     @Test
@@ -68,7 +59,7 @@ class LoginTokenServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> loginTokenService.issuance("some@mail.com", "userPass"))
+        assertThatThrownBy(() -> loginTokenService.login("some@mail.com", "userPass"))
             .isInstanceOf(ValidationErrorException.class);
     }
 
@@ -83,7 +74,7 @@ class LoginTokenServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> loginTokenService.issuance("userA@mail.com", "other"))
+        assertThatThrownBy(() -> loginTokenService.login("userA@mail.com", "other"))
             .isInstanceOf(ValidationErrorException.class);
     }
 }

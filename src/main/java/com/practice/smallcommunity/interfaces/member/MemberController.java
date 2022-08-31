@@ -1,11 +1,9 @@
 package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.interfaces.CurrentUser;
-import com.practice.smallcommunity.interfaces.member.dto.MemberSelfResponse;
-import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
-import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
+import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,11 +34,5 @@ public class MemberController {
     public MemberResponse find(@PathVariable Long userId) {
         Member member = memberService.findByUserId(userId);
         return mapper.toDto(member);
-    }
-
-    @GetMapping("/self")
-    public MemberSelfResponse my(@CurrentUser Long currentUserId) {
-        Member member = memberService.findByUserId(currentUserId);
-        return mapper.toDetailsDto(member);
     }
 }

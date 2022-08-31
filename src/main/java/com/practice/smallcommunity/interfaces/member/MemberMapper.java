@@ -1,6 +1,5 @@
 package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.interfaces.member.dto.MemberSelfResponse;
 import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
@@ -15,6 +14,4 @@ public interface MemberMapper {
     Member toEntity(MemberRegisterRequest dto);
 
     MemberResponse toDto(Member member);
-
-    MemberSelfResponse toDetailsDto(Member member);
 }

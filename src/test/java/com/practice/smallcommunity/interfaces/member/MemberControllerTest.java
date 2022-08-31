@@ -113,33 +113,6 @@ class MemberControllerTest {
                 )));
     }
 
-    @Test
-    @WithMockMember
-    void 회원_상세정보_조회() throws Exception {
-        //given
-        when(memberService.findByUserId(targetMember.getId()))
-            .thenReturn(targetMember);
-
-        //when
-        ResultActions result = mvc.perform(get("/api/v1/members/self")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer jwt-token"));
-
-        //then
-        result.andExpect(status().isOk())
-            .andDo(generateDocument("member",
-                requestHeaders(
-                    headerWithName("Authorization").description("JWT 토큰")
-                ),
-                responseFields(
-                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
-                    fieldWithPath("lastPasswordChange").type(LocalDateTime.class.getName())
-                        .description("마지막 비밀번호 변경일")
-                )));
-    }
-
     @TestConfiguration
     static class TestConfig {
 
