@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.interfaces.member.dto.MemberDetailsDto;
-import com.practice.smallcommunity.interfaces.member.dto.MemberDto;
+import com.practice.smallcommunity.interfaces.member.dto.MemberSelfResponse;
+import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.domain.member.Member;
 import org.mapstruct.Mapper;
@@ -14,7 +14,7 @@ public interface MemberMapper {
     @Mapping(target = "memberRole", ignore = true)
     Member toEntity(MemberRegisterRequest dto);
 
-    MemberDto toDto(Member member);
+    MemberResponse toDto(Member member);
 
-    MemberDetailsDto toDetailsDto(Member member);
+    MemberSelfResponse toDetailsDto(Member member);
 }

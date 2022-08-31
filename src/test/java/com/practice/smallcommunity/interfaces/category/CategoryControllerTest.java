@@ -13,18 +13,18 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.interfaces.RestTest;
+import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,12 +32,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-@AutoConfigureRestDocs
+@RestTest
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest {
 
@@ -53,7 +52,7 @@ class CategoryControllerTest {
     Category dummy = DomainGenerator.createCategory("dev", "개발");
 
     @Test
-    @WithMockUser
+    @WithMockMember(roles = "ADMIN")
     void 카테고리등록() throws Exception {
         //given
         when(categoryService.register(any(Category.class)))
@@ -65,8 +64,7 @@ class CategoryControllerTest {
         ResultActions result = mvc.perform(post("/api/v1/categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto))
-            .accept(MediaType.APPLICATION_JSON)
-            .with(csrf()));
+            .accept(MediaType.APPLICATION_JSON));
 
         ConstrainedFields fields = getConstrainedFields(CategoryRequest.class);
 
@@ -80,7 +78,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockMember
     void 카테고리조회() throws Exception {
         //given
         when(categoryService.findOne(anyLong()))
@@ -90,8 +88,7 @@ class CategoryControllerTest {
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.get("/api/v1/categories/{categoryId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()));
+                .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
@@ -106,7 +103,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockMember(roles = "ADMIN")
     void 카테고리수정() throws Exception {
         //given
         when(categoryService.update(anyLong(), anyString(), anyBoolean()))
@@ -119,8 +116,7 @@ class CategoryControllerTest {
             RestDocumentationRequestBuilders.patch("/api/v1/categories/{categoryId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()));
+                .accept(MediaType.APPLICATION_JSON));
 
         ConstrainedFields fields = getConstrainedFields(CategoryRequest.class);
 
@@ -139,14 +135,13 @@ class CategoryControllerTest {
 
 
     @Test
-    @WithMockUser
+    @WithMockMember(roles = "ADMIN")
     void 카테고리삭제() throws Exception {
         //when
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.delete("/api/v1/categories/{categoryId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()));
+                .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isNoContent())

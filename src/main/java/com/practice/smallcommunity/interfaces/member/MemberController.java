@@ -1,8 +1,8 @@
 package com.practice.smallcommunity.interfaces.member;
 
 import com.practice.smallcommunity.interfaces.CurrentUser;
-import com.practice.smallcommunity.interfaces.member.dto.MemberDetailsDto;
-import com.practice.smallcommunity.interfaces.member.dto.MemberDto;
+import com.practice.smallcommunity.interfaces.member.dto.MemberSelfResponse;
+import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
@@ -33,13 +33,13 @@ public class MemberController {
     }
 
     @GetMapping("/{userId}")
-    public MemberDto find(@PathVariable Long userId) {
+    public MemberResponse find(@PathVariable Long userId) {
         Member member = memberService.findByUserId(userId);
         return mapper.toDto(member);
     }
 
-    @GetMapping("/details")
-    public MemberDetailsDto details(@CurrentUser Long currentUserId) {
+    @GetMapping("/self")
+    public MemberSelfResponse my(@CurrentUser Long currentUserId) {
         Member member = memberService.findByUserId(currentUserId);
         return mapper.toDetailsDto(member);
     }

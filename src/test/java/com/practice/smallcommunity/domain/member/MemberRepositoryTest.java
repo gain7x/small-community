@@ -41,7 +41,7 @@ class MemberRepositoryTest {
             .email("userB@mail.com")
             .password("password")
             .nickname("secondUser")
-            .memberRole(MemberRole.ROLE_USER)
+            .memberRole(MemberRole.USER)
             .build();
 
         //when

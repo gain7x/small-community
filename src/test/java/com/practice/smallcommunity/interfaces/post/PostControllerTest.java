@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,12 +20,13 @@ import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import com.practice.smallcommunity.interfaces.RestTest;
+import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,12 +34,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-@AutoConfigureRestDocs
+@RestTest
 @WebMvcTest(PostController.class)
 class PostControllerTest {
 
@@ -63,7 +62,7 @@ class PostControllerTest {
     Post dummyPost = DomainGenerator.createPost(category, member, "내용");
 
     @Test
-    @WithMockUser
+    @WithMockMember
     void 게시글등록() throws Exception {
         //given
         when(categoryService.findOne(1L))
@@ -86,8 +85,7 @@ class PostControllerTest {
         ResultActions result = mvc.perform(post("/api/v1/posts")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto))
-            .accept(MediaType.APPLICATION_JSON)
-            .with(csrf()));
+            .accept(MediaType.APPLICATION_JSON));
 
         ConstrainedFields fields = getConstrainedFields(PostRequest.class);
 
@@ -102,7 +100,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockMember
     void 게시글조회() throws Exception {
         //given
         when(postService.findEnabledPost(1L))
@@ -112,8 +110,7 @@ class PostControllerTest {
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.get("/api/v1/posts/{postId}", 1L)
             .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .with(csrf()));
+            .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
@@ -123,7 +120,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockMember
     void 게시글수정() throws Exception {
         //given
         when(postService.update(eq(1L), any(PostDto.class)))
@@ -139,8 +136,7 @@ class PostControllerTest {
             RestDocumentationRequestBuilders.patch("/api/v1/posts/{postId}", 1L)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto))
-            .accept(MediaType.APPLICATION_JSON)
-            .with(csrf()));
+            .accept(MediaType.APPLICATION_JSON));
 
         ConstrainedFields fields = getConstrainedFields(PostRequest.class);
 
@@ -157,7 +153,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockMember
     void 게시글삭제() throws Exception {
         //given
         when(postService.findEnabledPost(1L))
@@ -167,8 +163,7 @@ class PostControllerTest {
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.delete("/api/v1/posts/{postId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()));
+                .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isNoContent())
