@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.config;
 
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
-import com.practice.smallcommunity.security.JwtTokenProvider;
+import com.practice.smallcommunity.security.JwtProvider;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class SecurityConfig {
             .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
             .authorizeRequests()
             // 인증
-            .antMatchers("/api/v1/auth").permitAll()
+            .antMatchers("/api/v1/auth/**").permitAll()
             // 회원
             .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
             .antMatchers("/api/v1/members/**").authenticated()
@@ -67,7 +67,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtTokenProvider jwtTokenService() {
-        return new JwtTokenProvider();
+    JwtProvider jwtTokenService() {
+        return new JwtProvider();
     }
 }

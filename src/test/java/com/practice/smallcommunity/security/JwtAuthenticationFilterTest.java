@@ -23,7 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 class JwtAuthenticationFilterTest {
 
     @Mock
-    JwtTokenProvider jwtTokenService;
+    JwtProvider jwtProvider;
 
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -35,16 +35,16 @@ class JwtAuthenticationFilterTest {
 
     @BeforeEach
     void beforeEach() {
-        jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenService);
+        jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider);
     }
 
     @Test
     void 토큰이_있으면_인증객체를_등록한다() throws ServletException, IOException {
-        when(jwtTokenService.createToken(member)).thenReturn("jwt-token");
-        when(jwtTokenService.getAuthentication("jwt-token"))
+        when(jwtProvider.createAccessToken(member)).thenReturn("jwt-token");
+        when(jwtProvider.getAuthentication("jwt-token"))
             .thenReturn(new UsernamePasswordAuthenticationToken("userA", null, null));
 
-        String token = jwtTokenService.createToken(member);
+        String token = jwtProvider.createAccessToken(member);
         request.addHeader("Authorization", "Bearer " + token);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);

@@ -1,19 +1,16 @@
 package com.practice.smallcommunity.interfaces.login.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
-public class LoginResponse {
+@NoArgsConstructor
+public class RefreshRequest {
 
     private String accessToken;
     private String refreshToken;
-
-    private String email;
-    private String nickname;
-    private LocalDateTime lastPasswordChange;
 }

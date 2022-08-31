@@ -1,10 +1,11 @@
 package com.practice.smallcommunity.interfaces.login;
 
+import com.practice.smallcommunity.application.dto.LoginDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
 import com.practice.smallcommunity.interfaces.login.dto.LoginResponse;
 import com.practice.smallcommunity.application.LoginService;
-import com.practice.smallcommunity.security.JwtTokenProvider;
+import com.practice.smallcommunity.interfaces.login.dto.RefreshRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,18 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final LoginService loginService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final LoginMapper mapper;
 
     @PostMapping
     public LoginResponse auth(@Valid @RequestBody LoginRequest loginRequest) {
-        Member member = loginService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        String token = jwtTokenProvider.createToken(member);
+        LoginDto loginDto = loginService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        return mapper.toResponse(loginDto);
+    }
 
-        return LoginResponse.builder()
-            .accessToken(token)
-            .email(member.getEmail())
-            .nickname(member.getNickname())
-            .lastPasswordChange(member.getLastPasswordChange())
-            .build();
+    @PostMapping("/refresh")
+    public LoginResponse refresh(@Valid @RequestBody RefreshRequest dto) {
+        LoginDto loginDto = loginService.refresh(dto.getAccessToken(), dto.getRefreshToken());
+        return mapper.toResponse(loginDto);
     }
 }
