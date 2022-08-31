@@ -48,7 +48,7 @@ public class JwtTokenProvider {
             .setSubject(member.getId().toString())
             .setExpiration(
                 Date.from(
-                    Instant.now().plus(1, ChronoUnit.DAYS)))
+                    Instant.now().plus(30, ChronoUnit.MINUTES)))
             .claim(ROLE_CLAIM, member.getMemberRole().name())
             .compact();
     }
