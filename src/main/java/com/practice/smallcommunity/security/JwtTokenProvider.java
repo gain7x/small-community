@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,13 @@ public class JwtTokenProvider {
     @Value("${jwt.secret-key}")
     private String secretKey = "dummy";
 
+    private byte[] key;
+
+    @PostConstruct
+    public void init() {
+        key = secretKey.getBytes(StandardCharsets.UTF_8);
+    }
+
     /**
      * 회원 정보를 기반으로 토큰을 생성하여 반환합니다.
      * @param member 회원
@@ -35,7 +43,7 @@ public class JwtTokenProvider {
      */
     public String createToken(Member member) {
         return Jwts.builder()
-            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes(StandardCharsets.UTF_8))
+            .signWith(SignatureAlgorithm.HS512, key)
             .setIssuedAt(new Date())
             .setSubject(member.getId().toString())
             .setExpiration(
@@ -53,7 +61,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                .setSigningKey(key)
                 .parseClaimsJws(jwtToken);
 
             Claims body = claims.getBody();

@@ -23,6 +23,7 @@ class JwtTokenProviderTest {
     @BeforeEach
     void setUp() {
         when(member.getId()).thenReturn(1L);
+        jwtTokenService.init();
     }
 
     @Test
