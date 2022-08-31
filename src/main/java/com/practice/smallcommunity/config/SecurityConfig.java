@@ -1,11 +1,12 @@
 package com.practice.smallcommunity.config;
 
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
-import com.practice.smallcommunity.security.JwtTokenService;
+import com.practice.smallcommunity.security.JwtTokenProvider;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +32,21 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
-            .authorizeRequests().anyRequest().permitAll();
+            .authorizeRequests()
+            // 인증
+            .antMatchers("/api/v1/auth").permitAll()
+            // 회원
+            .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
+            .antMatchers("/api/v1/members/**").authenticated()
+            // 카테고리
+            .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+            .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
+            // 게시글
+            .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+            .antMatchers("/api/v1/posts/**").authenticated()
+            // 답글
+            .antMatchers("/api/v1/replies/**").authenticated()
+            .anyRequest().authenticated();
 
         return http.build();
     }
@@ -52,7 +67,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtTokenService jwtTokenService() {
-        return new JwtTokenService();
+    JwtTokenProvider jwtTokenService() {
+        return new JwtTokenProvider();
     }
 }
