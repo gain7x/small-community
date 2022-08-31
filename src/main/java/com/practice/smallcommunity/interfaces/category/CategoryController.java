@@ -4,6 +4,7 @@ import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryResponse;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,7 @@ public class CategoryController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void register(@RequestBody CategoryRequest dto) {
+    public void register(@Valid @RequestBody CategoryRequest dto) {
         Category category = mapper.toEntity(dto);
         Category registeredCategory = categoryService.register(category);
     }
@@ -39,7 +40,7 @@ public class CategoryController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{categoryId}")
-    public void update(@PathVariable Long categoryId, @RequestBody CategoryRequest dto) {
+    public void update(@PathVariable Long categoryId, @Valid @RequestBody CategoryRequest dto) {
         categoryService.update(categoryId, dto.getName(), dto.isEnable());
     }
 

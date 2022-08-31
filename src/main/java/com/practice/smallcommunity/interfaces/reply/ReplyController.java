@@ -9,8 +9,11 @@ import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.interfaces.CollectionResponse;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyAddRequest;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyResponse;
+import com.practice.smallcommunity.interfaces.reply.dto.ReplyUpdateRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +38,7 @@ public class ReplyController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/posts/{postId}/replies")
-    public void add(@PathVariable Long postId, @RequestBody ReplyAddRequest dto) {
+    public void add(@PathVariable Long postId, @Valid @RequestBody ReplyAddRequest dto) {
         Post post = postService.findEnabledPost(postId);
         Member writer = memberService.findByUserId(dto.getMemberId());
         Reply reply = Reply.builder()
@@ -60,8 +63,8 @@ public class ReplyController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/replies/{replyId}")
-    public void update(@PathVariable Long replyId, @RequestBody String text) {
-        replyService.update(replyId, text);
+    public void update(@PathVariable Long replyId, @NotBlank @RequestBody ReplyUpdateRequest dto) {
+        replyService.update(replyId, dto.getText());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

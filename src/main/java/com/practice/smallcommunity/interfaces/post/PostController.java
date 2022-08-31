@@ -10,6 +10,7 @@ import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +35,7 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void write(@RequestBody PostRequest dto) {
+    public void write(@Valid @RequestBody PostRequest dto) {
         Category category = categoryService.findOne(dto.getCategoryId());
         Member member = memberService.findByUserId(dto.getMemberId());
         PostDto postDto = PostDto.builder()
@@ -53,7 +54,7 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{postId}")
-    public void update(@PathVariable Long postId, @RequestBody PostUpdateRequest dto) {
+    public void update(@PathVariable Long postId, @Valid @RequestBody PostUpdateRequest dto) {
         PostDto postDto = PostDto.builder()
             .title(dto.getTitle())
             .text(dto.getText())
