@@ -60,7 +60,7 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_ID로_조회한다() {
         //given
-        when(categoryRepository.findById(1L))
+        when(categoryRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(category));
 
         //when
@@ -72,7 +72,7 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_ID로_조회할_때_일치하는_ID가_없으면_예외를_던진다() {
         //given
-        when(categoryRepository.findById(1L))
+        when(categoryRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.empty());
 
         //when
@@ -84,7 +84,7 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_수정한다() {
         //given
-        when(categoryRepository.findById(1L))
+        when(categoryRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(category));
 
         //when
@@ -98,7 +98,7 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_삭제한다() {
         //given
-        when(categoryRepository.findById(1L))
+        when(categoryRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(category));
 
         //when

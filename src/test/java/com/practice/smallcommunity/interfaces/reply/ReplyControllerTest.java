@@ -43,7 +43,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestTest
 @WebMvcTest(ReplyController.class)
 class ReplyControllerTest {
@@ -72,7 +71,7 @@ class ReplyControllerTest {
 
     @BeforeEach
     void setUp() {
-        when(postService.findEnabledPost(1L))
+        when(postService.findPost(1L))
             .thenReturn(post);
 
         when(memberService.findByUserId(1L))

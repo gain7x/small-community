@@ -63,7 +63,7 @@ class PostServiceTest {
             .thenReturn(Optional.of(dummyPost));
 
         //when
-        Post findPost = postService.findEnabledPost(1L);
+        Post findPost = postService.findPost(1L);
 
         //then
         assertThat(findPost).isNotNull();
@@ -78,7 +78,7 @@ class PostServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> postService.findEnabledPost(1L))
+        assertThatThrownBy(() -> postService.findPost(1L))
             .isInstanceOf(ValidationErrorException.class);
     }
 
@@ -86,7 +86,7 @@ class PostServiceTest {
     void 게시글을_수정한다() {
         //given
         when(member.getId()).thenReturn(1L);
-        when(postRepository.findByIdAndEnableIsTrue(1L))
+        when(postRepository.findPostWithMainText(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when
@@ -102,7 +102,7 @@ class PostServiceTest {
     void 게시글을_수정하는_회원이_게시글_작성자가_아니면_예외를_던진다() {
         //given
         when(member.getId()).thenReturn(2L);
-        when(postRepository.findByIdAndEnableIsTrue(1L))
+        when(postRepository.findPostWithMainText(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when

@@ -49,7 +49,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public PostResponse find(@PathVariable Long postId) {
-        Post findPost = postService.findEnabledPost(postId);
+        Post findPost = postService.findPostFetchMainText(postId);
         return mapper.toResponse(findPost);
     }
 

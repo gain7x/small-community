@@ -39,7 +39,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestTest
 @WebMvcTest(PostController.class)
 class PostControllerTest {
@@ -105,7 +104,7 @@ class PostControllerTest {
     @WithMockMember
     void 게시글조회() throws Exception {
         //given
-        when(postService.findEnabledPost(1L))
+        when(postService.findPostFetchMainText(1L))
             .thenReturn(dummyPost);
 
         //when

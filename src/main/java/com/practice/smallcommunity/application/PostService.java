@@ -40,15 +40,28 @@ public class PostService {
     }
 
     /**
-     * 삭제 상태가 아닌 게시글을 조회합니다.
+     * 삭제 상태가 아닌 게시글을 조회합니다. 연관관계 엔티티는 가져오지 않습니다.
      * @param postId 게시글 ID
      * @return 게시글
      * @throws ValidationErrorException
      *          ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
      */
     @Transactional(readOnly = true)
-    public Post findEnabledPost(Long postId) {
+    public Post findPost(Long postId) {
         return postRepository.findByIdAndEnableIsTrue(postId)
+            .orElseThrow(() -> new ValidationErrorException("게시글을 찾을 수 없습니다.",
+                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId")));
+    }
+
+    /**
+     * 삭제 상태가 아닌 게시글을 조회하며, 본문까지 페치조인으로 가져옵니다.
+     * @param postId 게시글 ID
+     * @throws ValidationErrorException
+     *          ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
+     */
+    @Transactional(readOnly = true)
+    public Post findPostFetchMainText(Long postId) {
+        return postRepository.findPostWithMainText(postId)
             .orElseThrow(() -> new ValidationErrorException("게시글을 찾을 수 없습니다.",
                 ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId")));
     }
@@ -64,7 +77,7 @@ public class PostService {
      *          정보가 유효하지 않은 경우( 존재하지 않는 게시글 ID, ... ),
      */
     public Post update(Long postId, Long loginId, PostDto dto) {
-        Post findPost = findEnabledPost(postId);
+        Post findPost = findPostFetchMainText(postId);
         validateUpdater(findPost, loginId);
         findPost.updateTitle(dto.getTitle());
         findPost.updateContent(dto.getText());
@@ -81,7 +94,7 @@ public class PostService {
      *          ID가 일치하는 게시글이 없는 경우
      */
     public void disable(Long postId, Long loginId) {
-        Post findPost = findEnabledPost(postId);
+        Post findPost = findPost(postId);
         validateUpdater(findPost, loginId);
         findPost.delete();
     }

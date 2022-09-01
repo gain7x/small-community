@@ -40,7 +40,7 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/posts/{postId}/replies")
     public void add(@PathVariable Long postId, @Valid @RequestBody ReplyAddRequest dto) {
-        Post post = postService.findEnabledPost(postId);
+        Post post = postService.findPost(postId);
         Member writer = memberService.findByUserId(dto.getMemberId());
         Reply reply = Reply.builder()
             .post(post)
@@ -53,7 +53,7 @@ public class ReplyController {
 
     @GetMapping("/posts/{postId}/replies")
     public CollectionResponse<ReplyResponse> findReplies(@PathVariable Long postId) {
-        Post post = postService.findEnabledPost(postId);
+        Post post = postService.findPost(postId);
         List<Reply> replies = replyService.findRepliesOnPost(post);
         List<ReplyResponse> result = replies.stream()
             .map(mapper::toResponse)
