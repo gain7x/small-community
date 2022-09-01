@@ -5,6 +5,7 @@ import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.application.exception.ValidationError;
 import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +43,17 @@ public class CategoryService {
      */
     @Transactional(readOnly = true)
     public Category findOne(Long categoryId) {
-        return categoryRepository.findById(categoryId)
+        return categoryRepository.findByIdAndEnableIsTrue(categoryId)
             .orElseThrow(() -> new ValidationErrorException("카테고리를 찾을 수 없습니다.",
                 ValidationError.of(ValidationErrorStatus.NOT_FOUND, "categoryId")));
+    }
+
+    /**
+     * 삭제상태가 아닌 모든 카테고리를 조회합니다.
+     * @return 카테고리 목록
+     */
+    public List<Category> findEnableCategories() {
+        return categoryRepository.findAllByEnableIsTrue();
     }
 
     /**

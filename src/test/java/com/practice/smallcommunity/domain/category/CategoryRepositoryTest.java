@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,57 @@ class CategoryRepositoryTest {
 
         //then
         assertThat(count).isEqualTo(2);
+        assertThat(all.size()).isEqualTo(2);
+    }
+
+    @Test
+    void ID가_일치하고_삭제상태가_아닌_카테고리를_조회한다() {
+        //given
+        categoryRepository.save(category);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Category> result = categoryRepository.findByIdAndEnableIsTrue(
+            this.category.getId());
+
+        //then
+        assertThat(result).isPresent();
+    }
+
+    @Test
+    void ID가_일치하고_삭제상태가_아닌_카테고리를_조회할_때_삭제상태면_조회되지_않는다() {
+        //given
+        category.setEnable(false);
+        categoryRepository.save(category);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Category> result = categoryRepository.findByIdAndEnableIsTrue(
+            this.category.getId());
+
+        //then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void ID가_일치하고_삭제상태가_아닌_모든_카테고리를_조회한다() {
+        //given
+        Category category2 = DomainGenerator.createCategory("life", "일상");
+        Category category3 = DomainGenerator.createCategory("qna", "Q&A");
+        category3.setEnable(false);
+
+        //when
+        categoryRepository.save(category);
+        categoryRepository.save(category2);
+        categoryRepository.save(category3);
+
+        long count = categoryRepository.count();
+        List<Category> all = categoryRepository.findAllByEnableIsTrue();
+
+        //then
+        assertThat(count).isEqualTo(3);
         assertThat(all.size()).isEqualTo(2);
     }
 
