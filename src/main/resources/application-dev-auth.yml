@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile:
+        - dev
+
+jwt:
+  secret-key: 'DUMMY'
+  access-token:
+    expirationMinutes: 30
+  refresh-token:
+    expirationHours: 24
