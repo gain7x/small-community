@@ -5,6 +5,7 @@ import com.practice.smallcommunity.security.JwtProvider;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,9 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     @Bean
     SecurityFilterChain web(HttpSecurity http) throws Exception {
         http
@@ -31,22 +35,11 @@ public class SecurityConfig {
             .formLogin().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
-            .authorizeRequests()
-            // 인증
-            .antMatchers("/api/v1/auth/**").permitAll()
-            // 회원
-            .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
-            .antMatchers("/api/v1/members/**").authenticated()
-            // 카테고리
-            .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
-            .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
-            // 게시글
-            .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
-            .antMatchers("/api/v1/posts/**").authenticated()
-            // 답글
-            .antMatchers("/api/v1/replies/**").authenticated()
-            .anyRequest().authenticated();
+            .headers().frameOptions().sameOrigin()
+            .and()
+            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class);
+
+        configureRequestAuth(http);
 
         return http.build();
     }
@@ -69,5 +62,32 @@ public class SecurityConfig {
     @Bean
     JwtProvider jwtTokenService() {
         return new JwtProvider();
+    }
+
+    private void configureRequestAuth(HttpSecurity http) throws Exception {
+        if (profile.equals("dev")) {
+            http.authorizeRequests()
+                .antMatchers("/h2-console/**", "/actuator/**").permitAll();
+        } else {
+            http.authorizeRequests()
+                .antMatchers("/actuator/**").hasRole("ADMIN");
+        }
+
+        http
+            .authorizeRequests()
+            // 인증
+            .antMatchers("/api/v1/auth/**").permitAll()
+            // 회원
+            .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
+            .antMatchers("/api/v1/members/**").authenticated()
+            // 카테고리
+            .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+            .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
+            // 게시글
+            .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+            .antMatchers("/api/v1/posts/**").authenticated()
+            // 답글
+            .antMatchers("/api/v1/replies/**").authenticated()
+            .anyRequest().authenticated();
     }
 }
