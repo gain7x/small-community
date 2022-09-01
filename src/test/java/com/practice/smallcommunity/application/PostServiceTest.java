@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,12 +30,16 @@ class PostServiceTest {
     PostService postService;
 
     Category category = DomainGenerator.createCategory("dev", "개발");
+
+    @Spy
     Member member = DomainGenerator.createMember("A");
-    Post dummyPost = DomainGenerator.createPost(category, member, "내용");
+
+    Post dummyPost;
 
     @BeforeEach
     void setUp() {
         postService = new PostService(postRepository);
+        dummyPost = DomainGenerator.createPost(category, member, "내용");
     }
 
     @Test
@@ -52,24 +57,24 @@ class PostServiceTest {
     }
 
     @Test
-    void 게시글을_ID로_조회할_때_일치하는_ID가_없으면_예외를_던진다() {
+    void 미삭제상태_게시글을_ID로_조회한다() {
         //given
-        when(postRepository.findById(1L))
-            .thenReturn(Optional.empty());
+        when(postRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyPost));
 
         //when
+        Post findPost = postService.findEnabledPost(1L);
+
         //then
-        assertThatThrownBy(() -> postService.findEnabledPost(1L))
-            .isInstanceOf(ValidationErrorException.class);
+        assertThat(findPost).isNotNull();
+        assertThat(findPost.getTitle()).isEqualTo(dummyPost.getTitle());
     }
 
     @Test
-    void 게시글을_ID로_조회했는데_삭제상태이면_예외를_던진다() {
+    void 미삭제상태_게시글을_ID로_조회할_때_해당하는_데이터가_없으면_예외를_던진다() {
         //given
-        dummyPost.delete();
-
-        when(postRepository.findById(1L))
-            .thenReturn(Optional.of(dummyPost));
+        when(postRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.empty());
 
         //when
         //then
@@ -80,11 +85,12 @@ class PostServiceTest {
     @Test
     void 게시글을_수정한다() {
         //given
-        when(postRepository.findById(1L))
+        when(member.getId()).thenReturn(1L);
+        when(postRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when
-        Post updatedPost = postService.update(1L,
+        Post updatedPost = postService.update(1L, 1L,
             new PostDto("new title", "new text"));
 
         //then
@@ -93,15 +99,41 @@ class PostServiceTest {
     }
 
     @Test
-    void 게시글을_삭제한다() {
+    void 게시글을_수정하는_회원이_게시글_작성자가_아니면_예외를_던진다() {
         //given
-        when(postRepository.findById(1L))
+        when(member.getId()).thenReturn(2L);
+        when(postRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when
-        postService.disable(1L);
+        assertThatThrownBy(() -> postService.update(1L, 1L,
+            new PostDto("new title", "new text")))
+            .isInstanceOf(ValidationErrorException.class);
+    }
+
+    @Test
+    void 게시글을_삭제한다() {
+        //given
+        when(member.getId()).thenReturn(1L);
+        when(postRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        postService.disable(1L, 1L);
 
         //then
         assertThat(dummyPost.isEnable()).isFalse();
+    }
+
+    @Test
+    void 게시글을_삭제하는_회원이_게시글_작성자가_아니면_예외를_던진다() {
+        //given
+        when(member.getId()).thenReturn(2L);
+        when(postRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        assertThatThrownBy(() -> postService.disable(1L, 1L))
+            .isInstanceOf(ValidationErrorException.class);
     }
 }

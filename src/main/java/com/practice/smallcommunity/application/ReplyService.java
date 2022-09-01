@@ -56,25 +56,40 @@ public class ReplyService {
     /**
      * 답글을 수정하고, 성공하면 수정된 답글을 반환합니다.
      * @param replyId 답글 ID
+     * @param loginId 답글을 수정하려는 현재 회원 ID
      * @param text 새로운 텍스트
      * @return 수정된 답글
      * @throws ValidationErrorException
-     * ID가 일치하는 답글이 없거나, 삭제 상태인 경우
+     *          답글 작성자가 아닌 경우,
+     *          ID가 일치하는 답글이 없거나 삭제 상태인 경우
      */
-    public Reply update(Long replyId, String text) {
-        Reply reply = findEnabledReply(replyId);
-        reply.updateText(text);
-        return reply;
+    public Reply update(Long replyId, Long loginId, String text) {
+        Reply findReply = findEnabledReply(replyId);
+        validateUpdater(findReply, loginId);
+        findReply.updateText(text);
+
+        return findReply;
     }
 
     /**
      * 답글을 삭제 상태로 변경합니다.
      * @param replyId 답글 ID
+     * @param loginId 답글을 수정하려는 현재 회원 ID
      * @throws ValidationErrorException
-     *          ID가 일치하는 답글이 없거나, 삭제 상태인 경우
+     *          답글 작성자가 아닌 경우,
+     *          ID가 일치하는 답글이 없거나 삭제 상태인 경우
      */
-    public void disable(Long replyId) {
-        Reply reply = findEnabledReply(replyId);
-        reply.delete();
+    public void disable(Long replyId, Long loginId) {
+        Reply findReply = findEnabledReply(replyId);
+        validateUpdater(findReply, loginId);
+        findReply.delete();
+    }
+
+    private void validateUpdater(Reply reply, Long loginId) {
+        Long writerId = reply.getWriter().getId();
+        if (!writerId.equals(loginId)) {
+            throw new ValidationErrorException("답글 작성자가 아닙니다.",
+                ValidationError.of(ValidationErrorStatus.UNAUTHORIZED));
+        }
     }
 }

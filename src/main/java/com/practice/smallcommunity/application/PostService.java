@@ -8,7 +8,6 @@ import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,36 +48,49 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public Post findEnabledPost(Long postId) {
-        Optional<Post> findPost = postRepository.findById(postId);
-        if (findPost.isEmpty() || !findPost.get().isEnable()) {
-            throw new ValidationErrorException("게시글을 찾을 수 없습니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId"));
-        }
-
-        return findPost.get();
+        return postRepository.findByIdAndEnableIsTrue(postId)
+            .orElseThrow(() -> new ValidationErrorException("게시글을 찾을 수 없습니다.",
+                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId")));
     }
 
     /**
      * 게시글을 수정하고, 성공하면 수정된 게시글을 반환합니다.
      * @param postId 게시글 ID
+     * @param loginId 게시글을 수정하려는 현재 회원 ID
      * @param dto 수정 정보
      * @return 수정된 게시글
      * @throws ValidationErrorException
-     *          정보가 유효하지 않은 경우( 존재하지 않는 게시글 ID, ... )
+     *          게시글 작성자가 아닌 경우,
+     *          정보가 유효하지 않은 경우( 존재하지 않는 게시글 ID, ... ),
      */
-    public Post update(Long postId, PostDto dto) {
+    public Post update(Long postId, Long loginId, PostDto dto) {
         Post findPost = findEnabledPost(postId);
+        validateUpdater(findPost, loginId);
         findPost.updateTitle(dto.getTitle());
         findPost.updateContent(dto.getText());
+
         return findPost;
     }
 
     /**
      * 게시글을 삭제 상태로 변경합니다.
      * @param postId 게시글 ID
+     * @param loginId 게시글을 삭제하려는 현재 회원 ID
+     * @throws ValidationErrorException
+     *          게시글 작성자가 아닌 경우,
+     *          ID가 일치하는 게시글이 없는 경우
      */
-    public void disable(Long postId) {
+    public void disable(Long postId, Long loginId) {
         Post findPost = findEnabledPost(postId);
+        validateUpdater(findPost, loginId);
         findPost.delete();
+    }
+
+    private void validateUpdater(Post post, Long loginId) {
+        Long writerId = post.getWriter().getId();
+        if (!writerId.equals(loginId)) {
+            throw new ValidationErrorException("게시글 작성자가 아닙니다.",
+                ValidationError.of(ValidationErrorStatus.UNAUTHORIZED));
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +73,36 @@ class PostRepositoryTest {
         //then
         assertThat(count).isEqualTo(2);
         assertThat(all.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 삭제상태가_아닌_게시글_조회() {
+        //given
+        postRepository.save(post);
+        em.flush();
+        em.clear();
+
+        //when
+        Post findItem = postRepository.findByIdAndEnableIsTrue(post.getId()).orElseThrow();
+
+        //then
+        assertThat(post.getId()).isEqualTo(findItem.getId());
+        assertThat(post.getTitle()).isEqualTo(findItem.getTitle());
+    }
+
+    @Test
+    void 삭제상태인_게시글은_조회되지_않는다() {
+        //given
+        post.delete();
+        postRepository.save(post);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Post> findItem = postRepository.findByIdAndEnableIsTrue(post.getId());
+
+        //then
+        assertThat(findItem).isEmpty();
     }
 
     @Test

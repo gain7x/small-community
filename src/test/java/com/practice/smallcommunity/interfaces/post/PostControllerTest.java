@@ -4,6 +4,8 @@ import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocu
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -123,7 +125,7 @@ class PostControllerTest {
     @WithMockMember
     void 게시글수정() throws Exception {
         //given
-        when(postService.update(eq(1L), any(PostDto.class)))
+        when(postService.update(eq(1L), eq(1L), any(PostDto.class)))
             .thenReturn(dummyPost);
 
         //when
@@ -155,10 +157,6 @@ class PostControllerTest {
     @Test
     @WithMockMember
     void 게시글삭제() throws Exception {
-        //given
-        when(postService.findEnabledPost(1L))
-            .thenReturn(dummyPost);
-
         //when
         ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.delete("/api/v1/posts/{postId}", 1L)
@@ -166,6 +164,8 @@ class PostControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         //then
+        verify(postService, only()).disable(1L, 1L);
+
         result.andExpect(status().isNoContent())
             .andDo(generateDocument("post", pathParameters(
                 parameterWithName("postId").description("게시글 번호")

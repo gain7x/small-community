@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,14 +30,17 @@ class ReplyServiceTest {
 
     ReplyService replyService;
 
+    @Spy
     Member member = DomainGenerator.createMember("A");
+
     Category category = DomainGenerator.createCategory("dev", "개발");
     Post post = DomainGenerator.createPost(category, member, "내용");
-    Reply dummyReply = DomainGenerator.createReply(post, member, "답글");
+    Reply dummyReply;
 
     @BeforeEach
     void setUp() {
         replyService = new ReplyService(replyRepository);
+        dummyReply = DomainGenerator.createReply(post, member, "답글");
     }
 
     @Test
@@ -67,7 +71,7 @@ class ReplyServiceTest {
     }
 
     @Test
-    void 미삭제상태_답글을_ID로_조회할_때_일치하는_ID가_없으면_예외를_던진다() {
+    void 미삭제상태_답글을_ID로_조회할_때_해당하는_데이터가_없으면_예외를_던진다() {
         //given
         when(replyRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.empty());
@@ -96,26 +100,53 @@ class ReplyServiceTest {
     @Test
     void 답글을_수정한다() {
         //given
+        when(member.getId()).thenReturn(1L);
         when(replyRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(dummyReply));
 
         //when
-        Reply updatedReply = replyService.update(1L, "새로운 내용");
+        Reply updatedReply = replyService.update(1L, 1L, "새로운 내용");
 
         //then
         assertThat(updatedReply.getText()).isEqualTo("새로운 내용");
     }
 
     @Test
-    void 답글을_삭제상태로_만든다() {
+    void 답글을_수정하는_회원이_답글_작성자가_아니면_예외를_던진다() {
         //given
+        when(member.getId()).thenReturn(2L);
         when(replyRepository.findByIdAndEnableIsTrue(1L))
             .thenReturn(Optional.of(dummyReply));
 
         //when
-        replyService.disable(1L);
+        //then
+        assertThatThrownBy(() -> replyService.update(1L, 1L, "새로운 내용"))
+            .isInstanceOf(ValidationErrorException.class);
+    }
+
+    @Test
+    void 답글을_삭제상태로_만든다() {
+        //given
+        when(member.getId()).thenReturn(1L);
+        when(replyRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyReply));
+
+        //when
+        replyService.disable(1L, 1L);
 
         //then
         assertThat(dummyReply.isEnable()).isFalse();
+    }
+
+    @Test
+    void 답글을_삭제하는_회원이_답글_작성자가_아니면_예외를_던진다() {
+        //given
+        when(member.getId()).thenReturn(2L);
+        when(replyRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyReply));
+
+        //when
+        assertThatThrownBy(() -> replyService.disable(1L, 1L))
+            .isInstanceOf(ValidationErrorException.class);
     }
 }

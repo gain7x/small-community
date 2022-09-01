@@ -5,7 +5,9 @@ import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocu
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -156,7 +158,7 @@ class ReplyControllerTest {
     @WithMockMember
     void 답글수정() throws Exception {
         //given
-        when(replyService.update(eq(1L), any(String.class)))
+        when(replyService.update(eq(1L), eq(1L), any(String.class)))
             .thenReturn(dummyReply);
 
         //when
@@ -193,6 +195,8 @@ class ReplyControllerTest {
                 .accept(MediaType.APPLICATION_JSON));
 
         //then
+        verify(replyService, only()).disable(1L, 1L);
+
         result.andExpect(status().isNoContent())
             .andDo(generateDocument("reply",
                 pathParameters(

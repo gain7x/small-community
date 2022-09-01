@@ -7,6 +7,7 @@ import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
@@ -54,18 +55,20 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{postId}")
-    public void update(@PathVariable Long postId, @Valid @RequestBody PostUpdateRequest dto) {
+    public void update(@PathVariable Long postId,
+        @CurrentUser Long loginId,
+        @Valid @RequestBody PostUpdateRequest dto) {
         PostDto postDto = PostDto.builder()
             .title(dto.getTitle())
             .text(dto.getText())
             .build();
 
-        postService.update(postId, postDto);
+        postService.update(postId, loginId, postDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{postId}")
-    public void disable(@PathVariable Long postId) {
-        postService.disable(postId);
+    public void disable(@PathVariable Long postId, @CurrentUser Long loginId) {
+        postService.disable(postId, loginId);
     }
 }

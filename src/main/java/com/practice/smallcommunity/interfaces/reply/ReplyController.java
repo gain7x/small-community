@@ -7,6 +7,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.interfaces.CollectionResponse;
+import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyAddRequest;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyResponse;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyUpdateRequest;
@@ -63,13 +64,15 @@ public class ReplyController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/replies/{replyId}")
-    public void update(@PathVariable Long replyId, @NotBlank @RequestBody ReplyUpdateRequest dto) {
-        replyService.update(replyId, dto.getText());
+    public void update(@PathVariable Long replyId,
+        @CurrentUser Long loginId,
+        @NotBlank @RequestBody ReplyUpdateRequest dto) {
+        replyService.update(replyId, loginId, dto.getText());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/replies/{replyId}")
-    public void delete(@PathVariable Long replyId) {
-        replyService.disable(replyId);
+    public void delete(@PathVariable Long replyId, @CurrentUser Long loginId) {
+        replyService.disable(replyId, loginId);
     }
 }
