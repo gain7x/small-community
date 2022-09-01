@@ -1,8 +1,6 @@
 spring:
-  config:
-    activate:
-      on-profile:
-        - dev
+  profiles:
+    active: test
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -20,3 +18,10 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
+
+jwt:
+  secret-key: 'DUMMY'
+  access-token:
+    expirationMinutes: 30
+  refresh-token:
+    expirationHours: 24
