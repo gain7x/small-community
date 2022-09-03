@@ -9,8 +9,15 @@ spring:
     username: sa
     password:
   jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
     hibernate:
       ddl-auto: 'update'
+  data:
+    web:
+      pageable:
+        max-page-size: 50
   h2:
     console:
       enabled: true
