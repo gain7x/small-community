@@ -5,3 +5,21 @@ spring:
         - dev-auth
         - dev-db
     active: dev
+
+management:
+  server:
+    port: 7070
+  endpoints:
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: *
+    web:
+      base-path: /smc-mgnt
+      exposure:
+        include:
+          - info
+          - health
+  endpoint:
+    info.enabled: true
+    health.enabled: true
