@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.30:///S_COMM
+    driver-class-name:
+    username: test
+    password: test
+  sql:
+    init:
+      platform: tc-db

@@ -1,0 +1,1 @@
+CREATE FULLTEXT INDEX ft_idx_title ON post(title);

@@ -1,0 +1,71 @@
+package com.practice.smallcommunity.domain.post;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
+import com.practice.smallcommunity.infrastructure.BoardRepositoryImpl;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+/**
+ * MySQL 통합 테스트입니다.
+ *  FULLTEXT 인덱스를 테스트합니다. 데이터가 완전히 커밋되어야 FULLTEXT 인덱스가 생성되며,
+ *   MATCH-AGAINST 절로 검색이 가능합니다. 이를 위해 트랜잭션을 비활성화하였으니 주의바랍니다.
+ */
+@ActiveProfiles("tc-db")
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Testcontainers
+@DataJpaTest
+class BoardRepositoryIT {
+
+    @Container
+    static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.30")
+        .withDatabaseName("S_COMM")
+        .withUsername("test")
+        .withPassword("test");
+
+    @PersistenceContext
+    EntityManager em;
+
+    BoardRepository boardRepository;
+
+    @BeforeEach
+    void setUp() {
+        boardRepository = new BoardRepositoryImpl(em);
+    }
+
+    @Sql(value = "classpath:db/insert-posts.sql")
+    @Sql(value = "classpath:db/delete.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    void FULLTEXT_인덱스_제목으로_게시글을_조회한다() {
+        //given
+        BoardSearchCond dto = BoardSearchCond.builder()
+            .categoryId(1L)
+            .title("some")
+            .build();
+
+        Pageable pageable = PageRequest.of(0, 3);
+
+        //when
+        Page<Post> result = boardRepository.searchPosts(dto, pageable);
+
+        //then
+        assertThat(result.getSize()).isEqualTo(3);
+        assertThat(result.getTotalElements()).isEqualTo(5);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+    }
+}
