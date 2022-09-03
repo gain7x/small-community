@@ -4,6 +4,7 @@ import com.practice.smallcommunity.domain.BaseTimeEntity;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.reply.Reply;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 게시글 엔티티입니다.
- *  본문 조회 빈도가 상대적으로 낮기 때문에 JPA 사용 편의를 위해 지연로딩으로 분리합니다.
+ *  본문( MainText )은 조회 빈도가 상대적으로 낮기 때문에 JPA 사용 편의를 위해 지연로딩으로 분리합니다.
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,6 +49,9 @@ public class Post extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     private MainText mainText;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Reply acceptedReply;
 
     private boolean enable;
 
@@ -86,6 +90,10 @@ public class Post extends BaseTimeEntity {
 
     public void vote(boolean positive) {
         votes += positive ? 1 : -1;
+    }
+
+    public void accept(Reply reply) {
+        acceptedReply = reply;
     }
 
     public void delete() {

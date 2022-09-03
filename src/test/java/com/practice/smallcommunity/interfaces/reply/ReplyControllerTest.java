@@ -143,6 +143,7 @@ class ReplyControllerTest {
                     parameterWithName("postId").description("게시글 ID")
                 ),
                 responseFields(
+                    fieldWithPath("reason").type(JsonFieldType.STRING).description("부가정보"),
                     fieldWithPath("count").type(JsonFieldType.NUMBER).description("답글 개수"),
                     fieldWithPath("data").type(JsonFieldType.ARRAY).description("답글 목록"),
                     fieldWithPath("data[].replyId").type(JsonFieldType.NUMBER).description("답글 ID"),

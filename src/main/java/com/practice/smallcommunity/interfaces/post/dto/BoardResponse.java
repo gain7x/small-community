@@ -1,20 +1,23 @@
 package com.practice.smallcommunity.interfaces.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
-public class PostResponse {
+public class BoardResponse {
 
-    private Long categoryId;
+    private Long postId;
     private Long memberId;
     private String nickname;
     private String title;
-    private String text;
     private int views;
     private int votes;
-    private boolean solved;
+
+    @JsonInclude(Include.NON_NULL)
+    private Boolean solved;
 }

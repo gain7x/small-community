@@ -5,9 +5,12 @@ import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrain
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,7 +63,6 @@ class PostControllerTest {
 
     Category category = DomainGenerator.createCategory("dev", "개발");
     Member member = DomainGenerator.createMember("A");
-    Post dummyPost = DomainGenerator.createPost(category, member, "내용");
 
     @Test
     @WithMockMember
@@ -72,8 +74,10 @@ class PostControllerTest {
         when(memberService.findByUserId(1L))
             .thenReturn(member);
 
+        Post post = DomainGenerator.createPost(category, member, "내용");
+
         when(postService.write(eq(category), eq(member), any(PostDto.class)))
-            .thenReturn(dummyPost);
+            .thenReturn(post);
 
         //when
         PostRequest dto = PostRequest.builder()
@@ -104,8 +108,16 @@ class PostControllerTest {
     @WithMockMember
     void 게시글조회() throws Exception {
         //given
+        Category spyCategory = spy(category);
+        when(spyCategory.getId()).thenReturn(1L);
+
+        Member spyMember = spy(member);
+        when(spyMember.getId()).thenReturn(1L);
+
+        Post post = DomainGenerator.createPost(spyCategory, spyMember, "내용");
+
         when(postService.findPostFetchMainText(1L))
-            .thenReturn(dummyPost);
+            .thenReturn(post);
 
         //when
         ResultActions result = mvc.perform(
@@ -115,17 +127,30 @@ class PostControllerTest {
 
         //then
         result.andExpect(status().isOk())
-            .andDo(generateDocument("post", pathParameters(
-                parameterWithName("postId").description("게시글 번호")
-            )));
+            .andDo(generateDocument("post",
+                pathParameters(
+                    parameterWithName("postId").description("게시글 번호")
+                ),
+                responseFields(
+                    fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성자 ID"),
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                    fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
+                    fieldWithPath("text").type(JsonFieldType.STRING).description("게시글 내용"),
+                    fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
+                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
+                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨")
+                )));
     }
 
     @Test
     @WithMockMember
     void 게시글수정() throws Exception {
         //given
+        Post post = DomainGenerator.createPost(category, member, "내용");
+
         when(postService.update(eq(1L), eq(1L), any(PostDto.class)))
-            .thenReturn(dummyPost);
+            .thenReturn(post);
 
         //when
         PostUpdateRequest dto = PostUpdateRequest.builder()

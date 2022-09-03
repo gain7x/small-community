@@ -9,6 +9,7 @@
 :operation-http-request-title: HTTP 요청 예시
 :operation-request-headers-title: 요청 헤더
 :operation-request-fields-title: 요청 필드
+:operation-request-parameters-title: 요청 매개변수
 :operation-path-parameters-title: 경로 변수
 
 :operation-http-response-title: HTTP 응답 예시
@@ -36,10 +37,10 @@ operation::member/회원정보_조회[snippets='http-request,path-parameters,htt
 operation::category/카테고리등록[snippets='http-request,request-fields,http-response']
 
 === 조회
-operation::category/카테고리조회[snippets='http-request,path-parameters,http-response']
+operation::category/카테고리조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 === 수정
-operation::category/카테고리수정[snippets='http-request,path-parameters,request-fields,http-response']
+operation::category/카테고리수정[snippets='http-request,path-parameters,request-fields,http-response,request-fields']
 
 === 삭제
 operation::category/카테고리삭제[snippets='http-request,path-parameters,http-response']
@@ -50,7 +51,7 @@ operation::category/카테고리삭제[snippets='http-request,path-parameters,ht
 operation::post/게시글등록[snippets='http-request,request-fields,http-response']
 
 === 조회
-operation::post/게시글조회[snippets='http-request,path-parameters,http-response']
+operation::post/게시글조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 === 수정
 operation::post/게시글수정[snippets='http-request,path-parameters,request-fields,http-response']
@@ -71,3 +72,8 @@ operation::reply/답글수정[snippets='http-request,path-parameters,request-fie
 
 === 삭제
 operation::reply/답글삭제[snippets='http-request,path-parameters,http-response']
+
+[[게시판-API]]
+== 게시판
+=== 검색
+operation::board/게시글_목록_검색[snippets='http-request,path-parameters,request-parameters,http-response,response-fields']

@@ -1,19 +1,17 @@
 package com.practice.smallcommunity.interfaces;
 
 import java.util.Collection;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class CollectionResponse<T> {
+public class CollectionResponse<T> extends BaseResponse<Collection<T>> {
 
     private int count;
-    private Collection<T> data;
 
-    public CollectionResponse(Collection<T> data) {
+    public CollectionResponse(String reason, Collection<T> data) {
+        super(reason, data);
         this.count = data.size();
-        this.data = data;
     }
 }
