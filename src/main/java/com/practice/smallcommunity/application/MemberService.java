@@ -38,7 +38,6 @@ public class MemberService {
 
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.changePassword(encodePassword);
-        member.changeMemberRole(MemberRole.USER);
 
         return memberRepository.save(member);
     }

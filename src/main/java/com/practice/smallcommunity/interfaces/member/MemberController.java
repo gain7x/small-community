@@ -2,6 +2,7 @@ package com.practice.smallcommunity.interfaces.member;
 
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ public class MemberController {
     @PostMapping
     public void register(@Valid @RequestBody MemberRegisterRequest dto) {
         Member member = mapper.toEntity(dto);
+        member.changeMemberRole(MemberRole.USER);
         memberService.register(member);
     }
 
