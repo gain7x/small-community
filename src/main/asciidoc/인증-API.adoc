@@ -1,0 +1,7 @@
+[[인증-API]]
+== 인증
+=== 로그인
+operation::auth/로그인[snippets='http-request,request-fields,http-response,response-fields']
+
+=== 토큰 새로고침
+operation::auth/토큰_새로고침[snippets='http-request,request-fields,http-response,response-fields']
