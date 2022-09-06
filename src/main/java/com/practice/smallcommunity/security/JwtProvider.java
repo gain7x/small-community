@@ -128,7 +128,7 @@ public class JwtProvider {
             List<GrantedAuthority> authorities = getAuthoritiesFromClaims(body);
 
             return new UsernamePasswordAuthenticationToken(
-                body.getSubject(),
+                Long.parseLong(body.getSubject()),
                 null,
                 authorities
             );
