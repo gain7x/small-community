@@ -4,16 +4,17 @@ spring:
       on-profile:
         - dev
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:13306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: test
   jpa:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+        dialect: com.practice.smallcommunity.infrastructure.CustomMySQLDialect
     hibernate:
-      ddl-auto: 'update'
+      ddl-auto: 'create-drop'
   data:
     web:
       pageable:
