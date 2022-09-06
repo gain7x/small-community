@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.utils;
 
+import com.practice.smallcommunity.domain.attachment.UploadFile;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
@@ -55,6 +56,15 @@ public abstract class DomainGenerator {
             .post(post)
             .writer(writer)
             .text(text)
+            .build();
+    }
+
+    public static UploadFile createUploadFile(Member uploader, String divider) {
+        return UploadFile.builder()
+            .uploader(uploader)
+            .bucket("Bucket" + divider)
+            .filename("Original" + divider)
+            .url("http://localhost/Bucket" + divider + "/Original" + divider)
             .build();
     }
 }

@@ -2,6 +2,7 @@ spring:
   profiles:
     group:
       dev:
+        - dev-env
         - dev-auth
         - dev-db
     active: dev
@@ -13,7 +14,7 @@ management:
     enabled-by-default: false
     jmx:
       exposure:
-        exclude: *
+        exclude: "*"
     web:
       base-path: /smc-mgnt
       exposure:
