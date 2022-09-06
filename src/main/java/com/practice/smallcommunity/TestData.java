@@ -7,6 +7,7 @@ import com.practice.smallcommunity.application.ReplyService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,21 @@ public class TestData {
     }
 
     private void initMembers() {
+        Member admin = Member.builder()
+            .email("admin@mail.com")
+            .password("adminPassword")
+            .nickname("admin")
+            .memberRole(MemberRole.ADMIN)
+            .build();
+
+        memberService.register(admin);
+
         for (int i = 0; i < MEMBER_COUNT; i++) {
             Member member = Member.builder()
                 .email("user" + i + "@mail.com")
                 .password("user" + i + "password")
                 .nickname("user" + i)
+                .memberRole(MemberRole.USER)
                 .build();
 
             memberService.register(member);
