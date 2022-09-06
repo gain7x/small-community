@@ -16,13 +16,15 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 보안 관련 구성 클래스입니다.
  */
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     @Value("${spring.profiles.active}")
     private String profile;
@@ -42,6 +44,15 @@ public class SecurityConfig {
         configureRequestAuth(http);
 
         return http.build();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("*")
+            .allowedHeaders("*")
+            .allowCredentials(true);
     }
 
     @Bean
@@ -75,19 +86,19 @@ public class SecurityConfig {
 
         http
             .authorizeRequests()
+            // CORS
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 인증
             .antMatchers("/api/v1/auth/**").permitAll()
-            // 회원
+            // 회원가입
             .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
-            .antMatchers("/api/v1/members/**").authenticated()
             // 카테고리
             .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
             .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
             // 게시글
             .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
-            .antMatchers("/api/v1/posts/**").authenticated()
-            // 답글
-            .antMatchers("/api/v1/replies/**").authenticated()
+            // 파일
+            .antMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
             .anyRequest().authenticated();
     }
 }
