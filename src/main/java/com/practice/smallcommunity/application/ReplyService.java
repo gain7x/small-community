@@ -1,8 +1,7 @@
 package com.practice.smallcommunity.application;
 
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
-import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
@@ -32,14 +31,13 @@ public class ReplyService {
      *  삭제 상태인 답글은 조회되지 않습니다.
      * @param replyId 답글 ID
      * @return 답글
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          ID가 일치하는 답글이 없거나, 삭제 상태인 경우
      */
     @Transactional(readOnly = true)
     public Reply findEnabledReply(Long replyId) {
         return replyRepository.findByIdAndEnableIsTrue(replyId)
-            .orElseThrow(() -> new ValidationErrorException("답글을 찾을 수 없습니다.",
-            ValidationError.of(ValidationErrorStatus.NOT_FOUND, "replyId")));
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_REPLY));
     }
 
     /**
@@ -59,7 +57,7 @@ public class ReplyService {
      * @param loginId 답글을 수정하려는 현재 회원 ID
      * @param text 새로운 텍스트
      * @return 수정된 답글
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          답글 작성자가 아닌 경우,
      *          ID가 일치하는 답글이 없거나 삭제 상태인 경우
      */
@@ -75,7 +73,7 @@ public class ReplyService {
      * 답글을 삭제 상태로 변경합니다.
      * @param replyId 답글 ID
      * @param loginId 답글을 수정하려는 현재 회원 ID
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          답글 작성자가 아닌 경우,
      *          ID가 일치하는 답글이 없거나 삭제 상태인 경우
      */
@@ -88,8 +86,7 @@ public class ReplyService {
     private void validateUpdater(Reply reply, Long loginId) {
         Long writerId = reply.getWriter().getId();
         if (!writerId.equals(loginId)) {
-            throw new ValidationErrorException("답글 작성자가 아닙니다.",
-                ValidationError.of(ValidationErrorStatus.UNAUTHORIZED));
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 }

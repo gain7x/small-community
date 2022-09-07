@@ -32,8 +32,6 @@ public class CommonControllerTest {
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("common", responseFields(
-                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                fieldWithPath("reason").type(JsonFieldType.STRING).description("응답 이유"),
                 fieldWithPath("data").type(JsonFieldType.STRING).description("응답 데이터")
             )));
     }
@@ -49,8 +47,6 @@ public class CommonControllerTest {
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("common", responseFields(
-                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                fieldWithPath("reason").type(JsonFieldType.STRING).description("응답 이유"),
                 fieldWithPath("data[]").type(JsonFieldType.ARRAY).description("응답 데이터"),
                 fieldWithPath("count").type(JsonFieldType.NUMBER).description("응답 데이터 개수")
             )));
@@ -67,13 +63,30 @@ public class CommonControllerTest {
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("common", responseFields(
-                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
-                fieldWithPath("reason").type(JsonFieldType.STRING).description("응답 이유"),
                 fieldWithPath("data[]").type(JsonFieldType.ARRAY).description("응답 데이터"),
                 fieldWithPath("count").type(JsonFieldType.NUMBER).description("응답 데이터 개수"),
                 fieldWithPath("pageNumber").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
                 fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 개수"),
                 fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 데이터 개수")
+            )));
+    }
+
+    @Test
+    @WithMockMember
+    void 예외_응답() throws Exception {
+        //when
+        ResultActions result = mvc.perform(get("/docs/error")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isBadRequest())
+            .andDo(generateDocument("common", responseFields(
+                fieldWithPath("code").type(JsonFieldType.STRING).description("오류 코드"),
+                fieldWithPath("message").type(JsonFieldType.STRING).description("오류 메시지"),
+                fieldWithPath("errors").type(JsonFieldType.ARRAY).optional().description("오류 추가 정보"),
+                fieldWithPath("errors[].field").type(JsonFieldType.STRING).description("오류 관련 필드"),
+                fieldWithPath("errors[].reason").type(JsonFieldType.STRING).description("오류 발생 이유")
             )));
     }
 }

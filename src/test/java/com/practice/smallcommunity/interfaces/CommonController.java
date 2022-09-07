@@ -1,5 +1,7 @@
 package com.practice.smallcommunity.interfaces;
 
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import java.util.List;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +25,10 @@ public class CommonController {
     @GetMapping("/page")
     public PageResponse<String> pageResponse() {
         return PageResponse.Ok(new PageImpl<>(List.of("데이터1", "데이터2")));
+    }
+
+    @GetMapping("/error")
+    public ErrorResponse errorResponse() {
+        throw new BusinessException(ErrorCode.DUPLICATED_EMAIL, "email");
     }
 }

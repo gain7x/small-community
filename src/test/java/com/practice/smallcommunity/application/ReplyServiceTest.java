@@ -3,10 +3,10 @@ package com.practice.smallcommunity.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
@@ -79,7 +79,8 @@ class ReplyServiceTest {
         //when
         //then
         assertThatThrownBy(() -> replyService.findEnabledReply(1L))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_REPLY);
     }
 
     @Test
@@ -121,7 +122,8 @@ class ReplyServiceTest {
         //when
         //then
         assertThatThrownBy(() -> replyService.update(1L, 1L, "새로운 내용"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
     }
 
     @Test
@@ -147,6 +149,7 @@ class ReplyServiceTest {
 
         //when
         assertThatThrownBy(() -> replyService.disable(1L, 1L))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
     }
 }

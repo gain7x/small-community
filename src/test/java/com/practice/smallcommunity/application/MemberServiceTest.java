@@ -5,10 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import com.practice.smallcommunity.domain.member.MemberRole;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,7 +94,8 @@ class MemberServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.register(targetMember))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_EMAIL);
     }
 
     @Test
@@ -105,7 +107,8 @@ class MemberServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.register(targetMember))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_NICKNAME);
     }
 
     @Test
@@ -143,6 +146,7 @@ class MemberServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.findByUserId(targetMember.getId()))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
     }
 }

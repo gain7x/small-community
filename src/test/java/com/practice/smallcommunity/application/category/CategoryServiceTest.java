@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.CategoryService;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.utils.DomainGenerator;
@@ -54,7 +55,8 @@ class CategoryServiceTest {
         //when
         //then
         assertThatThrownBy(() -> categoryService.register(this.category))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_CATEGORY);
     }
 
     @Test
@@ -78,7 +80,8 @@ class CategoryServiceTest {
         //when
         //then
         assertThatThrownBy(() -> categoryService.findOne(1L))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
     }
 
     @Test

@@ -1,11 +1,8 @@
 package com.practice.smallcommunity.application;
 
-import static com.practice.smallcommunity.application.exception.ValidationErrorStatus.NOT_MATCH;
-
 import com.practice.smallcommunity.application.dto.LoginDto;
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
-import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.login.RefreshToken;
 import com.practice.smallcommunity.domain.login.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
@@ -33,15 +30,14 @@ public class LoginService {
      * @param email 이메일
      * @param password 암호
      * @return 회원 정보
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          회원이 존재하지 않거나, 암호가 다른 경우
      */
     public LoginDto login(String email, String password) {
         Member findMember = memberService.findByEmail(email);
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());
         if (!matches) {
-            throw new ValidationErrorException("회원 정보가 다릅니다.",
-                ValidationError.of(NOT_MATCH));
+            throw new BusinessException(ErrorCode.NOT_MATCH_MEMBER);
         }
 
         return generateLoginInformation(findMember);
@@ -52,7 +48,7 @@ public class LoginService {
      * @param accessToken 액세스 토큰
      * @param refreshToken 리프레시 토큰
      * @return 로그인 정보
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          새로고침이 유효하지 않은 경우
      */
     public LoginDto refresh(String accessToken, String refreshToken) {
@@ -60,15 +56,13 @@ public class LoginService {
         try {
             memberId = jwtProvider.getSubject(accessToken);
         } catch (Exception e) {
-            throw new ValidationErrorException("유효하지 않은 액세스 토큰입니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_VALID, "accessToken"));
+            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
 
         boolean isValidRefreshToken =
             jwtProvider.isValid(refreshToken) && refreshTokenRepository.existsById(refreshToken);
         if (!isValidRefreshToken) {
-            throw new ValidationErrorException("유효하지 않은 리프레시 토큰입니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_VALID, "refreshToken"));
+            throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         refreshTokenRepository.deleteById(refreshToken);

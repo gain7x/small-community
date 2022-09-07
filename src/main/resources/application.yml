@@ -6,6 +6,8 @@ spring:
         - dev-auth
         - dev-db
     active: dev
+  messages:
+    basename: messages,errors
 
 management:
   server:

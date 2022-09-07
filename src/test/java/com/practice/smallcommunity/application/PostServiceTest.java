@@ -6,7 +6,8 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.dto.PostDto;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
@@ -79,7 +80,8 @@ class PostServiceTest {
         //when
         //then
         assertThatThrownBy(() -> postService.findPost(1L))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_POST);
     }
 
     @Test
@@ -108,7 +110,8 @@ class PostServiceTest {
         //when
         assertThatThrownBy(() -> postService.update(1L, 1L,
             new PostDto("new title", "new text")))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
     }
 
     @Test
@@ -134,6 +137,7 @@ class PostServiceTest {
 
         //when
         assertThatThrownBy(() -> postService.disable(1L, 1L))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
     }
 }

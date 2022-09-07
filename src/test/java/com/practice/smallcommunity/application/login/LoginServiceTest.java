@@ -2,16 +2,14 @@ package com.practice.smallcommunity.application.login;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.LoginService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.dto.LoginDto;
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.login.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
@@ -70,12 +68,13 @@ class LoginServiceTest {
     void 회원정보_없으면_검증예외발생() {
         //given
         when(memberService.findByEmail("some@mail.com"))
-            .thenThrow(new ValidationErrorException(null, ValidationError.of(null)));
+            .thenThrow(new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
 
         //when
         //then
         assertThatThrownBy(() -> loginService.login("some@mail.com", "userPass"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
     }
 
     @Test
@@ -87,7 +86,8 @@ class LoginServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginService.login("userA@mail.com", "other"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_MATCH_MEMBER);
     }
 
     @Test
@@ -119,7 +119,8 @@ class LoginServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_ACCESS_TOKEN);
     }
 
     @Test
@@ -131,7 +132,8 @@ class LoginServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
     }
 
     @Test
@@ -146,6 +148,7 @@ class LoginServiceTest {
         //when
         //then
         assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
-            .isInstanceOf(ValidationErrorException.class);
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
     }
 }

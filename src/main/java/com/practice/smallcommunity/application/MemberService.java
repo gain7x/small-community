@@ -1,13 +1,9 @@
 package com.practice.smallcommunity.application;
 
-import static com.practice.smallcommunity.application.exception.ValidationErrorStatus.DUPLICATED;
-import static com.practice.smallcommunity.application.exception.ValidationErrorStatus.NOT_FOUND;
-
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
-import com.practice.smallcommunity.domain.member.MemberRole;
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,11 +22,9 @@ public class MemberService {
 
     /**
      * 회원 등록을 시도하고, 성공하면 등록된 회원 정보를 반환합니다.
-     *
-     * 등록되는 회원은 기본적으로 사용자 권한( ROLE_USER )을 보유합니다.
      * @param member 등록할 회원 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 회원 정보
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          등록하려는 회원 정보가 유효하지 않은 경우( 아이디 중복, 이메일 중복, ... )
      */
     public Member register(Member member) {
@@ -46,39 +40,35 @@ public class MemberService {
      * ID가 일치하는 회원 정보를 반환합니다.
      * @param userId 회원 번호
      * @return 회원 정보
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          ID가 일치하는 회원이 존재하지 않는 경우
      */
     public Member findByUserId(Long userId) {
         return memberRepository.findById(userId)
-            .orElseThrow(() -> new ValidationErrorException("회원을 찾을 수 없습니다",
-                ValidationError.of(NOT_FOUND, "userId")));
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
     }
 
     /**
      * 이메일이 일치하는 회원 정보를 반환합니다.
      * @param email 이메일
      * @return 회원 정보
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          이메일이 일치하는 회원이 존재하지 않는 경우
      */
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email)
-            .orElseThrow(() -> new ValidationErrorException("회원을 찾을 수 없습니다.",
-                ValidationError.of(NOT_FOUND, "email")));
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
     }
 
     private void validateRegisterMember(Member member) {
         boolean existsByEmail = memberRepository.existsByEmail(member.getEmail());
         if (existsByEmail) {
-            throw new ValidationErrorException("이미 사용 중인 이메일입니다.",
-                ValidationError.of(DUPLICATED, "email"));
+            throw new BusinessException(ErrorCode.DUPLICATED_EMAIL);
         }
 
         boolean existsByNickname = memberRepository.existsByNickname(member.getNickname());
         if (existsByNickname) {
-            throw new ValidationErrorException("이미 사용 중인 별명입니다.",
-                ValidationError.of(DUPLICATED, "nickname"));
+            throw new BusinessException(ErrorCode.DUPLICATED_NICKNAME);
         }
     }
 }

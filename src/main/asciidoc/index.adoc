@@ -20,7 +20,7 @@
 :operation-response-fields-data-collection-title: 응답 필드( 컬렉션 )
 :operation-response-fields-data-page-title: 응답 필드( 페이지 )
 
-include::공통응답.adoc[]
+include::공통.adoc[]
 include::인증-API.adoc[]
 include::회원-API.adoc[]
 include::카테고리-API.adoc[]

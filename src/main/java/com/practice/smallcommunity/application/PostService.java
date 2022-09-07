@@ -1,9 +1,8 @@
 package com.practice.smallcommunity.application;
 
 import com.practice.smallcommunity.application.dto.PostDto;
-import com.practice.smallcommunity.application.exception.ValidationError;
-import com.practice.smallcommunity.application.exception.ValidationErrorException;
-import com.practice.smallcommunity.application.exception.ValidationErrorStatus;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
@@ -25,7 +24,7 @@ public class PostService {
      * @param writer 회원( 작성자 )
      * @param dto 게시글 정보
      * @return 등록된 게시글
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          등록 정보가 유효하지 않은 경우( 존재하지 않는 카테고리 OR 회원, ... )
      */
     public Post write(Category category, Member writer, PostDto dto) {
@@ -43,27 +42,25 @@ public class PostService {
      * 삭제 상태가 아닌 게시글을 조회합니다. 연관관계 엔티티는 가져오지 않습니다.
      * @param postId 게시글 ID
      * @return 게시글
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
      */
     @Transactional(readOnly = true)
     public Post findPost(Long postId) {
         return postRepository.findByIdAndEnableIsTrue(postId)
-            .orElseThrow(() -> new ValidationErrorException("게시글을 찾을 수 없습니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId")));
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
 
     /**
      * 삭제 상태가 아닌 게시글을 조회하며, 본문까지 페치조인으로 가져옵니다.
      * @param postId 게시글 ID
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
      */
     @Transactional(readOnly = true)
     public Post findPostFetchMainText(Long postId) {
         return postRepository.findPostWithMainText(postId)
-            .orElseThrow(() -> new ValidationErrorException("게시글을 찾을 수 없습니다.",
-                ValidationError.of(ValidationErrorStatus.NOT_FOUND, "postId")));
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
 
     /**
@@ -72,7 +69,7 @@ public class PostService {
      * @param loginId 게시글을 수정하려는 현재 회원 ID
      * @param dto 수정 정보
      * @return 수정된 게시글
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          게시글 작성자가 아닌 경우,
      *          정보가 유효하지 않은 경우( 존재하지 않는 게시글 ID, ... ),
      */
@@ -89,7 +86,7 @@ public class PostService {
      * 게시글을 삭제 상태로 변경합니다.
      * @param postId 게시글 ID
      * @param loginId 게시글을 삭제하려는 현재 회원 ID
-     * @throws ValidationErrorException
+     * @throws BusinessException
      *          게시글 작성자가 아닌 경우,
      *          ID가 일치하는 게시글이 없는 경우
      */
@@ -102,8 +99,7 @@ public class PostService {
     private void validateUpdater(Post post, Long loginId) {
         Long writerId = post.getWriter().getId();
         if (!writerId.equals(loginId)) {
-            throw new ValidationErrorException("게시글 작성자가 아닙니다.",
-                ValidationError.of(ValidationErrorStatus.UNAUTHORIZED));
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 }
