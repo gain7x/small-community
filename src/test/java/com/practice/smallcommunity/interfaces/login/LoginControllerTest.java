@@ -9,7 +9,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.LoginService;
 import com.practice.smallcommunity.application.dto.LoginDto;
@@ -30,7 +29,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestTest
 @WebMvcTest(LoginController.class)
 class LoginControllerTest {

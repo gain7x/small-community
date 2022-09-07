@@ -35,7 +35,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestTest
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest {

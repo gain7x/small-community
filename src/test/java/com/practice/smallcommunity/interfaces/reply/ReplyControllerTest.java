@@ -60,7 +60,7 @@ class ReplyControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    MockMvc mockMvc;
+    MockMvc mvc;
 
     Member postWriter = DomainGenerator.createMember("A");
     Category category = DomainGenerator.createCategory("dev", "개발");
@@ -102,7 +102,7 @@ class ReplyControllerTest {
             .text("답글")
             .build();
 
-        ResultActions result = mockMvc.perform(
+        ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.post("/api/v1/posts/{postId}/replies", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
@@ -131,7 +131,7 @@ class ReplyControllerTest {
             .thenReturn(List.of(dummyReply));
 
         //when
-        ResultActions result = mockMvc.perform(
+        ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.get("/api/v1/posts/{postId}/replies", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -166,7 +166,7 @@ class ReplyControllerTest {
             .text("새로운 내용")
             .build();
 
-        ResultActions result = mockMvc.perform(
+        ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.patch("/api/v1/replies/{replyId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
@@ -189,7 +189,7 @@ class ReplyControllerTest {
     @WithMockMember
     void 답글삭제() throws Exception {
         //when
-        ResultActions result = mockMvc.perform(
+        ResultActions result = mvc.perform(
             RestDocumentationRequestBuilders.delete("/api/v1/replies/{replyId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));

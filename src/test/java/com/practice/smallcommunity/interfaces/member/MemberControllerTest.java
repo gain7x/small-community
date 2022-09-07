@@ -4,26 +4,22 @@ import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocu
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
-import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
-import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.application.MemberService;
-import com.practice.smallcommunity.utils.DomainGenerator;
 import com.practice.smallcommunity.interfaces.WithMockMember;
-import java.time.LocalDateTime;
+import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
+import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
@@ -38,7 +34,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @RestTest
 @WebMvcTest(MemberController.class)
 class MemberControllerTest {
