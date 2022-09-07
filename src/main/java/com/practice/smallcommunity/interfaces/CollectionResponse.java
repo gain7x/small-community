@@ -10,8 +10,12 @@ public class CollectionResponse<T> extends BaseResponse<Collection<T>> {
 
     private int count;
 
-    public CollectionResponse(String reason, Collection<T> data) {
-        super(reason, data);
+    public CollectionResponse(int code, String reason, Collection<T> data) {
+        super(code, reason, data);
         this.count = data.size();
+    }
+
+    public static <T> CollectionResponse<T> Ok(Collection<T> data) {
+        return new CollectionResponse<>(0, "", data);
     }
 }

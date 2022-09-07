@@ -1,4 +1,4 @@
 [[게시판-API]]
 == 게시판
-=== 검색
-operation::board/게시글_목록_검색[snippets='http-request,path-parameters,request-parameters,http-response,response-fields']
+=== 게시판 검색
+operation::board/게시글_목록_검색[snippets='http-request,path-parameters,request-parameters,http-response,response-fields-data-page']

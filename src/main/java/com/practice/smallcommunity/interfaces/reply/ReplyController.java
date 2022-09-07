@@ -59,7 +59,7 @@ public class ReplyController {
             .map(mapper::toResponse)
             .collect(Collectors.toList());
 
-        return new CollectionResponse<>("", result);
+        return CollectionResponse.Ok(result);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

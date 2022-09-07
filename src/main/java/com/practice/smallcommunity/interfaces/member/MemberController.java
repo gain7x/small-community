@@ -3,6 +3,7 @@ package com.practice.smallcommunity.interfaces.member;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.member.dto.MemberRegisterRequest;
 import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;
 import javax.validation.Valid;
@@ -33,8 +34,8 @@ public class MemberController {
     }
 
     @GetMapping("/{userId}")
-    public MemberResponse find(@PathVariable Long userId) {
+    public BaseResponse<MemberResponse> find(@PathVariable Long userId) {
         Member member = memberService.findByUserId(userId);
-        return mapper.toDto(member);
+        return BaseResponse.Ok(mapper.toDto(member));
     }
 }

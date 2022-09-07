@@ -13,10 +13,14 @@ public class PageResponse<T> extends CollectionResponse<T>{
     private int totalPages;
     private long totalElements;
 
-    public PageResponse(String reason, Page<T> page) {
-        super(reason, page.getContent());
+    public PageResponse(int code, String reason, Page<T> page) {
+        super(code, reason, page.getContent());
         this.pageNumber = page.getNumber();
         this.totalElements = page.getTotalElements();
         this.totalPages = page.getTotalPages();
+    }
+
+    public static <T> PageResponse<T> Ok(Page<T> page) {
+        return new PageResponse<>(0, "", page);
     }
 }

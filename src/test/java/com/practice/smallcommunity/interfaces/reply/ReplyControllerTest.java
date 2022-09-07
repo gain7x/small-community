@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.interfaces.reply;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.collectionData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
@@ -143,14 +144,12 @@ class ReplyControllerTest {
                     parameterWithName("postId").description("게시글 ID")
                 ),
                 responseFields(
-                    fieldWithPath("reason").type(JsonFieldType.STRING).description("부가정보"),
-                    fieldWithPath("count").type(JsonFieldType.NUMBER).description("답글 개수"),
-                    fieldWithPath("data").type(JsonFieldType.ARRAY).description("답글 목록"),
-                    fieldWithPath("data[].replyId").type(JsonFieldType.NUMBER).description("답글 ID"),
-                    fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
-                    fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
-                    fieldWithPath("data[].text").type(JsonFieldType.STRING).description("내용"),
-                    fieldWithPath("data[].votes").type(JsonFieldType.NUMBER).description("투표수")
+                    collectionData(),
+                    fieldWithPath("replyId").type(JsonFieldType.NUMBER).description("답글 ID"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+                    fieldWithPath("text").type(JsonFieldType.STRING).description("내용"),
+                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("투표수")
                 )));
     }
 

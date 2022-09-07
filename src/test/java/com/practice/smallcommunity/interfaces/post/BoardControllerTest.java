@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.interfaces.post;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.pageData;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -81,18 +82,14 @@ class BoardControllerTest {
                     parameterWithName("size").optional().description("페이지 크기")
                 ),
                 responseFields(
-                    fieldWithPath("reason").type(JsonFieldType.STRING).description("부가정보"),
-                    fieldWithPath("count").type(JsonFieldType.NUMBER).description("결과 개수"),
-                    fieldWithPath("pageNumber").type(JsonFieldType.NUMBER).description("현재 페이지"),
-                    fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 수"),
-                    fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 개수"),
-                    fieldWithPath("data[].postId").type(JsonFieldType.NUMBER).description("게시글 ID"),
-                    fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
-                    fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
-                    fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
-                    fieldWithPath("data[].views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
-                    fieldWithPath("data[].votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
-                    fieldWithPath("data[].solved").type(JsonFieldType.BOOLEAN).description("해결됨")
+                    pageData(),
+                    fieldWithPath("postId").type(JsonFieldType.NUMBER).description("게시글 ID"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                    fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
+                    fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
+                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
+                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨")
                 )));
     }
 

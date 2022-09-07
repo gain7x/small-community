@@ -6,6 +6,7 @@ import com.practice.smallcommunity.domain.attachment.FileStore;
 import com.practice.smallcommunity.domain.attachment.StoredFile;
 import com.practice.smallcommunity.domain.attachment.UploadFile;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.attachment.dto.UploadResponse;
 import java.net.MalformedURLException;
@@ -40,7 +41,7 @@ public class AttachmentController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadResponse uploadImage(@CurrentUser Long loginId, MultipartFile file) {
+    public BaseResponse<UploadResponse> uploadImage(@CurrentUser Long loginId, MultipartFile file) {
         Member uploader = memberService.findByUserId(loginId);
         StoredFile storedFile = fileStore.storeFile(file);
         UploadFile uploadFile = UploadFile.builder()
@@ -52,8 +53,8 @@ public class AttachmentController {
 
         attachmentService.upload(uploadFile);
 
-        return UploadResponse.builder()
+        return BaseResponse.Ok(UploadResponse.builder()
             .url(storedFile.getUrl())
-            .build();
+            .build());
     }
 }

@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.interfaces.category;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
@@ -96,6 +97,7 @@ class CategoryControllerTest {
                     parameterWithName("categoryId").description("카테고리 번호")
                 ),
                 responseFields(
+                    baseData(),
                     fieldWithPath("code").type(JsonFieldType.STRING).description("카테고리 코드"),
                     fieldWithPath("name").type(JsonFieldType.STRING).description("카테고리 이름")
                 )));

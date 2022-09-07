@@ -1,4 +1,4 @@
 [[파일-API]]
 == 이미지
-=== 업로드
-operation::attachment/이미지_업로드[snippets='http-request,request-parts,http-response,response-fields']
+=== 이미지 업로드
+operation::attachment/이미지_업로드[snippets='http-request,request-parts,http-response,response-fields-data-base']

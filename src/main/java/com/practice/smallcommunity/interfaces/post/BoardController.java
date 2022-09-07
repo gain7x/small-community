@@ -34,6 +34,6 @@ public class BoardController {
 
         Page<Post> posts = boardService.searchPostsInCategory(cond, pageable);
 
-        return new PageResponse<>("", posts.map(mapper::toBoard));
+        return PageResponse.Ok(posts.map(mapper::toBoard));
     }
 }

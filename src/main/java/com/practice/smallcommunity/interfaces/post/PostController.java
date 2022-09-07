@@ -7,6 +7,7 @@ import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
@@ -48,9 +49,9 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public PostResponse find(@PathVariable Long postId) {
+    public BaseResponse<PostResponse> find(@PathVariable Long postId) {
         Post findPost = postService.findPostFetchMainText(postId);
-        return mapper.toResponse(findPost);
+        return BaseResponse.Ok(mapper.toResponse(findPost));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

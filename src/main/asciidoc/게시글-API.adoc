@@ -1,13 +1,13 @@
 [[게시글-API]]
 == 게시글
-=== 등록
+=== 게시글 등록
 operation::post/게시글등록[snippets='http-request,request-fields,http-response']
 
-=== 조회
-operation::post/게시글조회[snippets='http-request,path-parameters,http-response,response-fields']
+=== 게시글 조회
+operation::post/게시글조회[snippets='http-request,path-parameters,http-response,response-fields-data-base']
 
-=== 수정
+=== 게시글 수정
 operation::post/게시글수정[snippets='http-request,path-parameters,request-fields,http-response']
 
-=== 삭제
+=== 게시글 삭제
 operation::post/게시글삭제[snippets='http-request,path-parameters,http-response']

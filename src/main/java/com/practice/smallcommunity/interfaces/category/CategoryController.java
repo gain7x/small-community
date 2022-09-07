@@ -2,6 +2,7 @@ package com.practice.smallcommunity.interfaces.category;
 
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryResponse;
 import javax.validation.Valid;
@@ -33,9 +34,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public CategoryResponse find(@PathVariable Long categoryId) {
+    public BaseResponse<CategoryResponse> find(@PathVariable Long categoryId) {
         Category findCategory = categoryService.findOne(categoryId);
-        return mapper.toResponse(findCategory);
+        return BaseResponse.Ok(mapper.toResponse(findCategory));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.attachment;
 
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -75,6 +76,7 @@ class AttachmentControllerTest {
                     partWithName("file").description("이미지 파일")
                 ),
                 responseFields(
+                    baseData(),
                     fieldWithPath("url").type(JsonFieldType.STRING)
                         .description("업로드된 파일에 접근 가능한 URL")
                 )));

@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.member;
 
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.any;
@@ -104,6 +105,7 @@ class MemberControllerTest {
                     parameterWithName("userId").description("회원 번호")
                 ),
                 responseFields(
+                    baseData(),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 별명")
                 )));
     }

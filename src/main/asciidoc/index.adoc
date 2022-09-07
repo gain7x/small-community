@@ -13,8 +13,14 @@
 :operation-path-parameters-title: 경로 변수
 
 :operation-http-response-title: HTTP 응답 예시
-:operation-response-fields-title: 응답 필드
+:operation-response-body-title: 응답 본문
 
+:operation-response-fields-title: 응답 필드
+:operation-response-fields-data-base-title: 응답 필드( 기본 )
+:operation-response-fields-data-collection-title: 응답 필드( 컬렉션 )
+:operation-response-fields-data-page-title: 응답 필드( 페이지 )
+
+include::공통응답.adoc[]
 include::인증-API.adoc[]
 include::회원-API.adoc[]
 include::카테고리-API.adoc[]

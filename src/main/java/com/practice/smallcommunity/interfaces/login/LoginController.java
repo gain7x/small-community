@@ -1,10 +1,10 @@
 package com.practice.smallcommunity.interfaces.login;
 
+import com.practice.smallcommunity.application.LoginService;
 import com.practice.smallcommunity.application.dto.LoginDto;
-import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
 import com.practice.smallcommunity.interfaces.login.dto.LoginResponse;
-import com.practice.smallcommunity.application.LoginService;
 import com.practice.smallcommunity.interfaces.login.dto.RefreshRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ public class LoginController {
     private final LoginMapper mapper;
 
     @PostMapping
-    public LoginResponse auth(@Valid @RequestBody LoginRequest loginRequest) {
+    public BaseResponse<LoginResponse> auth(@Valid @RequestBody LoginRequest loginRequest) {
         LoginDto loginDto = loginService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return mapper.toResponse(loginDto);
+        return BaseResponse.Ok(mapper.toResponse(loginDto));
     }
 
     @PostMapping("/refresh")
-    public LoginResponse refresh(@Valid @RequestBody RefreshRequest dto) {
+    public BaseResponse<LoginResponse> refresh(@Valid @RequestBody RefreshRequest dto) {
         LoginDto loginDto = loginService.refresh(dto.getAccessToken(), dto.getRefreshToken());
-        return mapper.toResponse(loginDto);
+        return BaseResponse.Ok(mapper.toResponse(loginDto));
     }
 }

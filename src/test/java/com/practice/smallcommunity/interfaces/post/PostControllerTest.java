@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.post;
 
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.ArgumentMatchers.eq;
@@ -132,6 +133,7 @@ class PostControllerTest {
                     parameterWithName("postId").description("게시글 번호")
                 ),
                 responseFields(
+                    baseData(),
                     fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성자 ID"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),

@@ -1,0 +1,10 @@
+[[공통응답]]
+== 공통 응답
+=== 기본
+operation::common/공통_응답_기본[snippets='response-body,response-fields']
+
+=== 컬렉션
+operation::common/공통_응답_컬렉션[snippets='response-body,response-fields']
+
+=== 페이지
+operation::common/공통_응답_페이지[snippets='response-body,response-fields']

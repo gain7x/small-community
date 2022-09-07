@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.login;
 
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.when;
@@ -72,6 +73,7 @@ class LoginControllerTest {
                     fields.withPath("email").description("회원 아이디"),
                     fields.withPath("password").description("비밀번호")
                 ), responseFields(
+                    baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
@@ -108,6 +110,7 @@ class LoginControllerTest {
                     fields.withPath("refreshToken").type(JsonFieldType.STRING)
                         .description("리프레시 토큰")
                 ), responseFields(
+                    baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
