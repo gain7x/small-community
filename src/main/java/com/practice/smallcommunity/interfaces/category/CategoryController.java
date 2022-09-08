@@ -7,6 +7,7 @@ import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -30,7 +32,10 @@ public class CategoryController {
     @PostMapping
     public void register(@Valid @RequestBody CategoryRequest dto) {
         Category category = mapper.toEntity(dto);
-        Category registeredCategory = categoryService.register(category);
+        Category result = categoryService.register(category);
+
+        log.info("Category has been registered. id: {}, code: {}, name: {}, enable: {}",
+            result.getId(), result.getCode(), result.getName(), result.isEnable());
     }
 
     @GetMapping("/{categoryId}")
@@ -42,12 +47,17 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{categoryId}")
     public void update(@PathVariable Long categoryId, @Valid @RequestBody CategoryRequest dto) {
-        categoryService.update(categoryId, dto.getName(), dto.isEnable());
+        Category result = categoryService.update(categoryId, dto.getName(), dto.isEnable());
+
+        log.info("Update the category. id: {}, name: {} -> {}, enable: {} -> {}",
+            categoryId, result.getName(), dto.getName(), result.isEnable(), dto.isEnable());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{categoryId}")
     public void delete(@PathVariable Long categoryId) {
         categoryService.delete(categoryId);
+
+        log.info("Delete a category. id: {}", categoryId);
     }
 }

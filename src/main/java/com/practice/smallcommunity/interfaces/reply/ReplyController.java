@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
@@ -48,7 +50,10 @@ public class ReplyController {
             .text(dto.getText())
             .build();
 
-        replyService.add(reply);
+        Reply result = replyService.add(reply);
+
+        log.info("Reply was added. postId: {}, replyId: {}, nickname: {}",
+            post.getId(), result.getId(), writer.getNickname());
     }
 
     @GetMapping("/posts/{postId}/replies")
@@ -68,11 +73,15 @@ public class ReplyController {
         @CurrentUser Long loginId,
         @NotBlank @RequestBody ReplyUpdateRequest dto) {
         replyService.update(replyId, loginId, dto.getText());
+
+        log.info("Reply was edited. replyId: {}", replyId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/replies/{replyId}")
     public void delete(@PathVariable Long replyId, @CurrentUser Long loginId) {
         replyService.disable(replyId, loginId);
+
+        log.info("Reply was disabled. replyId: {}", replyId);
     }
 }

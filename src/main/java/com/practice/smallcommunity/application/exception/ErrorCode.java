@@ -1,11 +1,13 @@
 package com.practice.smallcommunity.application.exception;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 /**
  * 공통 오류 코드 열거형입니다.
  */
+@ToString
 @Getter
 public enum ErrorCode {
     // 공통

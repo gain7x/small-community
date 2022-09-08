@@ -11,6 +11,7 @@ import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.attachment.dto.UploadResponse;
 import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
@@ -52,6 +54,10 @@ public class AttachmentController {
             .build();
 
         attachmentService.upload(uploadFile);
+
+        log.info("File has been uploaded. id: {}, uploaderId: {}, bucket: {}, filename: {}, url: {}",
+            uploadFile.getId(), uploadFile.getUploader().getId(),
+            uploadFile.getBucket(), uploadFile.getFilename(), uploadFile.getUrl());
 
         return BaseResponse.Ok(UploadResponse.builder()
             .url(storedFile.getUrl())

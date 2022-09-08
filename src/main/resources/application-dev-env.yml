@@ -9,3 +9,6 @@ server:
 
 file-store:
   dir: "C:/Small-Community/upload"
+
+logging:
+  config: classpath:log4j2-spring-dev.xml

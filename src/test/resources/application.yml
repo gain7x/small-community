@@ -41,6 +41,9 @@ decorator:
     p6spy:
       enable-logging: true
 
+logging:
+  config: classpath:log4j2-spring-dev.xml
+
 jwt:
   secret-key: 'DUMMY'
   access-token:

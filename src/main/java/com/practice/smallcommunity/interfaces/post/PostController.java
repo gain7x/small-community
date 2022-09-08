@@ -14,6 +14,7 @@ import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -45,7 +47,11 @@ public class PostController {
             .text(dto.getText())
             .build();
 
-        postService.write(category, member, postDto);
+        Post result = postService.write(category, member, postDto);
+
+        log.info("Post was written. category: {}-{}, postId: {}, nickname: {}, title: {}",
+            category.getId(), category.getCode(), result.getId(), member.getNickname(),
+            result.getTitle());
     }
 
     @GetMapping("/{postId}")
@@ -56,7 +62,7 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{postId}")
-    public void update(@PathVariable Long postId,
+    public void edit(@PathVariable Long postId,
         @CurrentUser Long loginId,
         @Valid @RequestBody PostUpdateRequest dto) {
         PostDto postDto = PostDto.builder()
@@ -65,11 +71,15 @@ public class PostController {
             .build();
 
         postService.update(postId, loginId, postDto);
+
+        log.info("Post was edited. postId: {}", postId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{postId}")
     public void disable(@PathVariable Long postId, @CurrentUser Long loginId) {
         postService.disable(postId, loginId);
+
+        log.info("Post was disabled. postId: {}", postId);
     }
 }

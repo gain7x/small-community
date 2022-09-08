@@ -5,6 +5,7 @@ import com.practice.smallcommunity.application.exception.BusinessExceptions;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  *  오류 코드 기반으로 관리되며, 메시지소스에서 오류 코드와 일치하는 메시지를 가져옵니다.
  *  일치하는 메시지가 없는 경우 오류 코드에 정의된 기본 메시지를 사용합니다.
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class RestErrorController {
@@ -27,6 +29,8 @@ public class RestErrorController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
         ErrorCode errorCode = ErrorCode.SERVER_ERROR;
+
+        log.error("Exception: {}, ", errorCode, e);
 
         return ResponseEntity.status(errorCode.getResponseStatus())
             .body(ErrorResponse.builder()
@@ -38,6 +42,8 @@ public class RestErrorController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException e) {
         ErrorCode errorCode = ErrorCode.RUNTIME_ERROR;
+
+        log.error("RuntimeException: {}, ", errorCode, e);
 
         return ResponseEntity.status(errorCode.getResponseStatus())
             .body(ErrorResponse.builder()
@@ -58,6 +64,8 @@ public class RestErrorController {
             response.addFieldError(e.getField(), getMessage(errorCode));
         }
 
+        log.error("BusinessException: {}, ", errorCode, e);
+
         return ResponseEntity.status(errorCode.getResponseStatus())
             .body(response);
     }
@@ -74,6 +82,8 @@ public class RestErrorController {
             response.addFieldError(be.getField(), getMessage(be.getErrorCode()));
         }
 
+        log.error("BusinessExceptions: {}, ", errorCode, e);
+
         return ResponseEntity.status(errorCode.getResponseStatus())
             .body(response);
     }
@@ -89,6 +99,8 @@ public class RestErrorController {
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addFieldError(fieldError.getField(), getMessage(fieldError));
         }
+
+        log.error("MethodArgumentNotValidException: {}, ", errorCode, e);
 
         return ResponseEntity.status(errorCode.getResponseStatus())
             .body(response);
