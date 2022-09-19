@@ -4,8 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.security.dto.TokenDto;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import javax.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +35,12 @@ class JwtAuthenticationFilterTest {
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockFilterChain filterChain = new MockFilterChain();
 
-    Member member = DomainGenerator.createMember("A");
+    Member dummyMember = DomainGenerator.createMember("A");
+
+    TokenDto dummyAccessToken = TokenDto.builder()
+        .token("some-access-token")
+        .expires(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
+        .build();
 
     @BeforeEach
     void beforeEach() {
@@ -40,12 +49,12 @@ class JwtAuthenticationFilterTest {
 
     @Test
     void 토큰이_있으면_인증객체를_등록한다() throws ServletException, IOException {
-        when(jwtProvider.createAccessToken(member)).thenReturn("jwt-token");
-        when(jwtProvider.getAuthentication("jwt-token"))
+        when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
+        when(jwtProvider.getAuthentication(dummyAccessToken.getToken()))
             .thenReturn(new UsernamePasswordAuthenticationToken("userA", null, null));
 
-        String token = jwtProvider.createAccessToken(member);
-        request.addHeader("Authorization", "Bearer " + token);
+        TokenDto token = jwtProvider.createAccessToken(dummyMember);
+        request.addHeader("Authorization", "Bearer " + token.getToken());
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 

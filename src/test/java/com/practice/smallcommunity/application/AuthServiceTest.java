@@ -1,19 +1,21 @@
-package com.practice.smallcommunity.application.login;
+package com.practice.smallcommunity.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.LoginService;
-import com.practice.smallcommunity.application.MemberService;
-import com.practice.smallcommunity.application.dto.LoginDto;
+import com.practice.smallcommunity.application.dto.AuthDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
-import com.practice.smallcommunity.domain.login.RefreshTokenRepository;
+import com.practice.smallcommunity.domain.auth.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
+import com.practice.smallcommunity.security.dto.TokenDto;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class LoginServiceTest {
+class AuthServiceTest {
 
     @Mock
     MemberService memberService;
@@ -36,26 +38,36 @@ class LoginServiceTest {
     @Mock
     RefreshTokenRepository refreshTokenRepository;
 
-    LoginService loginService;
+    AuthService authService;
 
     Member dummyMember = DomainGenerator.createMember("A");
 
+    TokenDto dummyAccessToken = TokenDto.builder()
+        .token("new-access-token")
+        .expires(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
+        .build();
+
+    TokenDto dummyRefreshToken = TokenDto.builder()
+        .token("new-refresh-token")
+        .expires(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+        .build();
+
     @BeforeEach
     void beforeEach() {
-        loginService = new LoginService(memberService, passwordEncoder, jwtProvider,
+        authService = new AuthService(memberService, passwordEncoder, jwtProvider,
             refreshTokenRepository);
     }
 
     @Test
     void 로그인_성공하면_로그인정보_반환() {
         //given
-        when(jwtProvider.createAccessToken(dummyMember)).thenReturn("new-access-token");
-        when(jwtProvider.createRefreshToken()).thenReturn("new-refresh-token");
+        when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
+        when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);
         when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
         //when
-        LoginDto result = loginService.login("userA@mail.com", "userPass");
+        AuthDto result = authService.login("userA@mail.com", "userPass");
 
         //then
         assertThat(result).isNotNull();
@@ -72,7 +84,7 @@ class LoginServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> loginService.login("some@mail.com", "userPass"))
+        assertThatThrownBy(() -> authService.login("some@mail.com", "userPass"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
     }
@@ -85,7 +97,7 @@ class LoginServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> loginService.login("userA@mail.com", "other"))
+        assertThatThrownBy(() -> authService.login("userA@mail.com", "other"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_MATCH_MEMBER);
     }
@@ -93,15 +105,14 @@ class LoginServiceTest {
     @Test
     void 재발급이_유효하면_로그인정보_반환() {
         //given
-        when(jwtProvider.createAccessToken(dummyMember)).thenReturn("new-access-token");
-        when(jwtProvider.createRefreshToken()).thenReturn("new-refresh-token");
+        when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
+        when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);
         when(jwtProvider.getSubject(anyString())).thenReturn(1L);
-        when(jwtProvider.isValid(anyString())).thenReturn(true);
         when(refreshTokenRepository.existsById(anyString())).thenReturn(true);
         when(memberService.findByUserId(1L)).thenReturn(dummyMember);
 
         //when
-        LoginDto result = loginService.refresh("access-token", "refresh-token");
+        AuthDto result = authService.refresh("refresh-token");
 
         //then
         assertThat(result).isNotNull();
@@ -118,20 +129,16 @@ class LoginServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
+        assertThatThrownBy(() -> authService.refresh("refresh-token"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_ACCESS_TOKEN);
     }
 
     @Test
     void 재발급_시_리프레시_토큰이_유효하지_않으면_예외를_던진다() {
-        //given
-        when(jwtProvider.isValid(anyString()))
-            .thenReturn(false);
-
         //when
         //then
-        assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
+        assertThatThrownBy(() -> authService.refresh("refresh-token"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
     }
@@ -139,15 +146,12 @@ class LoginServiceTest {
     @Test
     void 재발급_시_리프레시_토큰이_DB에_없으면_예외를_던진다() {
         //given
-        when(jwtProvider.isValid(anyString()))
-            .thenReturn(true);
-
         when(refreshTokenRepository.existsById("refresh-token"))
             .thenReturn(false);
 
         //when
         //then
-        assertThatThrownBy(() -> loginService.refresh("access-token", "refresh-token"))
+        assertThatThrownBy(() -> authService.refresh("refresh-token"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
     }

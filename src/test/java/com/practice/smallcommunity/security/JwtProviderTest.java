@@ -2,19 +2,11 @@ package com.practice.smallcommunity.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.security.dto.TokenDto;
 import com.practice.smallcommunity.utils.DomainGenerator;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +20,7 @@ class JwtProviderTest {
     JwtProvider jwtProvider = new JwtProvider();
 
     @Spy
-    Member member = DomainGenerator.createMember("A");
+    Member dummyMember = DomainGenerator.createMember("A");
 
     @BeforeEach
     void setUp() {
@@ -38,10 +30,10 @@ class JwtProviderTest {
     @Test
     void 액세스_토큰_발행() {
         //given
-        when(member.getId()).thenReturn(1L);
+        when(dummyMember.getId()).thenReturn(1L);
 
         //when
-        String token = jwtProvider.createAccessToken(member);
+        TokenDto token = jwtProvider.createAccessToken(dummyMember);
 
         //then
         assertThat(token).isNotNull();
@@ -50,35 +42,35 @@ class JwtProviderTest {
     @Test
     void 액세스_토큰이_유효하면_인증객체를_반환한다() {
         //given
-        when(member.getId()).thenReturn(1L);
-        String token = jwtProvider.createAccessToken(member);
+        when(dummyMember.getId()).thenReturn(1L);
+        TokenDto token = jwtProvider.createAccessToken(dummyMember);
 
         //when
-        Authentication authentication = jwtProvider.getAuthentication(token);
+        Authentication authentication = jwtProvider.getAuthentication(token.getToken());
 
         //then
         assertThat(authentication).isNotNull();
     }
 
     @Test
-    void 토큰이_서명이_검증되면_주체를_반환한다() {
+    void 토큰_서명이_검증되면_주체를_반환한다() {
         //given
-        when(member.getId()).thenReturn(1L);
-        String token = jwtProvider.createAccessToken(member);
+        when(dummyMember.getId()).thenReturn(1L);
+        TokenDto token = jwtProvider.createAccessToken(dummyMember);
 
         //when
         //then
-        assertThatNoException().isThrownBy(() -> jwtProvider.getSubject(token));
+        assertThatNoException().isThrownBy(() -> jwtProvider.getSubject(token.getToken()));
     }
 
     @Test
     void 토큰이_유효하면_참을_반환한다() {
         //given
-        when(member.getId()).thenReturn(1L);
-        String token = jwtProvider.createAccessToken(member);
+        when(dummyMember.getId()).thenReturn(1L);
+        TokenDto token = jwtProvider.createAccessToken(dummyMember);
 
         //when
-        boolean result = jwtProvider.isValid(token);
+        boolean result = jwtProvider.isValid(token.getToken());
 
         //then
         assertThat(result).isTrue();
@@ -86,9 +78,13 @@ class JwtProviderTest {
 
     @Test
     void 리프레시_토큰_발행() {
-        String refreshToken = jwtProvider.createRefreshToken();
-        boolean valid = jwtProvider.isValid(refreshToken);
+        //given
+        when(dummyMember.getId()).thenReturn(1L);
 
-        assertThat(valid).isTrue();
+        //when
+        TokenDto refreshToken = jwtProvider.createRefreshToken(dummyMember);
+
+        //then
+        assertThat(refreshToken).isNotNull();
     }
 }

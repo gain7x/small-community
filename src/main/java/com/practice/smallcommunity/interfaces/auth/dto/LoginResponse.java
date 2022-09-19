@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces.login.dto;
+package com.practice.smallcommunity.interfaces.auth.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,12 @@ import lombok.Getter;
 public class LoginResponse {
 
     private String accessToken;
-    private String refreshToken;
+    private long accessTokenExpires;
 
+    private String refreshToken;
+    private long refreshTokenExpires;
+
+    private Long memberId;
     private String email;
     private String nickname;
     private LocalDateTime lastPasswordChange;

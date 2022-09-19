@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.security;
 
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.security.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -46,39 +47,53 @@ public class JwtProvider {
     /**
      * 회원 정보를 기반으로 액세스 토큰을 생성하여 반환합니다.
      * @param member 회원
-     * @return 액세스 토큰
+     * @return 토큰 정보
      */
-    public String createAccessToken(Member member) {
-        return Jwts.builder()
+    public TokenDto createAccessToken(Member member) {
+        Date expires = Date.from(
+            Instant.now().plus(accessTokenExpirationMinutes, ChronoUnit.MINUTES));
+
+        String token = Jwts.builder()
             .signWith(SignatureAlgorithm.HS512, key)
             .setIssuedAt(new Date())
             .setSubject(member.getId().toString())
-            .setExpiration(
-                Date.from(
-                    Instant.now().plus(accessTokenExpirationMinutes, ChronoUnit.MINUTES)))
+            .setExpiration(expires)
             .claim(ROLE_CLAIM, member.getMemberRole().name())
             .compact();
+
+        return TokenDto.builder()
+            .token(token)
+            .expires(expires)
+            .build();
     }
 
     /**
      * 리프레시 토큰을 생성하여 반환합니다.
-     * @return 리프레시 토큰
+     * @return 토큰 정보
      */
-    public String createRefreshToken() {
-        return Jwts.builder()
+    public TokenDto createRefreshToken(Member member) {
+        Date expires = Date.from(
+            Instant.now().plus(refreshTokenExpirationHours, ChronoUnit.HOURS));
+
+        String token = Jwts.builder()
             .signWith(SignatureAlgorithm.HS512, key)
             .setIssuedAt(new Date())
-            .setExpiration(
-                Date.from(
-                    Instant.now().plus(refreshTokenExpirationHours, ChronoUnit.HOURS)))
+            .setSubject(member.getId().toString())
+            .setExpiration(expires)
+            .claim(ROLE_CLAIM, member.getMemberRole().name())
             .compact();
+
+        return TokenDto.builder()
+            .token(token)
+            .expires(expires)
+            .build();
     }
 
     /**
      * 토큰의 주인을 반환합니다.
      *  토큰의 서명만 검증하며 만료일은 신경쓰지 않습니다.
      * @param token JWT
-     * @return 토큰의 주인
+     * @return 토큰의 주인( 회원 번호 )
      * @throws IllegalArgumentException
      *          토큰이 유효하지 않거나, 주인이 설정되지 않은 경우
      */

@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces.login.dto;
+package com.practice.smallcommunity.interfaces.auth.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces.login;
+package com.practice.smallcommunity.interfaces.auth;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
@@ -11,15 +11,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.application.LoginService;
-import com.practice.smallcommunity.application.dto.LoginDto;
+import com.practice.smallcommunity.application.AuthService;
+import com.practice.smallcommunity.application.dto.AuthDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
-import com.practice.smallcommunity.interfaces.login.dto.LoginRequest;
-import com.practice.smallcommunity.interfaces.login.dto.RefreshRequest;
+import com.practice.smallcommunity.interfaces.auth.dto.LoginRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import javax.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -31,11 +36,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @RestTest
-@WebMvcTest(LoginController.class)
-class LoginControllerTest {
+@WebMvcTest(AuthController.class)
+class AuthControllerTest {
 
     @MockBean
-    LoginService loginService;
+    AuthService authService;
 
     @Autowired
     MockMvc mvc;
@@ -43,18 +48,28 @@ class LoginControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Spy
     Member dummyMember = DomainGenerator.createMember("A");
-    LoginDto dummyLoginDto = LoginDto.builder()
-        .accessToken("access-token")
-        .refreshToken("refresh-token")
-        .member(dummyMember)
-        .build();
+
+    AuthDto dummyAuthDto;
+
+    @BeforeEach
+    void setUp() {
+        when(dummyMember.getId()).thenReturn(1L);
+        dummyAuthDto = AuthDto.builder()
+            .accessToken("access-token")
+            .accessTokenExpires(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
+            .refreshToken("refresh-token")
+            .refreshTokenExpires(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+            .member(dummyMember)
+            .build();
+    }
 
     @Test
     void 로그인() throws Exception {
         //given
-        when(loginService.login(dummyMember.getEmail(), dummyMember.getPassword()))
-            .thenReturn(dummyLoginDto);
+        when(authService.login(dummyMember.getEmail(), dummyMember.getPassword()))
+            .thenReturn(dummyAuthDto);
 
         LoginRequest request = new LoginRequest(dummyMember.getEmail(), dummyMember.getPassword());
 
@@ -75,7 +90,12 @@ class LoginControllerTest {
                 ), responseFields(
                     baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
+                    fieldWithPath("accessTokenExpires").type(JsonFieldType.NUMBER)
+                        .description("액세스 토큰이 만료되는 시간( ms )"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
+                    fieldWithPath("refreshTokenExpires").type(JsonFieldType.NUMBER)
+                        .description("리프레시 토큰이 만료되는 시간( ms )"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
                     fieldWithPath("lastPasswordChange").type(JsonFieldType.STRING)
@@ -86,33 +106,27 @@ class LoginControllerTest {
     @Test
     void 토큰_새로고침() throws Exception {
         //given
-        when(loginService.refresh("access-token", "refresh-token"))
-            .thenReturn(dummyLoginDto);
+        when(authService.refresh("some-refresh-token"))
+            .thenReturn(dummyAuthDto);
 
         //when
-        RefreshRequest dto = RefreshRequest.builder()
-            .accessToken("access-token")
-            .refreshToken("refresh-token")
-            .build();
-
         ResultActions result = mvc.perform(post("/api/v1/auth/refresh")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(dto))
+            .cookie(new Cookie("refresh_token", "some-refresh-token"))
             .accept(MediaType.APPLICATION_JSON));
 
         //then
-        ConstrainedFields fields = getConstrainedFields(RefreshRequest.class);
-
         result.andExpect(status().isOk())
             .andDo(generateDocument("auth",
-                requestFields(
-                    fields.withPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                    fields.withPath("refreshToken").type(JsonFieldType.STRING)
-                        .description("리프레시 토큰")
-                ), responseFields(
+                responseFields(
                     baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
+                    fieldWithPath("accessTokenExpires").type(JsonFieldType.NUMBER)
+                        .description("액세스 토큰이 만료되는 시간( ms )"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
+                    fieldWithPath("refreshTokenExpires").type(JsonFieldType.NUMBER)
+                        .description("리프레시 토큰이 만료되는 시간( ms )"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
                     fieldWithPath("lastPasswordChange").type(JsonFieldType.STRING)
@@ -124,8 +138,8 @@ class LoginControllerTest {
     static class TestConfig {
 
         @Bean
-        LoginMapper loginMapper() {
-            return new LoginMapperImpl();
+        AuthMapper loginMapper() {
+            return new AuthMapperImpl();
         }
     }
 }

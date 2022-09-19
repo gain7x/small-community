@@ -1,12 +1,13 @@
 package com.practice.smallcommunity.application;
 
-import com.practice.smallcommunity.application.dto.LoginDto;
+import com.practice.smallcommunity.application.dto.AuthDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
-import com.practice.smallcommunity.domain.login.RefreshToken;
-import com.practice.smallcommunity.domain.login.RefreshTokenRepository;
+import com.practice.smallcommunity.domain.auth.RefreshToken;
+import com.practice.smallcommunity.domain.auth.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
+import com.practice.smallcommunity.security.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class LoginService {
+public class AuthService {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +34,7 @@ public class LoginService {
      * @throws BusinessException
      *          회원이 존재하지 않거나, 암호가 다른 경우
      */
-    public LoginDto login(String email, String password) {
+    public AuthDto login(String email, String password) {
         Member findMember = memberService.findByEmail(email);
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());
         if (!matches) {
@@ -44,23 +45,21 @@ public class LoginService {
     }
 
     /**
-     * 액세스 토큰과 리프레시 토큰을 검증하고, 새로고침이 유효하면 로그인 정보를 발급합니다.
-     * @param accessToken 액세스 토큰
+     * 리프레시 토큰이 유효하면 새로운 로그인 정보를 반환합니다.
      * @param refreshToken 리프레시 토큰
      * @return 로그인 정보
      * @throws BusinessException
-     *          새로고침이 유효하지 않은 경우
+     *          갱신이 유효하지 않은 경우
      */
-    public LoginDto refresh(String accessToken, String refreshToken) {
+    public AuthDto refresh(String refreshToken) {
         Long memberId;
         try {
-            memberId = jwtProvider.getSubject(accessToken);
+            memberId = jwtProvider.getSubject(refreshToken);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
 
-        boolean isValidRefreshToken =
-            jwtProvider.isValid(refreshToken) && refreshTokenRepository.existsById(refreshToken);
+        boolean isValidRefreshToken = refreshTokenRepository.existsById(refreshToken);
         if (!isValidRefreshToken) {
             throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
@@ -72,18 +71,32 @@ public class LoginService {
     }
 
     /**
+     * 리프레시 토큰을 제거합니다.
+     *  호출 후 해당 리프레시 토큰은 더 이상 사용할 수 없습니다.
+     * @param refreshToken 제거 대상 리프레시 토큰
+     */
+    public void deleteRefreshToken(String refreshToken) {
+        refreshTokenRepository.deleteById(refreshToken);
+    }
+
+    /**
      * 회원을 기준으로 로그인 정보를 생성합니다.
      * @param member 회원
      * @return 로그인 정보
      */
-    private LoginDto generateLoginInformation(Member member) {
-        String accessToken = jwtProvider.createAccessToken(member);
-        String refreshToken = jwtProvider.createRefreshToken();
-        refreshTokenRepository.save(new RefreshToken(refreshToken));
+    private AuthDto generateLoginInformation(Member member) {
+        TokenDto accessToken = jwtProvider.createAccessToken(member);
+        TokenDto refreshToken = jwtProvider.createRefreshToken(member);
+        refreshTokenRepository.save(RefreshToken.builder()
+            .token(refreshToken.getToken())
+            .member(member)
+            .build());
 
-        return LoginDto.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
+        return AuthDto.builder()
+            .accessToken(accessToken.getToken())
+            .accessTokenExpires(accessToken.getExpires())
+            .refreshToken(refreshToken.getToken())
+            .refreshTokenExpires(refreshToken.getExpires())
             .member(member)
             .build();
     }

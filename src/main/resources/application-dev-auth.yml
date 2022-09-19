@@ -9,4 +9,5 @@ jwt:
   access-token:
     expirationMinutes: 30
   refresh-token:
-    expirationHours: 24
+    # 14일
+    expirationHours: 336

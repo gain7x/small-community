@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.domain.login;
+package com.practice.smallcommunity.domain.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
