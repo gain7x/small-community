@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,8 @@ import lombok.NoArgsConstructor;
 public class MainText {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_text_seq_gen")
+    @SequenceGenerator(name = "main_text_seq_gen", sequenceName = "main_text_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

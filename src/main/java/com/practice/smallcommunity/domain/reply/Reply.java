@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,8 @@ import lombok.NoArgsConstructor;
 public class Reply extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reply_seq_gen")
+    @SequenceGenerator(name = "reply_seq_gen", sequenceName = "reply_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
