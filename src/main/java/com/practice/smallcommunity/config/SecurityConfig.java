@@ -1,11 +1,15 @@
 package com.practice.smallcommunity.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.smallcommunity.interfaces.RestAccessDeniedHandler;
+import com.practice.smallcommunity.interfaces.RestAuthenticationEntryPoint;
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
 import com.practice.smallcommunity.security.JwtProvider;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,9 +33,14 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    private final MessageSource ms;
+    private final ObjectMapper objectMapper;
+
     @Bean
     SecurityFilterChain web(HttpSecurity http) throws Exception {
         http
+            .cors()
+            .and()
             .csrf().disable()
             .httpBasic().disable()
             .formLogin().disable()
@@ -39,7 +48,10 @@ public class SecurityConfig implements WebMvcConfigurer {
             .and()
             .headers().frameOptions().sameOrigin()
             .and()
-            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class);
+            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
+            .exceptionHandling()
+            .authenticationEntryPoint(new RestAuthenticationEntryPoint(ms, objectMapper))
+            .accessDeniedHandler(new RestAccessDeniedHandler(ms, objectMapper));
 
         configureRequestAuth(http);
 
