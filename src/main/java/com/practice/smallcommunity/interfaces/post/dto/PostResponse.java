@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.post.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,5 @@ public class PostResponse {
     private int views;
     private int votes;
     private boolean solved;
+    private LocalDateTime createdDate;
 }

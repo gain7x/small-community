@@ -31,6 +31,7 @@ import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -76,6 +77,9 @@ class PostControllerTest {
             .thenReturn(member);
 
         Post post = DomainGenerator.createPost(category, member, "내용");
+        post = spy(post);
+
+        when(post.getId()).thenReturn(1L);
 
         when(postService.write(eq(category), eq(member), any(PostDto.class)))
             .thenReturn(post);
@@ -97,10 +101,15 @@ class PostControllerTest {
         //then
         result.andExpect(status().isCreated())
             .andDo(generateDocument("post", requestFields(
-                fields.withPath("categoryCode").type(JsonFieldType.STRING).description("카테고리 코드"),
-                fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
-                fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")
-            )));
+                    fields.withPath("categoryCode").type(JsonFieldType.STRING).description("카테고리 코드"),
+                    fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
+                    fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")
+                ),
+                responseFields(
+                    baseData(),
+                    fieldWithPath("postId").description(JsonFieldType.NUMBER)
+                        .description("등록된 게시글의 번호")
+                )));
     }
 
     @Test
@@ -114,6 +123,9 @@ class PostControllerTest {
         when(spyMember.getId()).thenReturn(1L);
 
         Post post = DomainGenerator.createPost(spyCategory, spyMember, "내용");
+        post = spy(post);
+
+        when(post.getCreatedDate()).thenReturn(LocalDateTime.now());
 
         when(postService.findPostFetchMainText(1L))
             .thenReturn(post);
@@ -139,7 +151,8 @@ class PostControllerTest {
                     fieldWithPath("text").type(JsonFieldType.STRING).description("게시글 내용"),
                     fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
                     fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
-                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨")
+                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨"),
+                    fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")
                 )));
     }
 

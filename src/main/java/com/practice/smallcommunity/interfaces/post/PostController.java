@@ -11,6 +11,7 @@ import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
+import com.practice.smallcommunity.interfaces.post.dto.PostSimpleResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void write(@CurrentUser Long loginId, @Valid @RequestBody PostRequest dto) {
+    public BaseResponse<PostSimpleResponse> write(@CurrentUser Long loginId, @Valid @RequestBody PostRequest dto) {
         Category category = categoryService.findOne(dto.getCategoryCode());
         Member member = memberService.findByUserId(loginId);
         PostDto postDto = PostDto.builder()
@@ -52,6 +53,10 @@ public class PostController {
         log.info("Post was written. category: {}-{}, postId: {}, nickname: {}, title: {}",
             category.getId(), category.getCode(), result.getId(), member.getNickname(),
             result.getTitle());
+
+        return BaseResponse.Ok(PostSimpleResponse.builder()
+            .postId(result.getId())
+            .build());
     }
 
     @GetMapping("/{postId}")

@@ -63,8 +63,8 @@ public class TestData {
 
     private void initCategories() {
         Category dev = Category.builder()
-            .code("dev")
-            .name("개발")
+            .code("tech")
+            .name("기술")
             .enable(true)
             .build();
 
