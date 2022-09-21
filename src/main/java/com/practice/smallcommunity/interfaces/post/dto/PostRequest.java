@@ -14,9 +14,6 @@ public class PostRequest {
     @NotNull
     private Long categoryId;
 
-    @NotNull
-    private Long memberId;
-
     @NotBlank
     private String title;
 

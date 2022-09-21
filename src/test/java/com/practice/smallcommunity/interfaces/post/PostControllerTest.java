@@ -82,7 +82,6 @@ class PostControllerTest {
 
         //when
         PostRequest dto = PostRequest.builder()
-            .memberId(1L)
             .categoryId(1L)
             .title("제목")
             .text("내용")
@@ -99,7 +98,6 @@ class PostControllerTest {
         result.andExpect(status().isCreated())
             .andDo(generateDocument("post", requestFields(
                 fields.withPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 번호"),
-                fields.withPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                 fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                 fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")
             )));
