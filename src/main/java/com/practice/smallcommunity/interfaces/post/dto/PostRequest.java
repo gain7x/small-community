@@ -1,7 +1,6 @@
 package com.practice.smallcommunity.interfaces.post.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class PostRequest {
 
-    @NotNull
-    private Long categoryId;
+    @NotBlank
+    private String categoryCode;
 
     @NotBlank
     private String title;

@@ -69,7 +69,7 @@ class PostControllerTest {
     @WithMockMember
     void 게시글등록() throws Exception {
         //given
-        when(categoryService.findOne(1L))
+        when(categoryService.findOne("dev"))
             .thenReturn(category);
 
         when(memberService.findByUserId(1L))
@@ -82,7 +82,7 @@ class PostControllerTest {
 
         //when
         PostRequest dto = PostRequest.builder()
-            .categoryId(1L)
+            .categoryCode("dev")
             .title("제목")
             .text("내용")
             .build();
@@ -97,7 +97,7 @@ class PostControllerTest {
         //then
         result.andExpect(status().isCreated())
             .andDo(generateDocument("post", requestFields(
-                fields.withPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 번호"),
+                fields.withPath("categoryCode").type(JsonFieldType.STRING).description("카테고리 코드"),
                 fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                 fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")
             )));
@@ -132,7 +132,7 @@ class PostControllerTest {
                 ),
                 responseFields(
                     baseData(),
-                    fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
+                    fieldWithPath("categoryCode").type(JsonFieldType.STRING).description("카테고리 코드"),
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성자 ID"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
                     fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),

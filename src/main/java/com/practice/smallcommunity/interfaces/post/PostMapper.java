@@ -10,7 +10,7 @@ import org.mapstruct.MappingConstants.ComponentModel;
 @Mapper(componentModel = ComponentModel.SPRING)
 public interface PostMapper {
 
-    @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "categoryCode", source = "category.code")
     @Mapping(target = "memberId", source = "writer.id")
     @Mapping(target = "text", source = "mainText.text")
     @Mapping(target = "solved", expression = "java(post.getAcceptedReply() != null)")

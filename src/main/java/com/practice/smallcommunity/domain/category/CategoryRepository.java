@@ -8,6 +8,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByIdAndEnableIsTrue(Long id);
 
+    Optional<Category> findByCodeAndEnableIsTrue(String code);
+
     List<Category> findAllByEnableIsTrue();
 
     boolean existsByName(String name);

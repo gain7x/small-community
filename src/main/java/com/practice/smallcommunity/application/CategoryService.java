@@ -46,6 +46,19 @@ public class CategoryService {
     }
 
     /**
+     * 카테고리 코드로 카테고리를 조회합니다.
+     * @param categoryCode 카테고리 코드
+     * @return 카테고리
+     * @throws BusinessException
+     *          번호에 해당하는 카테고리가 없는 경우
+     */
+    @Transactional(readOnly = true)
+    public Category findOne(String categoryCode) {
+        return categoryRepository.findByCodeAndEnableIsTrue(categoryCode)
+            .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_CATEGORY));
+    }
+
+    /**
      * 삭제상태가 아닌 모든 카테고리를 조회합니다.
      * @return 카테고리 목록
      */

@@ -40,7 +40,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void write(@CurrentUser Long loginId, @Valid @RequestBody PostRequest dto) {
-        Category category = categoryService.findOne(dto.getCategoryId());
+        Category category = categoryService.findOne(dto.getCategoryCode());
         Member member = memberService.findByUserId(loginId);
         PostDto postDto = PostDto.builder()
             .title(dto.getTitle())
