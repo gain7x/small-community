@@ -12,7 +12,7 @@ import lombok.Data;
 public class ReplyAddRequest {
 
     @NotNull
-    private Long memberId;
+    private Long postId;
 
     @NotBlank
     private String text;

@@ -1,5 +1,6 @@
 package com.practice.smallcommunity.interfaces.reply.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class ReplyResponse {
     private String nickname;
     private String text;
     private int votes;
+    private LocalDateTime createdDate;
 }

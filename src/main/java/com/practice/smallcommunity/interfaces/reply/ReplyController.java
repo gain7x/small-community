@@ -6,6 +6,7 @@ import com.practice.smallcommunity.application.ReplyService;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
+import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CollectionResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyAddRequest;
@@ -40,10 +41,10 @@ public class ReplyController {
     private final ReplyMapper mapper;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/posts/{postId}/replies")
-    public void add(@PathVariable Long postId, @Valid @RequestBody ReplyAddRequest dto) {
-        Post post = postService.findPost(postId);
-        Member writer = memberService.findByUserId(dto.getMemberId());
+    @PostMapping("/replies")
+    public BaseResponse<ReplyResponse> add(@CurrentUser Long loginId, @Valid @RequestBody ReplyAddRequest dto) {
+        Post post = postService.findPost(dto.getPostId());
+        Member writer = memberService.findByUserId(loginId);
         Reply reply = Reply.builder()
             .post(post)
             .writer(writer)
@@ -54,10 +55,12 @@ public class ReplyController {
 
         log.info("Reply was added. postId: {}, replyId: {}, nickname: {}",
             post.getId(), result.getId(), writer.getNickname());
+
+        return BaseResponse.Ok(mapper.toResponse(result));
     }
 
-    @GetMapping("/posts/{postId}/replies")
-    public CollectionResponse<ReplyResponse> findReplies(@PathVariable Long postId) {
+    @GetMapping("/replies")
+    public CollectionResponse<ReplyResponse> findReplies(Long postId) {
         Post post = postService.findPost(postId);
         List<Reply> replies = replyService.findRepliesOnPost(post);
         List<ReplyResponse> result = replies.stream()

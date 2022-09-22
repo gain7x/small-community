@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.interfaces.reply;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
+import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.collectionData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
@@ -15,6 +16,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,7 @@ import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyAddRequest;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,6 +91,9 @@ class ReplyControllerTest {
 
         when(dummyReply.getId())
             .thenReturn(1L);
+
+        when(dummyReply.getCreatedDate())
+            .thenReturn(LocalDateTime.now());
     }
 
     @Test
@@ -99,12 +105,12 @@ class ReplyControllerTest {
 
         //when
         ReplyAddRequest dto = ReplyAddRequest.builder()
-            .memberId(1L)
+            .postId(1L)
             .text("답글")
             .build();
 
         ResultActions result = mvc.perform(
-            RestDocumentationRequestBuilders.post("/api/v1/posts/{postId}/replies", 1L)
+            RestDocumentationRequestBuilders.post("/api/v1/replies", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON));
@@ -114,13 +120,18 @@ class ReplyControllerTest {
 
         result.andExpect(status().isCreated())
             .andDo(generateDocument("reply",
-                pathParameters(
-                    parameterWithName("postId").description("게시글 ID")
-                ),
                 requestFields(
-                    fields.withPath("memberId").type(JsonFieldType.NUMBER)
-                        .description("답글을 작성하는 회원 ID"),
+                    fields.withPath("postId").type(JsonFieldType.NUMBER).description("대상 게시글 ID"),
                     fields.withPath("text").type(JsonFieldType.STRING).description("답글 내용")
+                ),
+                responseFields(
+                    baseData(),
+                    fieldWithPath("replyId").type(JsonFieldType.NUMBER).description("답글 ID"),
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+                    fieldWithPath("text").type(JsonFieldType.STRING).description("내용"),
+                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("투표수"),
+                    fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")
                 )));
     }
 
@@ -133,14 +144,15 @@ class ReplyControllerTest {
 
         //when
         ResultActions result = mvc.perform(
-            RestDocumentationRequestBuilders.get("/api/v1/posts/{postId}/replies", 1L)
+            RestDocumentationRequestBuilders.get("/api/v1/replies")
+                .param("postId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("reply",
-                pathParameters(
+                requestParameters(
                     parameterWithName("postId").description("게시글 ID")
                 ),
                 responseFields(
@@ -149,7 +161,8 @@ class ReplyControllerTest {
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
                     fieldWithPath("text").type(JsonFieldType.STRING).description("내용"),
-                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("투표수")
+                    fieldWithPath("votes").type(JsonFieldType.NUMBER).description("투표수"),
+                    fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")
                 )));
     }
 

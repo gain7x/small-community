@@ -8,6 +8,8 @@ import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.reply.Reply;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class TestData {
 
     private static final int MEMBER_COUNT = 30;
     private static final int POST_COUNT_PER_CATEGORIES = 10;
+    private static final int REPLY_COUNT = 5;
 
     private final MemberService memberService;
     private final CategoryService categoryService;
@@ -109,6 +112,19 @@ public class TestData {
     }
 
     private void initReplies() {
+        Post findPost = postService.findPost(1L);
 
+        for (int i = 0; i < REPLY_COUNT; i++) {
+            String userEmail = "user" + i % MEMBER_COUNT + "@mail.com";
+            Member member = memberService.findByEmail(userEmail);
+
+            Reply reply = replyService.add(Reply.builder()
+                .post(findPost)
+                .writer(member)
+                .text(i + "번 답글입니다.")
+                .build());
+
+            replyService.add(reply);
+        }
     }
 }

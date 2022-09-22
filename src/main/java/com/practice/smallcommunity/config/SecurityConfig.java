@@ -109,6 +109,8 @@ public class SecurityConfig implements WebMvcConfigurer {
             .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
             // 게시글
             .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+            // 답글
+            .antMatchers(HttpMethod.GET, "/api/v1/replies/**").permitAll()
             // 파일
             .antMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
             .anyRequest().authenticated();
