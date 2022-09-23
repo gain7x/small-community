@@ -61,7 +61,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public BaseResponse<PostResponse> find(@PathVariable Long postId) {
-        Post findPost = postService.findPostFetchMainText(postId);
+        Post findPost = postService.viewPost(postId);
         return BaseResponse.Ok(mapper.toResponse(findPost));
     }
 

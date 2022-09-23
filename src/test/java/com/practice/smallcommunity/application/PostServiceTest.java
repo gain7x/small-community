@@ -85,6 +85,19 @@ class PostServiceTest {
     }
 
     @Test
+    void 미삭제상태_게시글을_ID로_조회하고_조회수를_증가시킨다() {
+        //given
+        when(postRepository.findPostWithMainText(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        Post findPost = postService.viewPost(1L);
+
+        //then
+        assertThat(findPost.getViews()).isEqualTo(1);
+    }
+
+    @Test
     void 게시글을_수정한다() {
         //given
         when(member.getId()).thenReturn(1L);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void 삭제상태가_아닌_게시글_조회() {
+    void 미삭제상태_게시글_조회() {
         //given
         postRepository.save(post);
         em.flush();
@@ -91,7 +92,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void 삭제상태인_게시글은_조회되지_않는다() {
+    void 미삭제상태_게시글_조회_시_삭제상태인_게시글은_조회되지_않는다() {
         //given
         post.delete();
         postRepository.save(post);
@@ -100,6 +101,35 @@ class PostRepositoryTest {
 
         //when
         Optional<Post> findItem = postRepository.findByIdAndEnableIsTrue(post.getId());
+
+        //then
+        assertThat(findItem).isEmpty();
+    }
+
+    @Test
+    void 미삭제상태_게시글을_본문과_함께_조회한다() {
+        //given
+        postRepository.save(post);
+        em.flush();
+        em.clear();
+
+        //when
+        Post findItem = postRepository.findPostWithMainText(post.getId()).orElseThrow();
+
+        //then
+        assertThat(Hibernate.isInitialized(findItem.getMainText())).isTrue();
+    }
+
+    @Test
+    void 미삭제상태_게시글을_본문과_함께_조회_시_삭제상태인_게시글은_조회되지_않는다() {
+        //given
+        post.delete();
+        postRepository.save(post);
+        em.flush();
+        em.clear();
+
+        //when
+        Optional<Post> findItem = postRepository.findPostWithMainText(post.getId());
 
         //then
         assertThat(findItem).isEmpty();
@@ -116,7 +146,7 @@ class PostRepositoryTest {
 
         //then
         assertThat(contentCount).isEqualTo(1);
-        assertThat(post.getContent()).isNotNull();
+        assertThat(findItem.getContent()).isNotNull();
     }
 
     @Test
@@ -131,7 +161,7 @@ class PostRepositoryTest {
 
         //then
         assertThat(mainTextCount).isEqualTo(1);
-        assertThat(post.getContent()).isNotNull();
+        assertThat(findItem.getContent()).isNotNull();
     }
 
     @Test

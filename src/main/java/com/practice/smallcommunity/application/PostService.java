@@ -39,7 +39,7 @@ public class PostService {
     }
 
     /**
-     * 삭제 상태가 아닌 게시글을 조회합니다. 연관관계 엔티티는 가져오지 않습니다.
+     * 삭제 상태가 아닌 게시글을 조회합니다.
      * @param postId 게시글 ID
      * @return 게시글
      * @throws BusinessException
@@ -52,8 +52,10 @@ public class PostService {
     }
 
     /**
-     * 삭제 상태가 아닌 게시글을 조회하며, 본문까지 페치조인으로 가져옵니다.
+     * 삭제 상태가 아닌 게시글을 조회합니다.
+     *  본문을 페치조인으로 가져옵니다.
      * @param postId 게시글 ID
+     * @return 게시글
      * @throws BusinessException
      *          ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
      */
@@ -61,6 +63,20 @@ public class PostService {
     public Post findPostFetchMainText(Long postId) {
         return postRepository.findPostWithMainText(postId)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+    }
+
+    /**
+     * 삭제 상태가 아닌 게시글을 조회합니다.
+     *  본문을 페치조인으로 가져오며, 조회수를 1 증가시킵니다.
+     * @param postId 게시글 ID
+     * @return 게시글
+     * @throws BusinessException
+     * ID가 일치하는 게시글이 없거나, 삭제 상태인 경우
+     */
+    public Post viewPost(Long postId) {
+        Post findPost = findPostFetchMainText(postId);
+        findPost.increaseViewCount();
+        return findPost;
     }
 
     /**

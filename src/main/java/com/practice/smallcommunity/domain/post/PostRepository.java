@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param id 게시글 ID
      * @return 게시글
      */
-    @Query("select p from Post p where p.id = :id")
+    @Query("select p from Post p where p.id = :id and p.enable is true")
     @EntityGraph(attributePaths = {"mainText"})
     Optional<Post> findPostWithMainText(@Param("id") Long id);
 }

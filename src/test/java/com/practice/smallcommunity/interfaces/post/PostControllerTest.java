@@ -127,7 +127,7 @@ class PostControllerTest {
 
         when(post.getCreatedDate()).thenReturn(LocalDateTime.now());
 
-        when(postService.findPostFetchMainText(1L))
+        when(postService.viewPost(1L))
             .thenReturn(post);
 
         //when
