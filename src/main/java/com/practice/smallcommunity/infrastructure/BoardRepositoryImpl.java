@@ -7,6 +7,8 @@ import com.practice.smallcommunity.domain.post.BoardRepository;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
@@ -33,6 +35,7 @@ public class BoardRepositoryImpl implements BoardRepository {
             .join(post.content, content)
             .on(categoryEq(cond.getCategoryId()))
             .where(titleMatch(cond.getTitle()))
+            .orderBy(sortPost(pageable))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetchResults();
@@ -52,5 +55,9 @@ public class BoardRepositoryImpl implements BoardRepository {
         return Expressions.numberTemplate(Double.class,
                 "function('match', {0}, {1})", field, expression)
             .gt(0);
+    }
+
+    private OrderSpecifier<?> sortPost(Pageable pageable) {
+        return new OrderSpecifier<>(Order.DESC, post.createdDate);
     }
 }
