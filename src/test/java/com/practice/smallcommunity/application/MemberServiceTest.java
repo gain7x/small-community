@@ -30,14 +30,14 @@ class MemberServiceTest {
 
     MemberService memberService;
 
+    @Spy
+    Member targetMember = DomainGenerator.createMember("A");
+
     @BeforeEach()
     void beforeEach() {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         memberService = new MemberService(memberRepository, passwordEncoder);
     }
-
-    @Spy
-    Member targetMember = DomainGenerator.createMember("A");
 
     @Test
     void 회원가입() {
@@ -82,7 +82,7 @@ class MemberServiceTest {
         assertThat(registeredMember).isNotNull();
         assertThat(registeredMember.getPassword()).isNotEqualTo(plainPassword);
         // '{bcrypt}암호화된 문자열' 형식 검증
-        assertThat(registeredMember.getPassword()).startsWith("{");
+        assertThat(registeredMember.getPassword()).startsWith("{bcrypt}");
     }
 
     @Test
@@ -114,7 +114,7 @@ class MemberServiceTest {
     @Test
     void 회원을_ID로_조회한다() {
         //given
-        when(memberRepository.findById(targetMember.getId()))
+        when(memberRepository.findByIdAndWithdrawalIsFalse(targetMember.getId()))
             .thenReturn(Optional.of(targetMember));
 
         //when
@@ -125,9 +125,22 @@ class MemberServiceTest {
     }
 
     @Test
+    void 회원을_ID로_조회_시_일치하는_회원이_없으면_예외를_던진다() {
+        //given
+        when(memberRepository.findByIdAndWithdrawalIsFalse(1L))
+            .thenReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.findByUserId(1L))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
+    }
+
+    @Test
     void 회원을_이메일로_조회한다() {
         //given
-        when(memberRepository.findByEmail(targetMember.getEmail()))
+        when(memberRepository.findByEmailAndWithdrawalIsFalse(targetMember.getEmail()))
             .thenReturn(Optional.of(targetMember));
 
         //when
@@ -138,15 +151,48 @@ class MemberServiceTest {
     }
 
     @Test
-    void 식별자로_조회_시_동일한_식별자가_없으면_예외를_던진다() {
+    void 회원을_이메일로_조회_시_일치하는_회원이_없으면_예외를_던진다() {
         //given
-        when(memberRepository.findById(targetMember.getId()))
+        when(memberRepository.findByEmailAndWithdrawalIsFalse(targetMember.getEmail()))
             .thenReturn(Optional.empty());
 
         //when
         //then
-        assertThatThrownBy(() -> memberService.findByUserId(targetMember.getId()))
+        assertThatThrownBy(() -> memberService.findByEmail(targetMember.getEmail()))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
+    }
+
+    @Test
+    void 회원정보를_변경한다() {
+        //given
+        String expected = "새로운 별명";
+
+        when(memberRepository.findByIdAndWithdrawalIsFalse(1L))
+            .thenReturn(Optional.of(targetMember));
+
+        //when
+        Member result = memberService.update(1L, expected);
+
+        //then
+        assertThat(result.getNickname()).isEqualTo(expected);
+    }
+
+    @Test
+    void 회원정보_변경_시_별명이_중복되면_예외를_던진다() {
+        //given
+        String newNickname = "새로운 별명";
+
+        when(memberRepository.findByIdAndWithdrawalIsFalse(1L))
+            .thenReturn(Optional.of(targetMember));
+
+        when(memberRepository.existsByNickname(newNickname))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.update(1L, newNickname))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_NICKNAME);
     }
 }

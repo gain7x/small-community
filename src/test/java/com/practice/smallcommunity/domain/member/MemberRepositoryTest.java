@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -70,27 +71,56 @@ class MemberRepositoryTest {
     }
 
     @Test
-    void 회원명으로_조회() {
+    void 탈퇴상태가_아닌_회원을_이메일로_조회한다() {
         //given
         memberRepository.save(member);
 
         //when
-        Member findItem = memberRepository.findByEmail(member.getEmail()).orElseThrow();
-
-        assertThat(findItem.getId()).isEqualTo(member.getId());
-        assertThat(findItem.getEmail()).isEqualTo(findItem.getEmail());
-    }
-
-    @Test
-    void 이메일로_조회() {
-        //given
-        memberRepository.save(member);
-
-        //when
-        Member findItem = memberRepository.findByEmail(this.member.getEmail()).orElseThrow();
+        Member findItem = memberRepository.findByEmailAndWithdrawalIsFalse(this.member.getEmail())
+            .orElseThrow();
 
         //then
         assertThat(findItem.getId()).isEqualTo(member.getId());
         assertThat(findItem.getEmail()).isEqualTo(member.getEmail());
+    }
+
+    @Test
+    void 탈퇴상태가_아닌_회원을_이메일로_조회_시_탈퇴상태인_회원은_조회되지_않는다() {
+        //given
+        member.withdrawal();
+        memberRepository.save(member);
+
+        //when
+        Optional<Member> findItem = memberRepository.findByEmailAndWithdrawalIsFalse(
+            this.member.getEmail());
+
+        //then
+        assertThat(findItem.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 탈퇴상태가_아닌_회원을_ID로_조회한다() {
+        //given
+        memberRepository.save(member);
+
+        //when
+        Member findItem = memberRepository.findByIdAndWithdrawalIsFalse(this.member.getId())
+            .orElseThrow();
+
+        //then
+        assertThat(findItem.getId()).isEqualTo(member.getId());
+    }
+
+    @Test
+    void 탈퇴상태가_아닌_회원을_ID로_조회_시_탈퇴상태인_회원은_조회되지_않는다() {
+        //given
+        member.withdrawal();
+        memberRepository.save(member);
+
+        //when
+        Optional<Member> findItem = memberRepository.findByIdAndWithdrawalIsFalse(this.member.getId());
+
+        //then
+        assertThat(findItem.isEmpty()).isTrue();
     }
 }

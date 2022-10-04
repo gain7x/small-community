@@ -45,6 +45,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private MemberRole memberRole;
 
+    @Column(nullable = false)
+    private boolean withdrawal;
+
     @Builder
     public Member(String email, String password, String nickname, MemberRole memberRole) {
         this.email = email;
@@ -55,7 +58,7 @@ public class Member extends BaseTimeEntity {
     }
 
     /**
-     * 암호를 변경합니다. 이때, 암호 변경일도 갱신됩니다.
+     * 암호를 변경하고, 암호 변경일을 갱신합니다.
      * @param password 새로운 암호
      */
     public void changePassword(String password) {
@@ -63,8 +66,27 @@ public class Member extends BaseTimeEntity {
         lastPasswordChange = LocalDateTime.now();
     }
 
+    /**
+     * 별명을 변경합니다.
+     * @param nickname 새로운 별명
+     */
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 회원 권한을 변경합니다.
+     * @param memberRole 회원 권한
+     */
     public void changeMemberRole(MemberRole memberRole) {
         this.memberRole = memberRole;
+    }
+
+    /**
+     * 회원을 탈퇴 상태로 변경합니다.
+     */
+    public void withdrawal() {
+        this.withdrawal = true;
     }
 
     @Override
