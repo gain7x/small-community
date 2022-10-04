@@ -13,11 +13,11 @@ public interface PostMapper {
     @Mapping(target = "categoryCode", source = "category.code")
     @Mapping(target = "memberId", source = "writer.id")
     @Mapping(target = "text", source = "mainText.text")
-    @Mapping(target = "solved", expression = "java(post.getAcceptedReply() != null)")
+    @Mapping(target = "acceptId", source = "acceptedReply.id")
     PostResponse toResponse(Post post);
 
     @Mapping(target = "postId", source = "post.id")
     @Mapping(target = "memberId", source = "writer.id")
-    @Mapping(target = "solved", expression = "java(post.getAcceptedReply() != null)")
+    @Mapping(target = "acceptId", source = "acceptedReply.id")
     BoardResponse toBoard(Post post);
 }

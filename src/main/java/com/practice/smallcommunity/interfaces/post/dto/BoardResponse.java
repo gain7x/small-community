@@ -1,7 +1,6 @@
 package com.practice.smallcommunity.interfaces.post.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,6 @@ public class BoardResponse {
     private String title;
     private int views;
     private int votes;
-
-    @JsonInclude(Include.NON_NULL)
-    private Boolean solved;
+    private Long acceptId;
+    private LocalDateTime createdDate;
 }

@@ -17,6 +17,6 @@ public class PostResponse {
     private String text;
     private int views;
     private int votes;
-    private boolean solved;
+    private Long acceptId;
     private LocalDateTime createdDate;
 }

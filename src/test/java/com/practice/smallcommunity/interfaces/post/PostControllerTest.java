@@ -151,7 +151,7 @@ class PostControllerTest {
                     fieldWithPath("text").type(JsonFieldType.STRING).description("게시글 내용"),
                     fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
                     fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
-                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨"),
+                    fieldWithPath("acceptId").type(JsonFieldType.NUMBER).optional().description("채택한 답글 ID"),
                     fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")
                 )));
     }
