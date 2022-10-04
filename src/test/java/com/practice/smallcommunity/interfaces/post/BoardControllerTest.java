@@ -13,12 +13,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.practice.smallcommunity.application.BoardService;
+import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ import org.springframework.test.web.servlet.ResultActions;
 class BoardControllerTest {
 
     @MockBean
+    CategoryService categoryService;
+
+    @MockBean
     BoardService boardService;
 
     @Autowired
@@ -51,12 +56,17 @@ class BoardControllerTest {
     @Test
     void 게시글_목록_검색() throws Exception {
         //given
+        Category spyCategory = spy(category);
+        when(spyCategory.getId()).thenReturn(1L);
+
+        when(categoryService.findOne("dev")).thenReturn(spyCategory);
+
         Member spyMember = spy(this.member);
         when(spyMember.getId()).thenReturn(1L);
 
-        Post post = DomainGenerator.createPost(category, spyMember, "내용");
-        Post spyPost = spy(post);
+        Post spyPost = spy(DomainGenerator.createPost(category, spyMember, "내용"));
         when(spyPost.getId()).thenReturn(1L);
+        when(spyPost.getCreatedDate()).thenReturn(LocalDateTime.now());
 
         Page<Post> posts = new PageImpl<>(List.of(spyPost));
 
@@ -65,19 +75,18 @@ class BoardControllerTest {
 
         //when
         ResultActions result = mvc.perform(RestDocumentationRequestBuilders.get(
-                "/api/v1/categories/{categoryId}/posts", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+                "/api/v1/categories/{categoryCode}/posts", "dev")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("board",
                 pathParameters(
-                    parameterWithName("categoryId").description("카테고리 번호")
+                    parameterWithName("categoryCode").description("카테고리 코드")
                 ),
                 requestParameters(
-                    parameterWithName("title").optional().description("검색할 제목"),
-                    parameterWithName("text").optional().description("검색할 내용"),
+                    parameterWithName("title").optional().description("검색할 제목, 최소 2글자"),
                     parameterWithName("page").optional().description("페이지 번호"),
                     parameterWithName("size").optional().description("페이지 크기")
                 ),
@@ -89,7 +98,8 @@ class BoardControllerTest {
                     fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                     fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
                     fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
-                    fieldWithPath("solved").type(JsonFieldType.BOOLEAN).description("해결됨")
+                    fieldWithPath("acceptId").type(JsonFieldType.NUMBER).optional().description("채택한 답글 ID"),
+                    fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")
                 )));
     }
 
