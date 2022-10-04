@@ -23,12 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
 import com.practice.smallcommunity.application.ReplyService;
+import com.practice.smallcommunity.application.VoteService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.interfaces.WithMockMember;
+import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyAddRequest;
 import com.practice.smallcommunity.interfaces.reply.dto.ReplyUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
@@ -59,6 +61,9 @@ class ReplyControllerTest {
 
     @MockBean
     ReplyService replyService;
+
+    @MockBean
+    VoteService voteService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -213,6 +218,37 @@ class ReplyControllerTest {
             .andDo(generateDocument("reply",
                 pathParameters(
                     parameterWithName("replyId").description("답글 ID")
+                )));
+    }
+
+    @Test
+    @WithMockMember
+    void 답글투표() throws Exception {
+        //when
+        VoteRequest dto = VoteRequest.builder()
+            .positive(true)
+            .build();
+
+        ResultActions result = mvc.perform(
+            RestDocumentationRequestBuilders.post("/api/v1/replies/{replyId}/vote", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        ConstrainedFields fields = getConstrainedFields(VoteRequest.class);
+
+        result.andExpect(status().isOk())
+            .andDo(generateDocument("reply",
+                pathParameters(
+                    parameterWithName("replyId").description("답글 번호")
+                ),
+                requestFields(
+                    fields.withPath("positive").type(JsonFieldType.BOOLEAN).description("긍정 여부")
+                ),
+                responseFields(
+                    baseData(),
+                    fieldWithPath("voted").type(JsonFieldType.BOOLEAN).description("투표수 변화 여부")
                 )));
     }
 

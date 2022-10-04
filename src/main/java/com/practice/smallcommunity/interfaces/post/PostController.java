@@ -3,12 +3,15 @@ package com.practice.smallcommunity.interfaces.post;
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
+import com.practice.smallcommunity.application.VoteService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
+import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
+import com.practice.smallcommunity.interfaces.content.dto.VoteResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostSimpleResponse;
@@ -37,6 +40,7 @@ public class PostController {
     private final MemberService memberService;
     private final PostService postService;
     private final PostMapper mapper;
+    private final VoteService voteService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -86,5 +90,16 @@ public class PostController {
         postService.disable(postId, loginId);
 
         log.info("Post was disabled. postId: {}", postId);
+    }
+
+    @PostMapping("/{postId}/vote")
+    public BaseResponse<VoteResponse> vote(@PathVariable Long postId, @CurrentUser Long loginId,
+        @Valid @RequestBody VoteRequest dto) {
+        Member member = memberService.findByUserId(loginId);
+        boolean result = voteService.votePost(postId, member, dto.getPositive());
+
+        return BaseResponse.Ok(VoteResponse.builder()
+            .voted(result)
+            .build());
     }
 }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
+import com.practice.smallcommunity.application.VoteService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
@@ -28,6 +29,7 @@ import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.interfaces.WithMockMember;
+import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
@@ -57,31 +59,34 @@ class PostControllerTest {
     @MockBean
     PostService postService;
 
+    @MockBean
+    VoteService voteService;
+
     @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
     MockMvc mvc;
 
-    Category category = DomainGenerator.createCategory("dev", "개발");
-    Member member = DomainGenerator.createMember("A");
+    Category dummyCategory = DomainGenerator.createCategory("dev", "개발");
+    Member dummyMember = DomainGenerator.createMember("A");
 
     @Test
     @WithMockMember
     void 게시글등록() throws Exception {
         //given
         when(categoryService.findOne("dev"))
-            .thenReturn(category);
+            .thenReturn(dummyCategory);
 
         when(memberService.findByUserId(1L))
-            .thenReturn(member);
+            .thenReturn(dummyMember);
 
-        Post post = DomainGenerator.createPost(category, member, "내용");
+        Post post = DomainGenerator.createPost(dummyCategory, dummyMember, "내용");
         post = spy(post);
 
         when(post.getId()).thenReturn(1L);
 
-        when(postService.write(eq(category), eq(member), any(PostDto.class)))
+        when(postService.write(eq(dummyCategory), eq(dummyMember), any(PostDto.class)))
             .thenReturn(post);
 
         //when
@@ -116,10 +121,10 @@ class PostControllerTest {
     @WithMockMember
     void 게시글조회() throws Exception {
         //given
-        Category spyCategory = spy(category);
+        Category spyCategory = spy(dummyCategory);
         when(spyCategory.getId()).thenReturn(1L);
 
-        Member spyMember = spy(member);
+        Member spyMember = spy(dummyMember);
         when(spyMember.getId()).thenReturn(1L);
 
         Post post = DomainGenerator.createPost(spyCategory, spyMember, "내용");
@@ -160,7 +165,7 @@ class PostControllerTest {
     @WithMockMember
     void 게시글수정() throws Exception {
         //given
-        Post post = DomainGenerator.createPost(category, member, "내용");
+        Post post = DomainGenerator.createPost(dummyCategory, dummyMember, "내용");
 
         when(postService.update(eq(1L), eq(1L), any(PostDto.class)))
             .thenReturn(post);
@@ -207,6 +212,37 @@ class PostControllerTest {
             .andDo(generateDocument("post", pathParameters(
                 parameterWithName("postId").description("게시글 번호")
             )));
+    }
+
+    @Test
+    @WithMockMember
+    void 게시글투표() throws Exception {
+        //when
+        VoteRequest dto = VoteRequest.builder()
+            .positive(true)
+            .build();
+
+        ResultActions result = mvc.perform(
+            RestDocumentationRequestBuilders.post("/api/v1/posts/{postId}/vote", 1L)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto))
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        ConstrainedFields fields = getConstrainedFields(VoteRequest.class);
+
+        result.andExpect(status().isOk())
+            .andDo(generateDocument("post",
+                pathParameters(
+                    parameterWithName("postId").description("게시글 번호")
+                ),
+                requestFields(
+                    fields.withPath("positive").type(JsonFieldType.BOOLEAN).description("긍정 여부")
+                ),
+                responseFields(
+                    baseData(),
+                    fieldWithPath("voted").type(JsonFieldType.BOOLEAN).description("투표수 변화 여부")
+                )));
     }
 
     @TestConfiguration

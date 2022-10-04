@@ -11,3 +11,6 @@ operation::reply/답글수정[snippets='http-request,path-parameters,request-fie
 
 === 답글 삭제
 operation::reply/답글삭제[snippets='http-request,path-parameters,http-response']
+
+=== 답글 투표
+operation::reply/답글투표[snippets='http-request,path-parameters,request-fields,http-response,response-fields-data-base']

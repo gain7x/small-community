@@ -1,19 +1,13 @@
 package com.practice.smallcommunity.domain.content;
 
-import com.practice.smallcommunity.domain.BaseTimeEntity;
 import com.practice.smallcommunity.domain.member.Member;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,9 +31,6 @@ public class Content {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member member;
-
-    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<VoteHistory> voteHistories = new HashSet<>();
 
     @Builder
     public Content(Member member) {
