@@ -11,3 +11,6 @@ operation::common/공통_응답_페이지[snippets='response-body,response-field
 
 === 예외
 operation::common/예외_응답[snippets='response-body,response-fields']
+
+=== 예외 목록
+operation::common/예외_목록[snippets='response-body']

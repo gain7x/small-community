@@ -89,4 +89,17 @@ public class CommonControllerTest {
                 fieldWithPath("errors[].reason").type(JsonFieldType.STRING).description("오류 발생 이유")
             )));
     }
+
+    @Test
+    @WithMockMember
+    void 예외_목록() throws Exception{
+        //when
+        ResultActions result = mvc.perform(get("/docs/errorCodes")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result.andExpect(status().isOk())
+            .andDo(generateDocument("common"));
+    }
 }

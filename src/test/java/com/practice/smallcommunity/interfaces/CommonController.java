@@ -2,6 +2,7 @@ package com.practice.smallcommunity.interfaces;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,5 +31,21 @@ public class CommonController {
     @GetMapping("/error")
     public ErrorResponse errorResponse() {
         throw new BusinessException(ErrorCode.DUPLICATED_EMAIL, "email");
+    }
+
+    @GetMapping("/errorCodes")
+    public CollectionResponse<ErrorResponse> errorCodes() {
+        List<ErrorResponse> errorCodes = new ArrayList<>();
+
+        for (ErrorCode errorCode : ErrorCode.values()) {
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getDefaultMessage())
+                .build();
+
+            errorCodes.add(errorResponse);
+        }
+
+        return CollectionResponse.Ok(errorCodes);
     }
 }
