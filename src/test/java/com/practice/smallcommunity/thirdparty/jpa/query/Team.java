@@ -1,7 +1,8 @@
-package com.practice.smallcommunity.thirdparty.jpa;
+package com.practice.smallcommunity.thirdparty.jpa.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,15 +18,14 @@ public class Team {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Player> players = new ArrayList<>();
 
-    public Team(Long id, String name) {
-        this.id = id;
+    public Team(String name) {
         this.name = name;
     }
 }

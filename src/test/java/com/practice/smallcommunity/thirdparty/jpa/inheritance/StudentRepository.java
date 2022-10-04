@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.thirdparty.jpa;
+package com.practice.smallcommunity.thirdparty.jpa.inheritance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
