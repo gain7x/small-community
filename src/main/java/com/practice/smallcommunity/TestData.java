@@ -84,8 +84,8 @@ public class TestData {
             .build();
 
         Category life = Category.builder()
-            .code("life")
-            .name("일상")
+            .code("free")
+            .name("자유")
             .enable(true)
             .build();
 
@@ -102,7 +102,7 @@ public class TestData {
                 String userEmail = "user" + i % MEMBER_COUNT + "@mail.com";
                 Member member = memberService.findByEmail(userEmail);
                 PostDto dto = PostDto.builder()
-                    .title(i + "번 게시글")
+                    .title(category.getName() + " " + i + "번 게시글")
                     .text(i + "번 게시글입니다.")
                     .build();
 
