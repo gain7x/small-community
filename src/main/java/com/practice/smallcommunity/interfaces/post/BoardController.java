@@ -12,24 +12,22 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1/posts")
 public class BoardController {
 
     private final CategoryService categoryService;
     private final BoardService boardService;
     private final PostMapper mapper;
 
-    @GetMapping("/{categoryCode}/posts")
-    public PageResponse<BoardResponse> findPosts(@PathVariable String categoryCode,
-        @RequestParam(required = false) @Length(min = 2) String title,
-        Pageable pageable) {
+    @GetMapping
+    public PageResponse<BoardResponse> findPosts(@RequestParam String categoryCode,
+        @RequestParam(required = false) @Length(min = 2) String title, Pageable pageable) {
         Category findCategory = categoryService.findOne(categoryCode);
         BoardSearchCond cond = BoardSearchCond.builder()
             .categoryId(findCategory.getId())

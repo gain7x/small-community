@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.practice.smallcommunity.application.BoardService;
@@ -32,7 +32,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -74,18 +73,16 @@ class BoardControllerTest {
             .thenReturn(posts);
 
         //when
-        ResultActions result = mvc.perform(RestDocumentationRequestBuilders.get(
-                "/api/v1/categories/{categoryCode}/posts", "dev")
+        ResultActions result = mvc.perform(get("/api/v1/posts")
+            .param("categoryCode", "dev")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
 
         //then
         result.andExpect(status().isOk())
             .andDo(generateDocument("board",
-                pathParameters(
-                    parameterWithName("categoryCode").description("카테고리 코드")
-                ),
                 requestParameters(
+                    parameterWithName("categoryCode").description("카테고리 코드"),
                     parameterWithName("title").optional().description("검색할 제목, 최소 2글자"),
                     parameterWithName("page").optional().description("페이지 번호"),
                     parameterWithName("size").optional().description("페이지 크기")
