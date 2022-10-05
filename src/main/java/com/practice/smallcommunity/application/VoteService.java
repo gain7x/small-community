@@ -22,6 +22,7 @@ public class VoteService {
      * @param voter    투표자
      * @param positive 긍정 여부
      * @return 투표수에 변화 발생 시 TRUE, 그대로면 FALSE
+     * @see VoteHistoryService#addVoteHistory
      */
     public boolean voteReply(Long replyId, Member voter, boolean positive) {
         Reply findReply = replyService.findEnabledReply(replyId);
@@ -39,6 +40,7 @@ public class VoteService {
      * @param voter    투표자
      * @param positive 긍정 여부
      * @return 투표수에 변화 발생 시 TRUE, 그대로면 FALSE
+     * @see VoteHistoryService#addVoteHistory
      */
     public boolean votePost(Long postId, Member voter, boolean positive) {
         Post findPost = postService.findPost(postId);
