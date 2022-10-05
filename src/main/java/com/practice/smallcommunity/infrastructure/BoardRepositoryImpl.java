@@ -33,7 +33,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     public Page<Post> searchPosts(BoardSearchCond cond, Pageable pageable) {
         QueryResults<Post> results = queryFactory.selectFrom(post)
             .join(post.content, content)
-            .on(categoryEq(cond.getCategoryId()))
+            .on(enabled(), categoryEq(cond.getCategoryId()))
             .where(titleMatch(cond.getTitle()))
             .orderBy(sortPost(pageable))
             .offset(pageable.getOffset())
@@ -45,6 +45,10 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     private BooleanExpression categoryEq(Long categoryId) {
         return categoryId != null ? post.category.id.eq(categoryId) : null;
+    }
+
+    private BooleanExpression enabled() {
+        return post.enable.eq(true);
     }
 
     private BooleanExpression titleMatch(String title) {
