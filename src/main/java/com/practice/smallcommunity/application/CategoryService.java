@@ -62,6 +62,7 @@ public class CategoryService {
      * 삭제상태가 아닌 모든 카테고리를 조회합니다.
      * @return 카테고리 목록
      */
+    @Transactional(readOnly = true)
     public List<Category> findEnableCategories() {
         return categoryRepository.findAllByEnableIsTrue();
     }

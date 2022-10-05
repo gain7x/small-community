@@ -44,6 +44,7 @@ public class MemberService {
      *          ID가 일치하는 회원이 존재하지 않는 경우
      *          회원이 탈퇴 상태인 경우
      */
+    @Transactional(readOnly = true)
     public Member findByUserId(Long userId) {
         return memberRepository.findByIdAndWithdrawalIsFalse(userId)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
@@ -57,6 +58,7 @@ public class MemberService {
      *          이메일이 일치하는 회원이 존재하지 않는 경우
      *          회원이 탈퇴 상태인 경우
      */
+    @Transactional(readOnly = true)
     public Member findByEmail(String email) {
         return memberRepository.findByEmailAndWithdrawalIsFalse(email)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));

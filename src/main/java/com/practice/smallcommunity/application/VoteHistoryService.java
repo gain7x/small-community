@@ -17,6 +17,7 @@ public class VoteHistoryService {
 
     private final VoteHistoryRepository voteHistoryRepository;
 
+    @Transactional(readOnly = true)
     public Optional<VoteHistory> findVoteHistory(Member voter, Content content) {
         return voteHistoryRepository.findById(new VoteHistoryId(voter.getId(), content.getId()));
     }
