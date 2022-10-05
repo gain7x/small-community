@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
+import com.practice.smallcommunity.application.ReplyService;
 import com.practice.smallcommunity.application.VoteService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
@@ -30,6 +31,7 @@ import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
+import com.practice.smallcommunity.interfaces.post.dto.AcceptReplyRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostUpdateRequest;
 import com.practice.smallcommunity.utils.DomainGenerator;
@@ -61,6 +63,9 @@ class PostControllerTest {
 
     @MockBean
     VoteService voteService;
+
+    @MockBean
+    ReplyService replyService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -242,6 +247,32 @@ class PostControllerTest {
                 responseFields(
                     baseData(),
                     fieldWithPath("voted").type(JsonFieldType.BOOLEAN).description("투표수 변화 여부")
+                )));
+    }
+
+    @Test
+    @WithMockMember
+    void 답글채택() throws Exception {
+        //when
+        AcceptReplyRequest dto = AcceptReplyRequest.builder()
+            .replyId(1L)
+            .build();
+
+        ResultActions result = mvc.perform(
+            RestDocumentationRequestBuilders.post("/api/v1/posts/{postId}/accept", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)));
+
+        //then
+        ConstrainedFields fields = getConstrainedFields(AcceptReplyRequest.class);
+
+        result.andExpect(status().isNoContent())
+            .andDo(generateDocument("post",
+                pathParameters(
+                    parameterWithName("postId").description("게시글 번호")
+                ),
+                requestFields(
+                    fields.withPath("replyId").type(JsonFieldType.NUMBER).description("채택 대상 답글 ID")
                 )));
     }
 

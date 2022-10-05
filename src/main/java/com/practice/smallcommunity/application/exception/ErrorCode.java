@@ -29,6 +29,7 @@ public enum ErrorCode {
     NOT_FOUND_CATEGORY(HttpStatus.BAD_REQUEST, "SCE152", "카테고리를 찾을 수 없습니다."),
     // 게시글
     NOT_FOUND_POST(HttpStatus.BAD_REQUEST, "SCE201", "게시글을 찾을 수 없습니다."),
+    EXIST_ACCEPTED_REPLY(HttpStatus.BAD_REQUEST, "SCE202", "이미 채택한 답글이 있습니다."),
     // 답글
     NOT_FOUND_REPLY(HttpStatus.BAD_REQUEST, "SCE251", "답글을 찾을 수 없습니다."),
     ;

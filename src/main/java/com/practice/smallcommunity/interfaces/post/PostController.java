@@ -3,15 +3,18 @@ package com.practice.smallcommunity.interfaces.post;
 import com.practice.smallcommunity.application.CategoryService;
 import com.practice.smallcommunity.application.MemberService;
 import com.practice.smallcommunity.application.PostService;
+import com.practice.smallcommunity.application.ReplyService;
 import com.practice.smallcommunity.application.VoteService;
 import com.practice.smallcommunity.application.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
 import com.practice.smallcommunity.interfaces.content.dto.VoteResponse;
+import com.practice.smallcommunity.interfaces.post.dto.AcceptReplyRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostRequest;
 import com.practice.smallcommunity.interfaces.post.dto.PostResponse;
 import com.practice.smallcommunity.interfaces.post.dto.PostSimpleResponse;
@@ -39,6 +42,7 @@ public class PostController {
     private final CategoryService categoryService;
     private final MemberService memberService;
     private final PostService postService;
+    private final ReplyService replyService;
     private final PostMapper mapper;
     private final VoteService voteService;
 
@@ -101,5 +105,13 @@ public class PostController {
         return BaseResponse.Ok(VoteResponse.builder()
             .voted(result)
             .build());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{postId}/accept")
+    public void accept(@PathVariable Long postId, @CurrentUser Long loginId,
+        @Valid @RequestBody AcceptReplyRequest dto) {
+        Reply targetReply = replyService.findEnabledReply(dto.getReplyId());
+        postService.accept(postId, loginId, targetReply);
     }
 }

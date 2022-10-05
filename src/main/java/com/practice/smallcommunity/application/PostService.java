@@ -7,6 +7,7 @@ import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
+import com.practice.smallcommunity.domain.reply.Reply;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,7 @@ public class PostService {
      */
     public Post update(Long postId, Long loginId, PostDto dto) {
         Post findPost = findPostFetchMainText(postId);
-        validateUpdater(findPost, loginId);
+        validatePostWriter(findPost, loginId);
         findPost.updateTitle(dto.getTitle());
         findPost.updateContent(dto.getText());
 
@@ -101,21 +102,54 @@ public class PostService {
     /**
      * 게시글을 삭제 상태로 변경합니다.
      * @param postId 게시글 ID
-     * @param loginId 게시글을 삭제하려는 현재 회원 ID
+     * @param loginId 게시글을 삭제하려는 현재 회원 ID( 작성자 )
      * @throws BusinessException
-     *          게시글 작성자가 아닌 경우,
-     *          ID가 일치하는 게시글이 없는 경우
+     *          ID가 일치하는 게시글이 없는 경우,
+     *          게시글 작성자가 아닌 경우
      */
     public void disable(Long postId, Long loginId) {
         Post findPost = findPost(postId);
-        validateUpdater(findPost, loginId);
+        validatePostWriter(findPost, loginId);
         findPost.delete();
     }
 
-    private void validateUpdater(Post post, Long loginId) {
-        Long writerId = post.getWriter().getId();
-        if (!writerId.equals(loginId)) {
-            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+    /**
+     * 답글을 채택합니다.
+     * @param postId  게시글 ID
+     * @param loginId 답글을 채택하려는 회원 ID( 작성자 )
+     * @param reply   채택 대상 답글
+     * @throws BusinessException
+     *          ID가 일치하는 게시글이 없는 경우,
+     *          게시글 작성자가 아닌 경우,
+     *          이미 채택된 답글이 있는 경우,
+     *          해당 게시글에 작성된 답글이 아닌 경우,
+     *          게시글 작성자가 본인의 답글을 채택하는 경우
+     */
+    public void accept(Long postId, Long loginId, Reply reply) {
+        Post findPost = findPost(postId);
+
+        validatePostWriter(findPost, loginId);
+        if (findPost.getAcceptedReply() != null) {
+            throw new BusinessException(ErrorCode.EXIST_ACCEPTED_REPLY);
+        }
+        if (!isReplyWriteToPost(postId, reply) || isReplyWriter(loginId, reply)) {
+            throw new BusinessException(ErrorCode.RUNTIME_ERROR);
+        }
+
+        findPost.accept(reply);
+    }
+
+    private boolean isReplyWriteToPost(Long postId, Reply reply) {
+        return reply.getPost().getId().equals(postId);
+    }
+
+    private boolean isReplyWriter(Long loginId, Reply reply) {
+        return reply.getWriter().getId().equals(loginId);
+    }
+
+    private void validatePostWriter(Post post, Long loginId) {
+        if (!post.getWriter().getId().equals(loginId)) {
+            throw new BusinessException(ErrorCode.RUNTIME_ERROR);
         }
     }
 }

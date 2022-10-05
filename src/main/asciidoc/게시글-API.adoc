@@ -14,3 +14,6 @@ operation::post/게시글삭제[snippets='http-request,path-parameters,http-resp
 
 === 게시글 투표
 operation::post/게시글투표[snippets='http-request,path-parameters,request-fields,http-response,response-fields-data-base']
+
+=== 답글 채택
+operation::post/답글채택[snippets='http-request,path-parameters,request-fields,http-response']
