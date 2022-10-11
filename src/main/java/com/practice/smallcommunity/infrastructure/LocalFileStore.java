@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class LocalFileStore implements FileStore {
 
-    @Value("${server.api}")
-    private String api;
+    @Value("${server.api.baseUrl}")
+    private String baseUrl;
 
     @Value("${file-store.dir}")
     private String fileDir;
@@ -48,7 +48,7 @@ public class LocalFileStore implements FileStore {
         return StoredFile.builder()
             .bucket(bucket)
             .originalFilename(originalFilename)
-            .url(api + "/images/" + bucket + "/" + originalFilename)
+            .url(baseUrl + "/images/" + bucket + "/" + originalFilename)
             .build();
     }
 }
