@@ -22,6 +22,7 @@ public class MemberService {
 
     /**
      * 회원 등록을 시도하고, 성공하면 등록된 회원 정보를 반환합니다.
+     *  비밀번호는 암호화 후 저장됩니다.
      * @param member 등록할 회원 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 회원 정보
      * @throws BusinessException
@@ -77,7 +78,7 @@ public class MemberService {
     public Member update(Long userId, String nickname) {
         Member findMember = findByUserId(userId);
         if (!findMember.getNickname().equals(nickname)) {
-            validateNickname(nickname);
+            checkDuplicateNicknames(nickname);
             findMember.changeNickname(nickname);
         }
 
@@ -108,6 +109,17 @@ public class MemberService {
     }
 
     /**
+     * 해당 이메일을 사용하는 회원을 이메일 인증 상태로 변경합니다.
+     * @param email 이메일
+     * @return 회원
+     */
+    public Member verifyEmail(String email) {
+        Member findMember = findByEmail(email);
+        findMember.verifyEmail();
+        return findMember;
+    }
+
+    /**
      * ID가 일치하는 회원을 탈퇴 상태로 변경합니다.
      * @param userId 회원 번호
      * @throws BusinessException
@@ -120,22 +132,34 @@ public class MemberService {
         return findMember;
     }
 
-    private void validateRegisterMember(Member member) {
-        validateEmail(member.getEmail());
-        validateNickname(member.getNickname());
-    }
-
-    private void validateEmail(String email) {
+    /**
+     * 이미 사용 중인 이메일인지 확인하고, 사용 중이면 예외를 던집니다.
+     * @param email 확인 대상 이메일
+     * @throws BusinessException
+     *          이메일이 이미 사용중인 경우
+     */
+    public void checkDuplicateEmails(String email) {
         boolean existsByEmail = memberRepository.existsByEmail(email);
         if (existsByEmail) {
             throw new BusinessException(ErrorCode.DUPLICATED_EMAIL);
         }
     }
 
-    private void validateNickname(String nickname) {
+    /**
+     * 이미 사용 중인 별명인지 확인하고, 사용 중이면 예외를 던집니다.
+     * @param nickname 확인 대상 별명
+     * @throws BusinessException
+     *          별명이 이미 사용중인 경우
+     */
+    public void checkDuplicateNicknames(String nickname) {
         boolean existsByNickname = memberRepository.existsByNickname(nickname);
         if (existsByNickname) {
             throw new BusinessException(ErrorCode.DUPLICATED_NICKNAME);
         }
+    }
+
+    private void validateRegisterMember(Member member) {
+        checkDuplicateEmails(member.getEmail());
+        checkDuplicateNicknames(member.getNickname());
     }
 }

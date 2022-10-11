@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Mail Verification</title>
+</head>
+<body>
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 100%">
+  <tbody>
+  <tr>
+    <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+        <tbody>
+        <tr>
+          <td valign="top" style="height: 100%">
+            <div style="max-width: 600px">
+              <p>이메일 인증을 완료하고 작은 커뮤니티에 로그인하세요!</p>
+              <form th:action="${action}" method="post" target="_blank">
+                <button style="height: auto; padding: 20px; border-style: none; border-radius: 10px;
+                  background-color: #7dd3fc; font-weight: bold; color: white; cursor: pointer;">
+                  이메일 인증하기
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

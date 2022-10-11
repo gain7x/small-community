@@ -49,6 +49,7 @@ public class TestData {
             .nickname("admin")
             .memberRole(MemberRole.ADMIN)
             .build();
+        admin.verifyEmail();
 
         memberService.register(admin);
 
@@ -59,6 +60,7 @@ public class TestData {
                 .nickname("user" + i)
                 .memberRole(MemberRole.USER)
                 .build();
+            member.verifyEmail();
 
             memberService.register(member);
         }

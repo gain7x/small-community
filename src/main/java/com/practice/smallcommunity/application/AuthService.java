@@ -27,15 +27,21 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
-     * 이메일 및 암호가 일치하는 회원 정보를 반환합니다.
+     * 이메일, 비밀번호가 일치하는 회원을 반환합니다.
      * @param email 이메일
-     * @param password 암호
-     * @return 회원 정보
+     * @param password 비밀번호
+     * @return 회원
      * @throws BusinessException
-     *          회원이 존재하지 않거나, 암호가 다른 경우
+     *          이메일이 일치하는 회원이 존재하지 않는 경우
+     *          이메일이 인증되지 않은 경우
+     *          비밀번호가 일치하지 않는 경우
      */
     public AuthDto login(String email, String password) {
         Member findMember = memberService.findByEmail(email);
+        if (!findMember.isEmailVerified()) {
+            throw new BusinessException(ErrorCode.UNVERIFIED_EMAIL);
+        }
+
         boolean matches = passwordEncoder.matches(password, findMember.getPassword());
         if (!matches) {
             throw new BusinessException(ErrorCode.NOT_MATCH_MEMBER);

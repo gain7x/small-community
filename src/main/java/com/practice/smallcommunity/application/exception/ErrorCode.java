@@ -20,6 +20,8 @@ public enum ErrorCode {
     NOT_MATCH_MEMBER(HttpStatus.BAD_REQUEST, "SCE051", "회원 정보가 다릅니다."),
     INVALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "SCE052", "유효하지 않은 액세스 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "SCE053", "유효하지 않은 리프레시 토큰입니다."),
+    INVALID_VERIFICATION_KEY(HttpStatus.BAD_REQUEST, "SCE054", "인증 키가 유효하지 않습니다."),
+    UNVERIFIED_EMAIL(HttpStatus.FORBIDDEN, "SCE055", "인증되지 않은 이메일입니다."),
     // 회원
     NOT_FOUND_MEMBER(HttpStatus.BAD_REQUEST, "SCE101", "회원을 찾을 수 없습니다."),
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "SCE102", "이미 사용 중인 이메일입니다."),

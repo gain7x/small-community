@@ -46,6 +46,9 @@ public class Member extends BaseTimeEntity {
     private MemberRole memberRole;
 
     @Column(nullable = false)
+    private boolean emailVerified;
+
+    @Column(nullable = false)
     private boolean withdrawal;
 
     @Builder
@@ -80,6 +83,10 @@ public class Member extends BaseTimeEntity {
      */
     public void changeMemberRole(MemberRole memberRole) {
         this.memberRole = memberRole;
+    }
+
+    public void verifyEmail() {
+        this.emailVerified = true;
     }
 
     /**

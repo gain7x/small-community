@@ -5,6 +5,7 @@ spring:
         - dev-env
         - dev-auth
         - dev-db
+        - prod-mail
     active: dev
   messages:
     basename: messages,errors

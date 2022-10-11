@@ -59,12 +59,13 @@ class AuthServiceTest {
     }
 
     @Test
-    void 로그인_성공하면_로그인정보_반환() {
+    void 로그인_성공_시_로그인_정보를_반환한다() {
         //given
         when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
         when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);
         when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+        dummyMember.verifyEmail();
 
         //when
         AuthDto result = authService.login("userA@mail.com", "userPass");
@@ -77,7 +78,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 회원정보_없으면_검증예외발생() {
+    void 로그인_시_회원정보가_없으면_예외를_던진다() {
         //given
         when(memberService.findByEmail("some@mail.com"))
             .thenThrow(new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
@@ -90,10 +91,23 @@ class AuthServiceTest {
     }
 
     @Test
-    void 비밀번호_틀리면_검증예외발생() {
+    void 로그인_시_이메일이_미인증_상태면_예외를_던진다() {
+        //given
+        when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
+
+        //when
+        //then
+        assertThatThrownBy(() -> authService.login("userA@mail.com", "other"))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNVERIFIED_EMAIL);
+    }
+
+    @Test
+    void 로그인_시_비밀번호가_일치하지_않으면_예외를_던진다() {
         //given
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
+        dummyMember.verifyEmail();
 
         //when
         //then
@@ -103,7 +117,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 재발급이_유효하면_로그인정보_반환() {
+    void 재발급이_유효하면_로그인_정보를_반환한다() {
         //given
         when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
         when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);

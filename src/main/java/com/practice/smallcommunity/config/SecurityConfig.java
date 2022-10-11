@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
@@ -33,8 +35,17 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    @Value("${verification.mail.api}")
+    private String mailVerificationApi;
+
     private final MessageSource ms;
     private final ObjectMapper objectMapper;
+
+    @Bean
+    WebSecurityCustomizer ignoringCustomizer() {
+        return (web) -> web.ignoring()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
     @Bean
     SecurityFilterChain web(HttpSecurity http) throws Exception {
@@ -60,6 +71,10 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping(mailVerificationApi)
+            .allowedOrigins("*")
+            .allowedMethods("POST");
+
         registry.addMapping("/**")
             .allowedOrigins("http://localhost:3000")
             .allowedMethods("*")
@@ -104,6 +119,7 @@ public class SecurityConfig implements WebMvcConfigurer {
             .antMatchers("/api/v1/auth/**").permitAll()
             // 회원가입
             .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
+            .antMatchers(HttpMethod.POST, mailVerificationApi).anonymous()
             // 카테고리
             .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
             .antMatchers("/api/v1/categories/**").hasRole("ADMIN")

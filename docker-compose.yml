@@ -14,6 +14,11 @@ services:
     environment:
       MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: test
+  redis:
+    container_name: sm-redis
+    image: "redis:7.0.5-alpine"
+    ports:
+      - "6379:6379"
 
 volumes:
   sm-mysql-vol:
