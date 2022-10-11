@@ -2,6 +2,7 @@ package com.practice.smallcommunity.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.practice.smallcommunity.domain.AbstractMySqlContainerTest;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.practice.smallcommunity.infrastructure.BoardRepositoryImpl;
 import javax.persistence.EntityManager;
@@ -17,9 +18,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * MySQL 통합 테스트입니다.
@@ -28,15 +26,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  */
 @ActiveProfiles("tc-db")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@Testcontainers
 @DataJpaTest
-class BoardRepositoryIT {
-
-    @Container
-    static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.30")
-        .withDatabaseName("S_COMM")
-        .withUsername("test")
-        .withPassword("test");
+class BoardRepositoryIT extends AbstractMySqlContainerTest {
 
     @PersistenceContext
     EntityManager em;

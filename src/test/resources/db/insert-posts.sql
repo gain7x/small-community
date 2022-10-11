@@ -1,5 +1,5 @@
-INSERT INTO member(id, email, last_password_change, member_role, nickname, password)
-VALUES (1, 'userA@mail.com', NOW(), 'USER', 'userA', 'password');
+INSERT INTO member(id, email, last_password_change, member_role, nickname, password, email_verified, withdrawal)
+VALUES (1, 'userA@mail.com', NOW(), 'USER', 'userA', 'password', true, false);
 
 INSERT INTO category(id, code, enable, name) VALUES (1, 'dev', true, '개발');
 
