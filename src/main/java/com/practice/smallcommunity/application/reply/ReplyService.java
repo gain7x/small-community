@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.reply;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
@@ -19,11 +19,14 @@ public class ReplyService {
 
     /**
      * 답글을 등록하고, 등록된 답글을 반환합니다.
+     *  답글이 추가된 게시글의 답글 개수를 증가시킵니다.
      * @param reply 답글 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 답글
      */
     public Reply add(Reply reply) {
-        return replyRepository.save(reply);
+        Reply savedReply = replyRepository.save(reply);
+        savedReply.getPost().increaseReplyCount();
+        return savedReply;
     }
 
     /**
@@ -81,6 +84,7 @@ public class ReplyService {
         Reply findReply = findEnabledReply(replyId);
         validateUpdater(findReply, loginId);
         findReply.delete();
+        findReply.getPost().decreaseReplyCount();
     }
 
     private void validateUpdater(Reply reply, Long loginId) {

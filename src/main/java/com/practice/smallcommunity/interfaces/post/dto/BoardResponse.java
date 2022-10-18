@@ -15,6 +15,7 @@ public class BoardResponse {
     private String nickname;
     private String title;
     private int views;
+    private int replyCount;
     private int votes;
     private Long acceptId;
     private LocalDateTime createdDate;

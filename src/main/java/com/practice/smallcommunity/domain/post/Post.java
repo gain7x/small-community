@@ -59,6 +59,8 @@ public class Post extends BaseTimeEntity {
 
     private int views;
 
+    private int replyCount;
+
     private int votes;
 
     @Builder
@@ -88,6 +90,14 @@ public class Post extends BaseTimeEntity {
 
     public void increaseViewCount() {
         views++;
+    }
+
+    public void increaseReplyCount() {
+        replyCount++;
+    }
+
+    public void decreaseReplyCount() {
+        replyCount--;
     }
 
     public void vote(boolean positive) {

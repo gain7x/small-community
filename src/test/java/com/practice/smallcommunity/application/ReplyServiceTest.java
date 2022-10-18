@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
@@ -55,6 +56,19 @@ class ReplyServiceTest {
         //then
         assertThat(reply).isNotNull();
         assertThat(reply.isEnable()).isTrue();
+    }
+
+    @Test
+    void 답글이_추가되면_게시글의_답글_개수가_증가한다() {
+        //given
+        when(replyRepository.save(any(Reply.class)))
+            .thenReturn(dummyReply);
+
+        //when
+        Reply reply = replyService.add(dummyReply);
+
+        //then
+        assertThat(reply.getPost().getReplyCount()).isEqualTo(1);
     }
 
     @Test
@@ -138,6 +152,25 @@ class ReplyServiceTest {
 
         //then
         assertThat(dummyReply.isEnable()).isFalse();
+    }
+
+    @Test
+    void 추가됐던_답글이_삭제상태로_변경되면_게시글의_답글_개수가_감소한다() {
+        //given
+        when(member.getId()).thenReturn(1L);
+        when(replyRepository.save(any(Reply.class)))
+            .thenReturn(dummyReply);
+        when(replyRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyReply));
+
+        //when
+        Reply reply = replyService.add(dummyReply);
+        assertThat(reply.getPost().getReplyCount()).isEqualTo(1);
+
+        replyService.disable(1L, 1L);
+
+        //then
+        assertThat(reply.getPost().getReplyCount()).isEqualTo(0);
     }
 
     @Test
