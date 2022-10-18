@@ -12,11 +12,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.practice.smallcommunity.application.BoardService;
-import com.practice.smallcommunity.application.CategoryService;
+import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.post.PostSearchRepository;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.practice.smallcommunity.interfaces.RestTest;
 import com.practice.smallcommunity.utils.DomainGenerator;
@@ -37,14 +37,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @RestTest
-@WebMvcTest(BoardController.class)
-class BoardControllerTest {
+@WebMvcTest(PostSearchController.class)
+class PostSearchControllerTest {
 
     @MockBean
     CategoryService categoryService;
 
     @MockBean
-    BoardService boardService;
+    PostSearchRepository postSearchRepository;
 
     @Autowired
     MockMvc mvc;
@@ -69,7 +69,7 @@ class BoardControllerTest {
 
         Page<Post> posts = new PageImpl<>(List.of(spyPost));
 
-        when(boardService.searchPostsInCategory(any(BoardSearchCond.class), any(Pageable.class)))
+        when(postSearchRepository.searchPosts(any(BoardSearchCond.class), any(Pageable.class)))
             .thenReturn(posts);
 
         //when
@@ -94,6 +94,7 @@ class BoardControllerTest {
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
                     fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                     fieldWithPath("views").type(JsonFieldType.NUMBER).description("게시글 조회수"),
+                    fieldWithPath("replyCount").type(JsonFieldType.NUMBER).description("게시글의 답글 개수"),
                     fieldWithPath("votes").type(JsonFieldType.NUMBER).description("게시글 투표수"),
                     fieldWithPath("acceptId").type(JsonFieldType.NUMBER).optional().description("채택한 답글 ID"),
                     fieldWithPath("createdDate").type(JsonFieldType.STRING).description("작성일")

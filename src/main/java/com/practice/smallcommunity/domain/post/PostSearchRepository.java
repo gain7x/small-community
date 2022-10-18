@@ -4,7 +4,7 @@ import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface BoardRepository {
+public interface PostSearchRepository {
 
     /**
      * 카테고리에 속한 게시글 목록을 반환합니다.

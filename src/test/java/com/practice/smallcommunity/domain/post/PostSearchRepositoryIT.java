@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.AbstractMySqlContainerTest;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
-import com.practice.smallcommunity.infrastructure.BoardRepositoryImpl;
+import com.practice.smallcommunity.infrastructure.PostSearchRepositoryImpl;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,16 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("tc-db")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @DataJpaTest
-class BoardRepositoryIT extends AbstractMySqlContainerTest {
+class PostSearchRepositoryIT extends AbstractMySqlContainerTest {
 
     @PersistenceContext
     EntityManager em;
 
-    BoardRepository boardRepository;
+    PostSearchRepository postSearchRepository;
 
     @BeforeEach
     void setUp() {
-        boardRepository = new BoardRepositoryImpl(em);
+        postSearchRepository = new PostSearchRepositoryImpl(em);
     }
 
     @Sql(value = "classpath:db/insert-posts.sql")
@@ -52,7 +52,7 @@ class BoardRepositoryIT extends AbstractMySqlContainerTest {
         Pageable pageable = PageRequest.of(0, 3);
 
         //when
-        Page<Post> result = boardRepository.searchPosts(dto, pageable);
+        Page<Post> result = postSearchRepository.searchPosts(dto, pageable);
 
         //then
         assertThat(result.getSize()).isEqualTo(3);

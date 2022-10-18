@@ -1,9 +1,9 @@
 package com.practice.smallcommunity.interfaces.post;
 
-import com.practice.smallcommunity.application.BoardService;
-import com.practice.smallcommunity.application.CategoryService;
+import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.post.PostSearchRepository;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.practice.smallcommunity.interfaces.PageResponse;
 import com.practice.smallcommunity.interfaces.post.dto.BoardResponse;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/posts")
-public class BoardController {
+public class PostSearchController {
 
     private final CategoryService categoryService;
-    private final BoardService boardService;
+    private final PostSearchRepository postSearchRepository;
     private final PostMapper mapper;
 
     @GetMapping
@@ -34,7 +34,7 @@ public class BoardController {
             .title(title)
             .build();
 
-        Page<Post> posts = boardService.searchPostsInCategory(cond, pageable);
+        Page<Post> posts = postSearchRepository.searchPosts(cond, pageable);
 
         return PageResponse.Ok(posts.map(mapper::toBoard));
     }

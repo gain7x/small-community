@@ -1,10 +1,9 @@
 package com.practice.smallcommunity.infrastructure;
 
-import static com.practice.smallcommunity.domain.content.QContent.content;
 import static com.practice.smallcommunity.domain.post.QPost.post;
 
-import com.practice.smallcommunity.domain.post.BoardRepository;
 import com.practice.smallcommunity.domain.post.Post;
+import com.practice.smallcommunity.domain.post.PostSearchRepository;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
@@ -21,21 +20,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 @Repository
-public class BoardRepositoryImpl implements BoardRepository {
+public class PostSearchRepositoryImpl implements PostSearchRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public BoardRepositoryImpl(EntityManager entityManager) {
+    public PostSearchRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
     @Override
     public Page<Post> searchPosts(BoardSearchCond cond, Pageable pageable) {
         QueryResults<Post> results = queryFactory.selectFrom(post)
-            .join(post.content, content)
-            .on(enabled(), categoryEq(cond.getCategoryId()))
-            .where(titleMatch(cond.getTitle()))
-            .orderBy(sortPost(pageable))
+            .where(postEnabled(), categoryEq(cond.getCategoryId()), titleMatch(cond.getTitle()))
+            .orderBy(sortPost())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetchResults();
@@ -44,10 +41,10 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     private BooleanExpression categoryEq(Long categoryId) {
-        return categoryId != null ? post.category.id.eq(categoryId) : null;
+        return categoryId == null ? null : post.category.id.eq(categoryId);
     }
 
-    private BooleanExpression enabled() {
+    private BooleanExpression postEnabled() {
         return post.enable.eq(true);
     }
 
@@ -61,7 +58,7 @@ public class BoardRepositoryImpl implements BoardRepository {
             .gt(0);
     }
 
-    private OrderSpecifier<?> sortPost(Pageable pageable) {
+    private OrderSpecifier<?> sortPost() {
         return new OrderSpecifier<>(Order.DESC, post.createdDate);
     }
 }
