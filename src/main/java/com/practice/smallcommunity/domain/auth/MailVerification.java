@@ -12,15 +12,15 @@ public class MailVerification {
 
     @Id
     private String key;
-    private String mail;
+    private String email;
 
     @TimeToLive
-    private long ttl;
+    private long expirationSeconds;
 
     @Builder
-    public MailVerification(String key, String mail, long ttl) {
+    public MailVerification(String key, String email, long expirationSeconds) {
         this.key = key;
-        this.mail = mail;
-        this.ttl = ttl;
+        this.email = email;
+        this.expirationSeconds = expirationSeconds;
     }
 }

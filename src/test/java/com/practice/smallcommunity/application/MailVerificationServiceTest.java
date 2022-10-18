@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.practice.smallcommunity.application.auth.MailVerificationService;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.auth.MailVerification;
@@ -61,7 +62,7 @@ class MailVerificationServiceTest {
         when(mailVerificationRepository.findById(key))
             .thenReturn(Optional.of(MailVerification.builder()
                 .key(key)
-                .mail(mail)
+                .email(mail)
                 .build()));
 
         //when

@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.application.MailVerificationService;
-import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.application.auth.MailVerificationService;
+import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.auth.MailVerification;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
@@ -31,10 +31,10 @@ public class RegisterController {
     @PostMapping("${verification.mail.api}")
     public String sendVerificationMail(@NotEmpty String key) {
         MailVerification verification = mailVerificationService.check(key);
-        Member result = memberService.verifyEmail(verification.getMail());
+        Member result = memberService.verifyEmail(verification.getEmail());
 
         log.info("Member email has been verified. id: {}, email: {}",
-            result.getId(), verification.getMail());
+            result.getId(), verification.getEmail());
 
         return "verify-email";
     }

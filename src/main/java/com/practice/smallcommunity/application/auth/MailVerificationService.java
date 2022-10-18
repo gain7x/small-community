@@ -1,5 +1,6 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.auth;
 
+import com.practice.smallcommunity.application.MailService;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.auth.MailVerification;
@@ -33,8 +34,8 @@ public class MailVerificationService {
     public void sendVerificationMail(String email) {
         MailVerification mailVerification = MailVerification.builder()
             .key(UUID.randomUUID().toString())
-            .mail(email)
-            .ttl(mailVerificationTimeout)
+            .email(email)
+            .expirationSeconds(mailVerificationTimeout)
             .build();
 
         mailVerificationRepository.save(mailVerification);

@@ -18,7 +18,7 @@ class MailVerificationRepositoryTestIT extends AbstractRedisContainerTest {
         //given
         MailVerification verification = MailVerification.builder()
             .key("key")
-            .mail("test@mail.com")
+            .email("test@mail.com")
             .build();
 
         //when
@@ -28,6 +28,6 @@ class MailVerificationRepositoryTestIT extends AbstractRedisContainerTest {
             verification.getKey()).orElseThrow();
 
         //then
-        assertThat(findItem.getMail()).isEqualTo("test@mail.com");
+        assertThat(findItem.getEmail()).isEqualTo("test@mail.com");
     }
 }
