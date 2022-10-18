@@ -44,6 +44,10 @@ public class JwtProvider {
         key = secretKey.getBytes(StandardCharsets.UTF_8);
     }
 
+    public long getRefreshTokenExpirationHours() {
+        return refreshTokenExpirationHours;
+    }
+
     /**
      * 회원 정보를 기반으로 액세스 토큰을 생성하여 반환합니다.
      * @param member 회원

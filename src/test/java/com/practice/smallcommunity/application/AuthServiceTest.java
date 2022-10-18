@@ -3,11 +3,14 @@ package com.practice.smallcommunity.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.dto.AuthDto;
+import com.practice.smallcommunity.application.auth.AuthService;
+import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.auth.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
@@ -61,11 +64,14 @@ class AuthServiceTest {
     @Test
     void 로그인_성공_시_로그인_정보를_반환한다() {
         //given
-        when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
-        when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);
-        when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
+        Member spyMember = spy(dummyMember);
+        when(spyMember.getId()).thenReturn(1L);
+
+        when(jwtProvider.createAccessToken(spyMember)).thenReturn(dummyAccessToken);
+        when(jwtProvider.createRefreshToken(spyMember)).thenReturn(dummyRefreshToken);
+        when(memberService.findByEmail(spyMember.getEmail())).thenReturn(spyMember);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        dummyMember.verifyEmail();
+        spyMember.verifyEmail();
 
         //when
         AuthDto result = authService.login("userA@mail.com", "userPass");
@@ -119,11 +125,14 @@ class AuthServiceTest {
     @Test
     void 재발급이_유효하면_로그인_정보를_반환한다() {
         //given
-        when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
-        when(jwtProvider.createRefreshToken(dummyMember)).thenReturn(dummyRefreshToken);
+        Member spyMember = spy(dummyMember);
+        when(spyMember.getId()).thenReturn(1L);
+
+        when(jwtProvider.createAccessToken(spyMember)).thenReturn(dummyAccessToken);
+        when(jwtProvider.createRefreshToken(spyMember)).thenReturn(dummyRefreshToken);
         when(jwtProvider.getSubject(anyString())).thenReturn(1L);
         when(refreshTokenRepository.existsById(anyString())).thenReturn(true);
-        when(memberService.findByUserId(1L)).thenReturn(dummyMember);
+        when(memberService.findByUserId(1L)).thenReturn(spyMember);
 
         //when
         AuthDto result = authService.refresh("refresh-token");

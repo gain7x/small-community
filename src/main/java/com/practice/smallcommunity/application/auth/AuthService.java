@@ -1,6 +1,7 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.auth;
 
-import com.practice.smallcommunity.application.dto.AuthDto;
+import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.auth.RefreshToken;
@@ -93,9 +94,11 @@ public class AuthService {
     private AuthDto generateLoginInformation(Member member) {
         TokenDto accessToken = jwtProvider.createAccessToken(member);
         TokenDto refreshToken = jwtProvider.createRefreshToken(member);
+
         refreshTokenRepository.save(RefreshToken.builder()
             .token(refreshToken.getToken())
-            .member(member)
+            .memberId(member.getId())
+            .expirationHours(jwtProvider.getRefreshTokenExpirationHours())
             .build());
 
         return AuthDto.builder()
