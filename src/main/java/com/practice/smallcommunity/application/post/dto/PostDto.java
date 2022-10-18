@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application.dto;
+package com.practice.smallcommunity.application.post.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

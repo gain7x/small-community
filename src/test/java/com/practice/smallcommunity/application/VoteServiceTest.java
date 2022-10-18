@@ -3,6 +3,10 @@ package com.practice.smallcommunity.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.practice.smallcommunity.application.content.VoteHistoryService;
+import com.practice.smallcommunity.application.content.VoteService;
+import com.practice.smallcommunity.application.post.PostService;
+import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;

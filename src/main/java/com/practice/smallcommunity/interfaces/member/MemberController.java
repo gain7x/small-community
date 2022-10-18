@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.interfaces.member;
 
-import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;

@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.content;
 
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;

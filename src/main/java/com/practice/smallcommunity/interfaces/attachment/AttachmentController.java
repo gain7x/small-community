@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.interfaces.attachment;
 
-import com.practice.smallcommunity.application.AttachmentService;
-import com.practice.smallcommunity.application.MemberService;
+import com.practice.smallcommunity.application.attachment.AttachmentService;
+import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.attachment.FileStore;
 import com.practice.smallcommunity.domain.attachment.StoredFile;
 import com.practice.smallcommunity.domain.attachment.UploadFile;

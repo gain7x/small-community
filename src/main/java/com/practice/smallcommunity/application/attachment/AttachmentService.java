@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.attachment;
 
 import com.practice.smallcommunity.domain.attachment.UploadFile;
 import com.practice.smallcommunity.domain.attachment.UploadFileRepository;

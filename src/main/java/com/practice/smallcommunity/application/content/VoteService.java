@@ -1,5 +1,7 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.content;
 
+import com.practice.smallcommunity.application.reply.ReplyService;
+import com.practice.smallcommunity.application.post.PostService;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;

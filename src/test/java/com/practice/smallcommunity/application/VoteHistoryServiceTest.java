@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.practice.smallcommunity.application.content.VoteHistoryService;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
 import com.practice.smallcommunity.domain.content.VoteHistoryRepository;

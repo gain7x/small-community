@@ -18,12 +18,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.application.CategoryService;
-import com.practice.smallcommunity.application.MemberService;
-import com.practice.smallcommunity.application.PostService;
-import com.practice.smallcommunity.application.ReplyService;
-import com.practice.smallcommunity.application.VoteService;
-import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.application.category.CategoryService;
+import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.application.post.PostService;
+import com.practice.smallcommunity.application.reply.ReplyService;
+import com.practice.smallcommunity.application.content.VoteService;
+import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;

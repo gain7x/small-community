@@ -6,7 +6,8 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.application.post.PostService;
+import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;

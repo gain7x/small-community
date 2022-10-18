@@ -1,6 +1,6 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.post;
 
-import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;

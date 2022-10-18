@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.interfaces.category;
 
-import com.practice.smallcommunity.application.CategoryService;
+import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;

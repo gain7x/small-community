@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.member;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
