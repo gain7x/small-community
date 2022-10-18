@@ -30,11 +30,14 @@ public class Category extends BaseTimeEntity {
 
     private boolean enable;
 
+    private boolean cudAdminOnly;
+
     @Builder
-    public Category(String code, String name, boolean enable) {
+    public Category(String code, String name, boolean enable, boolean cudAdminOnly) {
         this.code = code;
         this.name = name;
         this.enable = enable;
+        this.cudAdminOnly = cudAdminOnly;
     }
 
     public void changeCode(String code) {
@@ -47,5 +50,9 @@ public class Category extends BaseTimeEntity {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public void setCudAdminOnly(boolean cudAdminOnly) {
+        this.cudAdminOnly = cudAdminOnly;
     }
 }

@@ -1,10 +1,10 @@
 package com.practice.smallcommunity;
 
-import com.practice.smallcommunity.application.CategoryService;
-import com.practice.smallcommunity.application.MemberService;
-import com.practice.smallcommunity.application.PostService;
-import com.practice.smallcommunity.application.ReplyService;
-import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.application.category.CategoryService;
+import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.application.post.PostService;
+import com.practice.smallcommunity.application.reply.ReplyService;
+import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
@@ -83,6 +83,7 @@ public class TestData {
             .code("notice")
             .name("공지사항")
             .enable(true)
+            .cudAdminOnly(true)
             .build();
 
         Category life = Category.builder()
@@ -101,8 +102,9 @@ public class TestData {
         List<Category> categories = categoryService.findEnableCategories();
         for (Category category : categories) {
             for (int i = 0; i < POST_COUNT_PER_CATEGORIES; i++) {
-                String userEmail = "user" + i % MEMBER_COUNT + "@mail.com";
-                Member member = memberService.findByEmail(userEmail);
+                String email = category.isCudAdminOnly() ? "admin@mail.com"
+                    : "user" + i % MEMBER_COUNT + "@mail.com";
+                Member member = memberService.findByEmail(email);
                 PostDto dto = PostDto.builder()
                     .title(category.getName() + " " + i + "번 게시글")
                     .text(i + "번 게시글입니다.")

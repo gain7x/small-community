@@ -1,13 +1,16 @@
 package com.practice.smallcommunity.interfaces.post;
 
-import com.practice.smallcommunity.application.CategoryService;
-import com.practice.smallcommunity.application.MemberService;
-import com.practice.smallcommunity.application.PostService;
-import com.practice.smallcommunity.application.ReplyService;
-import com.practice.smallcommunity.application.VoteService;
-import com.practice.smallcommunity.application.dto.PostDto;
+import com.practice.smallcommunity.application.category.CategoryService;
+import com.practice.smallcommunity.application.content.VoteService;
+import com.practice.smallcommunity.application.exception.BusinessException;
+import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.application.post.PostService;
+import com.practice.smallcommunity.application.post.dto.PostDto;
+import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.interfaces.BaseResponse;
@@ -51,6 +54,11 @@ public class PostController {
     public BaseResponse<PostSimpleResponse> write(@CurrentUser Long loginId, @Valid @RequestBody PostRequest dto) {
         Category category = categoryService.findOne(dto.getCategoryCode());
         Member member = memberService.findByUserId(loginId);
+
+        if (category.isCudAdminOnly() && !member.getMemberRole().equals(MemberRole.ADMIN)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+        }
+
         PostDto postDto = PostDto.builder()
             .title(dto.getTitle())
             .text(dto.getText())
