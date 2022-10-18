@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.application.AuthService;
-import com.practice.smallcommunity.application.dto.AuthDto;
+import com.practice.smallcommunity.application.auth.AuthService;
+import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
@@ -99,7 +99,9 @@ class AuthControllerTest {
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
                     fieldWithPath("lastPasswordChange").type(JsonFieldType.STRING)
-                        .description("마지막 비밀번호 변경일")
+                        .description("마지막 비밀번호 변경일"),
+                    fieldWithPath("admin").type(JsonFieldType.BOOLEAN).optional()
+                        .description("로그인 회원이 관리자인 경우에만 포함, 값은 TRUE 고정")
                 )));
     }
 

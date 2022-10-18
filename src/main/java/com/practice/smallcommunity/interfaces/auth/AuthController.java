@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.interfaces.auth;
 
-import com.practice.smallcommunity.application.AuthService;
-import com.practice.smallcommunity.application.dto.AuthDto;
+import com.practice.smallcommunity.application.auth.AuthService;
+import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.auth.dto.LoginRequest;
 import com.practice.smallcommunity.interfaces.auth.dto.LoginResponse;

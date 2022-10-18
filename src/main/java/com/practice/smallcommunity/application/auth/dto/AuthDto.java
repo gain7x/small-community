@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.application.dto;
+package com.practice.smallcommunity.application.auth.dto;
 
 import com.practice.smallcommunity.domain.member.Member;
 import java.util.Date;
