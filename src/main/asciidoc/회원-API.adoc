@@ -17,3 +17,10 @@ operation::member/회원_암호_변경[snippets='http-request,request-fields,htt
 
 === 회원 탈퇴
 operation::member/회원탈퇴[snippets='http-request,http-response']
+
+== 내 활동
+=== 내가 쓴 게시글
+operation::member/내가_쓴_게시글[snippets='http-request,request-parameters,http-response,response-fields-data-page']
+
+=== 내가 답글을 쓴 게시글
+operation::member/내가_답글을_쓴_게시글[snippets='http-request,request-parameters,http-response,response-fields-data-page']

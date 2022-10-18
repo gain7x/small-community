@@ -17,6 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @DataJpaTest
 class PostRepositoryTest {
@@ -162,6 +164,19 @@ class PostRepositoryTest {
         //then
         assertThat(mainTextCount).isEqualTo(1);
         assertThat(findItem.getContent()).isNotNull();
+    }
+
+    @Test
+    void 작성자가_일치하는_게시글_목록을_조회한다() {
+        //given
+        postRepository.save(post);
+
+        //when
+        Page<Post> result = postRepository.findPostsByWriter(member.getId(), PageRequest.of(0, 5));
+
+        //then
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getTotalElements()).isEqualTo(1);
     }
 
     @Test

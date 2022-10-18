@@ -1,6 +1,8 @@
 package com.practice.smallcommunity.domain.post;
 
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +20,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.id = :id and p.enable is true")
     @EntityGraph(attributePaths = {"mainText"})
     Optional<Post> findPostWithMainText(@Param("id") Long id);
+
+    /**
+     * 회원이 작성한 게시글 목록을 반환합니다.
+     *  삭제 상태인 게시글은 제외합니다.
+     * @param writerId 회원( 작성자 ) ID
+     * @param pageable 페이징 정보
+     * @return 게시글 목록
+     */
+    @Query("select p from Post p where p.writer.id = :writerId and p.enable is true")
+    Page<Post> findPostsByWriter(Long writerId, Pageable pageable);
 }

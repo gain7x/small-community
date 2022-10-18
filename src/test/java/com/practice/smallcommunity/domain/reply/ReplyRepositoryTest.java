@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.domain.reply;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.category.CategoryRepository;
@@ -14,10 +14,13 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @DataJpaTest
 class ReplyRepositoryTest {
@@ -124,6 +127,26 @@ class ReplyRepositoryTest {
 
         //then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void 작성자가_일치하고_삭제상태가_아닌_답글을_조회하며_게시글을_페치조인한다() {
+        //given
+        replyRepository.save(reply);
+
+        //when
+        Page<Reply> result = replyRepository.findByWriterFetchPost(member.getId(),
+            PageRequest.of(0, 5));
+
+        List<Reply> content = result.getContent();
+
+        //then
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getTotalElements()).isEqualTo(1);
+
+        for (Reply item : content) {
+            assertThat(Hibernate.isInitialized(item.getPost())).isTrue();
+        }
     }
 
     @Test
