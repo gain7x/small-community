@@ -3,25 +3,26 @@ package com.practice.smallcommunity;
 import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.application.post.PostService;
-import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.application.post.dto.PostDto;
+import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
 @Transactional
+@Component
 @Profile("dev")
 public class TestData {
 
@@ -34,8 +35,8 @@ public class TestData {
     private final PostService postService;
     private final ReplyService replyService;
 
-    @PostConstruct
-    void init() {
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
         initMembers();
         initCategories();
         initPosts();
@@ -57,7 +58,7 @@ public class TestData {
             Member member = Member.builder()
                 .email("user" + i + "@mail.com")
                 .password("user" + i + "password")
-                .nickname("user" + i)
+                .nickname("nickname" + i)
                 .memberRole(MemberRole.USER)
                 .build();
             member.verifyEmail();
@@ -122,11 +123,11 @@ public class TestData {
             String userEmail = "user" + i % MEMBER_COUNT + "@mail.com";
             Member member = memberService.findByEmail(userEmail);
 
-            Reply reply = replyService.add(Reply.builder()
+            Reply reply = Reply.builder()
                 .post(findPost)
                 .writer(member)
                 .text(i + "번 답글입니다.")
-                .build());
+                .build();
 
             replyService.add(reply);
         }
