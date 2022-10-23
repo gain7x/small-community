@@ -91,10 +91,10 @@ class AuthControllerTest {
                     baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                     fieldWithPath("accessTokenExpires").type(JsonFieldType.NUMBER)
-                        .description("액세스 토큰이 만료되는 시간( ms )"),
+                        .description("액세스 토큰이 만료되는 시간( Unix Time )"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
                     fieldWithPath("refreshTokenExpires").type(JsonFieldType.NUMBER)
-                        .description("리프레시 토큰이 만료되는 시간( ms )"),
+                        .description("리프레시 토큰이 만료되는 시간( Unix Time )"),
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
@@ -124,10 +124,10 @@ class AuthControllerTest {
                     baseData(),
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                     fieldWithPath("accessTokenExpires").type(JsonFieldType.NUMBER)
-                        .description("액세스 토큰이 만료되는 시간( ms )"),
+                        .description("액세스 토큰이 만료되는 시간( Unix Time )"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
                     fieldWithPath("refreshTokenExpires").type(JsonFieldType.NUMBER)
-                        .description("리프레시 토큰이 만료되는 시간( ms )"),
+                        .description("리프레시 토큰이 만료되는 시간( Unix Time )"),
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
