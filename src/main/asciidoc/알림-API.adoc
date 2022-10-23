@@ -1,0 +1,7 @@
+[[알림-API]]
+== 알림
+=== 유효한 알림 조회
+operation::notification/유효한_알림_조회[snippets="http-request,request-parameters,http-response,response-fields-data-page"]
+
+=== 알림 읽음 처리
+operation::notification/알림_읽음_처리[snippets="http-request,path-parameters,http-response"]

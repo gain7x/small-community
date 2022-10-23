@@ -34,6 +34,8 @@ public enum ErrorCode {
     EXIST_ACCEPTED_REPLY(HttpStatus.BAD_REQUEST, "SCE202", "이미 채택한 답글이 있습니다."),
     // 답글
     NOT_FOUND_REPLY(HttpStatus.BAD_REQUEST, "SCE251", "답글을 찾을 수 없습니다."),
+    // 알림
+    NOT_FOUND_NOTIFICATION(HttpStatus.BAD_REQUEST, "SCE301", "알림 메시지를 찾을 수 없습니다."),
     ;
 
     private final HttpStatus responseStatus;

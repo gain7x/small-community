@@ -2,6 +2,7 @@ package com.practice.smallcommunity.application.reply;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
@@ -16,16 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReplyService {
 
     private final ReplyRepository replyRepository;
+    private final NotificationService notificationService;
 
     /**
      * 답글을 등록하고, 등록된 답글을 반환합니다.
      *  답글이 추가된 게시글의 답글 개수를 증가시킵니다.
+     *  답글 추가 알림을 저장합니다.
      * @param reply 답글 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 답글
      */
     public Reply add(Reply reply) {
         Reply savedReply = replyRepository.save(reply);
+
         savedReply.getPost().increaseReplyCount();
+        notificationService.notifyReply(savedReply.getPost(), savedReply);
+
         return savedReply;
     }
 

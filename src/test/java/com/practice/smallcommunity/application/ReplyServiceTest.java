@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
@@ -29,6 +30,9 @@ class ReplyServiceTest {
     @Mock
     ReplyRepository replyRepository;
 
+    @Mock
+    NotificationService notificationService;
+
     ReplyService replyService;
 
     @Spy
@@ -40,7 +44,7 @@ class ReplyServiceTest {
 
     @BeforeEach
     void setUp() {
-        replyService = new ReplyService(replyRepository);
+        replyService = new ReplyService(replyRepository, notificationService);
         dummyReply = DomainGenerator.createReply(post, member, "답글");
     }
 

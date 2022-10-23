@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.practice.smallcommunity.application.content.VoteHistoryService;
 import com.practice.smallcommunity.application.content.VoteService;
+import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.application.post.PostService;
 import com.practice.smallcommunity.application.reply.ReplyService;
 import com.practice.smallcommunity.domain.content.Content;
@@ -30,6 +31,9 @@ class VoteServiceTest {
     @Mock
     VoteHistoryService voteHistoryService;
 
+    @Mock
+    NotificationService notificationService;
+
     VoteService voteService;
 
     Member dummyMember;
@@ -41,7 +45,7 @@ class VoteServiceTest {
         dummyMember = spy(DomainGenerator.createMember("A"));
         dummyContent = spy(DomainGenerator.createContent(dummyMember));
 
-        voteService = new VoteService(postService, replyService, voteHistoryService);
+        voteService = new VoteService(postService, replyService, voteHistoryService, notificationService);
     }
 
     @Test

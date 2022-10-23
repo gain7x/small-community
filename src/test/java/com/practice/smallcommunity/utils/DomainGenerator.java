@@ -6,6 +6,8 @@ import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.domain.notification.Notification;
+import com.practice.smallcommunity.domain.notification.NotificationType;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 
@@ -56,6 +58,15 @@ public abstract class DomainGenerator {
             .post(post)
             .writer(writer)
             .text(text)
+            .build();
+    }
+
+    public static Notification createNotification(Member receiver, Post relatedPost) {
+        return Notification.builder()
+            .receiver(receiver)
+            .sender("TEST")
+            .relatedPost(relatedPost)
+            .type(NotificationType.SYSTEM)
             .build();
     }
 
