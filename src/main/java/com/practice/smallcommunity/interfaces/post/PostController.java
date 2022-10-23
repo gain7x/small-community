@@ -107,8 +107,8 @@ public class PostController {
     @PostMapping("/{postId}/vote")
     public BaseResponse<VoteResponse> vote(@PathVariable Long postId, @CurrentUser Long loginId,
         @Valid @RequestBody VoteRequest dto) {
-        Member member = memberService.findByUserId(loginId);
-        boolean result = voteService.votePost(postId, member, dto.getPositive());
+        Member voter = memberService.findByUserId(loginId);
+        boolean result = voteService.votePost(postId, voter, dto.getPositive());
 
         return BaseResponse.Ok(VoteResponse.builder()
             .voted(result)

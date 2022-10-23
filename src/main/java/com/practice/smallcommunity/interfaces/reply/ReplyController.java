@@ -48,17 +48,17 @@ public class ReplyController {
     @PostMapping
     public BaseResponse<ReplyResponse> add(@CurrentUser Long loginId, @Valid @RequestBody ReplyAddRequest dto) {
         Post post = postService.findPost(dto.getPostId());
-        Member writer = memberService.findByUserId(loginId);
+        Member replyWriter = memberService.findByUserId(loginId);
         Reply reply = Reply.builder()
             .post(post)
-            .writer(writer)
+            .writer(replyWriter)
             .text(dto.getText())
             .build();
 
         Reply result = replyService.add(reply);
 
         log.info("Reply was added. postId: {}, replyId: {}, nickname: {}",
-            post.getId(), result.getId(), writer.getNickname());
+            post.getId(), result.getId(), replyWriter.getNickname());
 
         return BaseResponse.Ok(mapper.toResponse(result));
     }
@@ -95,8 +95,8 @@ public class ReplyController {
     @PostMapping("/{replyId}/vote")
     public BaseResponse<VoteResponse> vote(@PathVariable Long replyId, @CurrentUser Long loginId,
         @Valid @RequestBody VoteRequest dto) {
-        Member findMember = memberService.findByUserId(loginId);
-        boolean result = voteService.voteReply(replyId, findMember, dto.getPositive());
+        Member voter = memberService.findByUserId(loginId);
+        boolean result = voteService.voteReply(replyId, voter, dto.getPositive());
 
         return BaseResponse.Ok(VoteResponse.builder()
             .voted(result)
