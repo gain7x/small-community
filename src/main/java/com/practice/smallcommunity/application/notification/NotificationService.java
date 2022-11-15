@@ -82,6 +82,14 @@ public class NotificationService {
         findNotification.read();
     }
 
+    /**
+     * 읽지 않은 알림을 모두 읽음 처리합니다.
+     * @param loginId 현재 로그인 회원 ID
+     */
+    public void readAllUnreadNotifications(Long loginId) {
+        notificationRepository.readAllUnreadNotifications(loginId);
+    }
+
     private boolean isValidNotification(Member receiver, Member sender) {
         return !receiver.getId().equals(sender.getId());
     }

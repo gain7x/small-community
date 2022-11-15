@@ -12,6 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.practice.smallcommunity.application.notification.NotificationService;
@@ -71,7 +72,7 @@ class NotificationControllerTest {
         when(notification.getId()).thenReturn(1L);
         when(notification.getCreatedDate()).thenReturn(LocalDateTime.now());
 
-        when(notificationRepository.findValidNotifications(eq(1L), any()))
+        when(notificationRepository.findRecentNotifications(eq(1L), any()))
             .thenReturn(new PageImpl<>(List.of(notification)));
 
         //when
@@ -116,6 +117,17 @@ class NotificationControllerTest {
                     parameterWithName("notificationId").description("알림 ID")
                 ))
             );
+    }
+
+    @Test
+    @WithMockMember
+    void 읽지_않은_알림_모두_읽음_처리() throws Exception {
+        //when
+        ResultActions result = mvc.perform(patch("/api/v1/notifications"));
+
+        //then
+        result.andExpect(status().isNoContent())
+            .andDo(generateDocument("notification"));
     }
 
     @TestConfiguration

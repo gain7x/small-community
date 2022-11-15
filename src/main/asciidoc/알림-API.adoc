@@ -5,3 +5,6 @@ operation::notification/유효한_알림_조회[snippets="http-request,request-p
 
 === 알림 읽음 처리
 operation::notification/알림_읽음_처리[snippets="http-request,path-parameters,http-response"]
+
+=== 모두 읽음 처리
+operation::notification/읽지_않은_알림_모두_읽음_처리[snippets="http-request,http-response"]

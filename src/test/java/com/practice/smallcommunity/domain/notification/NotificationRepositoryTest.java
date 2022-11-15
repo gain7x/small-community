@@ -88,12 +88,28 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification);
 
         //when
-        Page<Notification> result = notificationRepository.findValidNotifications(
+        Page<Notification> result = notificationRepository.findRecentNotifications(
             receiver.getId(), PageRequest.of(0, 5));
 
         //then
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    void 읽지_않은_알림을_모두_읽음_처리한다() {
+        //given
+        notificationRepository.save(notification);
+        em.flush();
+        em.clear();
+
+        //when
+        notificationRepository.readAllUnreadNotifications(receiver.getId());
+        Notification result = notificationRepository.findAll().get(0);
+
+        //then
+        assertThat(result.isRead()).isEqualTo(true);
+        assertThat(result.getLastModifiedDate()).isNotEqualTo(result.getCreatedDate());
     }
 
     @Test

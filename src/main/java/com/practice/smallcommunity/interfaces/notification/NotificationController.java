@@ -28,10 +28,16 @@ public class NotificationController {
 
     @GetMapping
     public PageResponse<NotificationResponse> find(@CurrentUser Long loginId, Pageable pageable) {
-        Page<Notification> notificationPage = notificationRepository.findValidNotifications(loginId,
+        Page<Notification> notificationPage = notificationRepository.findRecentNotifications(loginId,
             pageable);
 
         return PageResponse.Ok(notificationPage.map(mapper::toResponse));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping
+    public void readAll(@CurrentUser Long loginId) {
+        notificationService.readAllUnreadNotifications(loginId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
