@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @Builder
@@ -11,6 +12,7 @@ import lombok.Data;
 public class PostUpdateRequest {
 
     @NotBlank
+    @Length(max = 20)
     private String title;
 
     @NotBlank

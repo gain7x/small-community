@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ public class PostRequest {
     private String categoryCode;
 
     @NotBlank
+    @Length(max = 20)
     private String title;
 
     @NotBlank
