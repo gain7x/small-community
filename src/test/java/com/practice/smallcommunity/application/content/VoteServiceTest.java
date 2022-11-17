@@ -1,10 +1,11 @@
-package com.practice.smallcommunity.application;
+package com.practice.smallcommunity.application.content;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.content.VoteHistoryService;
-import com.practice.smallcommunity.application.content.VoteService;
 import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.application.post.PostService;
 import com.practice.smallcommunity.application.reply.ReplyService;
