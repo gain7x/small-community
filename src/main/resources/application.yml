@@ -2,10 +2,11 @@ spring:
   profiles:
     group:
       dev:
-        - dev-env
         - dev-auth
         - dev-db
+        - dev-env
         - prod-mail
+        - prod-oauth2
     active: dev
   messages:
     basename: messages,errors

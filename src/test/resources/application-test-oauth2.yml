@@ -1,0 +1,24 @@
+spring:
+  config:
+    activate:
+      on-profile:
+        - test
+  security:
+    oauth2:
+      client:
+        registration:
+          test:
+            clientId: testId
+            clientSecret: testSecret
+            authorizationGrantType: authorization_code
+            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+
+        provider:
+          test:
+            authorizationUri: https://test.com/oauth2.0/authorize
+            tokenUri: https://test.com/oauth2.0/token
+            userInfoUri: https://test.com/userinfo
+            userNameAttribute: id
+
+oauth2:
+  authorizedDomains: https://client.com

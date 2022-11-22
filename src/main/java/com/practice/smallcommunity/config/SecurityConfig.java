@@ -1,11 +1,15 @@
 package com.practice.smallcommunity.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.interfaces.RestAccessDeniedHandler;
-import com.practice.smallcommunity.interfaces.RestAuthenticationEntryPoint;
+import com.practice.smallcommunity.security.CookieOAuth2AuthorizationRequestRepository;
 import com.practice.smallcommunity.security.JwtAuthenticationFilter;
 import com.practice.smallcommunity.security.JwtProvider;
+import com.practice.smallcommunity.security.OAuth2AuthenticationFailureHandler;
+import com.practice.smallcommunity.security.OAuth2AuthenticationSuccessHandler;
+import com.practice.smallcommunity.security.RestAccessDeniedHandler;
+import com.practice.smallcommunity.security.RestAuthenticationEntryPoint;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,36 +42,14 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${verification.mail.api}")
     private String mailVerificationApi;
 
+    @Value("${oauth2.authorizedDomains}")
+    private String[] authorizedDomains;
+
+    private final JwtProvider jwtProvider;
+    private final OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
     private final MessageSource ms;
     private final ObjectMapper objectMapper;
-
-    @Bean
-    WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
-    @Bean
-    SecurityFilterChain web(HttpSecurity http) throws Exception {
-        http
-            .cors()
-            .and()
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .headers().frameOptions().sameOrigin()
-            .and()
-            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
-            .exceptionHandling()
-            .authenticationEntryPoint(new RestAuthenticationEntryPoint(ms, objectMapper))
-            .accessDeniedHandler(new RestAccessDeniedHandler(ms, objectMapper));
-
-        configureRequestAuth(http);
-
-        return http.build();
-    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -83,6 +65,42 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    WebSecurityCustomizer ignoringCustomizer() {
+        return (web) -> web.ignoring()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Bean
+    SecurityFilterChain web(HttpSecurity http) throws Exception {
+        http
+            .cors()
+            .and()
+            .csrf().disable()
+            .httpBasic().disable()
+            .formLogin().disable()
+            .headers().frameOptions().sameOrigin()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http
+            .oauth2Login()
+            .successHandler(oauth2AuthenticationSuccessHandler)
+            .failureHandler(oauth2AuthenticationFailureHandler)
+            .authorizationEndpoint()
+            .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository(List.of(authorizedDomains)));
+
+        http
+            .addFilterAfter(jwtAuthenticationFilter(), CorsFilter.class)
+            .exceptionHandling()
+            .authenticationEntryPoint(new RestAuthenticationEntryPoint(ms, objectMapper))
+            .accessDeniedHandler(new RestAccessDeniedHandler(ms, objectMapper));
+
+        configureRequestAuth(http);
+
+        return http.build();
+    }
+
+    @Bean
     PasswordEncoder passwordEncoder() {
         String idForEncode = "bcrypt";
 
@@ -94,12 +112,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenService());
-    }
-
-    @Bean
-    JwtProvider jwtTokenService() {
-        return new JwtProvider();
+        return new JwtAuthenticationFilter(jwtProvider);
     }
 
     private void configureRequestAuth(HttpSecurity http) throws Exception {
@@ -118,6 +131,7 @@ public class SecurityConfig implements WebMvcConfigurer {
             // 인증
             .antMatchers("/api/v1/auth/**").permitAll()
             // 회원가입
+            .antMatchers(HttpMethod.POST, "/api/v1/oauth2").anonymous()
             .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
             .antMatchers(HttpMethod.POST, mailVerificationApi).anonymous()
             // 카테고리

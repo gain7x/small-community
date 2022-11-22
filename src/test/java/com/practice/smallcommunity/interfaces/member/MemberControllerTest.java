@@ -14,7 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
@@ -41,6 +43,9 @@ import org.springframework.test.web.servlet.ResultActions;
 class MemberControllerTest {
 
     @MockBean
+    LoginService loginService;
+
+    @MockBean
     MemberService memberService;
 
     @Autowired
@@ -50,23 +55,25 @@ class MemberControllerTest {
     ObjectMapper objectMapper;
 
     @Spy
-    Member targetMember = DomainGenerator.createMember("A");
+    Member dummyMember = DomainGenerator.createMember("A");
+
+    Login dummyLogin = DomainGenerator.createLogin(dummyMember);
 
     @BeforeEach
     void setUp() {
-        when(targetMember.getId()).thenReturn(1L);
+        when(dummyMember.getId()).thenReturn(1L);
     }
 
     @Test
     @WithMockMember
     void 회원정보_조회() throws Exception {
         //given
-        when(memberService.findByUserId(targetMember.getId()))
-            .thenReturn(targetMember);
+        when(memberService.findByUserId(dummyMember.getId()))
+            .thenReturn(dummyMember);
 
         //when
         ResultActions result = mvc.perform(
-                RestDocumentationRequestBuilders.get("/api/v1/members/{userId}", targetMember.getId())
+                RestDocumentationRequestBuilders.get("/api/v1/members/{userId}", dummyMember.getId())
                     .accept(MediaType.APPLICATION_JSON));
 
         //then
@@ -86,10 +93,10 @@ class MemberControllerTest {
     void 회원정보_수정() throws Exception {
         //given
         String newNickname = "newNickname";
-        targetMember.changeNickname(newNickname);
+        dummyMember.changeNickname(newNickname);
 
         when(memberService.update(1L, newNickname))
-            .thenReturn(targetMember);
+            .thenReturn(dummyMember);
 
         //when
         MemberUpdateRequest dto = MemberUpdateRequest.builder()
@@ -117,8 +124,8 @@ class MemberControllerTest {
         String currentPassword = "currentPassword";
         String newPassword = "newPassword";
 
-        when(memberService.changePassword(1L, currentPassword, newPassword))
-            .thenReturn(targetMember);
+        when(loginService.changePassword(1L, currentPassword, newPassword))
+            .thenReturn(dummyLogin);
 
         //when
         MemberPasswordChangeRequest dto = MemberPasswordChangeRequest.builder()
@@ -147,7 +154,7 @@ class MemberControllerTest {
     void 회원탈퇴() throws Exception {
         //given
         when(memberService.withdrawal(1L))
-            .thenReturn(targetMember);
+            .thenReturn(dummyMember);
 
         //when
         ResultActions result = mvc.perform(delete("/api/v1/members")

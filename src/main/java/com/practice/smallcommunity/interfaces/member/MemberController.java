@@ -1,6 +1,8 @@
 package com.practice.smallcommunity.interfaces.member;
 
+import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.member.MemberService;
+import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/members")
 public class MemberController {
 
+    private final LoginService loginService;
     private final MemberService memberService;
     private final MemberMapper mapper;
 
@@ -48,10 +51,9 @@ public class MemberController {
     @PatchMapping("/password")
     public void changePassword(@CurrentUser Long loginId, @Valid @RequestBody
     MemberPasswordChangeRequest dto) {
-        Member result = memberService.changePassword(loginId, dto.getCurrentPassword(),
-            dto.getNewPassword());
+        Login result = loginService.changePassword(loginId, dto.getCurrentPassword(), dto.getNewPassword());
 
-        log.info("Member password has been changed. id: {}, email: {}", loginId, result.getEmail());
+        log.info("Member password has been changed. id: {}, email: {}", loginId, result.getMember().getEmail());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

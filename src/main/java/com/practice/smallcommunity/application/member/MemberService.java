@@ -5,7 +5,6 @@ import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,24 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    /**
-     * 회원 등록을 시도하고, 성공하면 등록된 회원 정보를 반환합니다.
-     *  비밀번호는 암호화 후 저장됩니다.
-     * @param member 등록할 회원 정보. 단, id 값은 널이어야 합니다.
-     * @return 등록된 회원 정보
-     * @throws BusinessException
-     *          등록하려는 회원 정보가 유효하지 않은 경우( 아이디 중복, 이메일 중복, ... )
-     */
-    public Member register(Member member) {
-        validateRegisterMember(member);
-
-        String encodePassword = passwordEncoder.encode(member.getPassword());
-        member.changePassword(encodePassword);
-
-        return memberRepository.save(member);
-    }
 
     /**
      * ID가 일치하는 회원 정보를 반환합니다.
@@ -86,40 +67,6 @@ public class MemberService {
     }
 
     /**
-     * 회원 암호를 변경합니다.
-     * @param userId 회원 번호
-     * @param currentPassword 기존 암호
-     * @param newPassword 새로운 암호
-     * @return 변경된 회원 정보
-     * @throws BusinessException
-     *          ID가 일치하는 회원이 존재하지 않는 경우
-     *          회원이 탈퇴 상태인 경우
-     *          기존 비밀번호가 일치하지 않는 경우
-     */
-    public Member changePassword(Long userId, String currentPassword, String newPassword) {
-        Member findMember = findByUserId(userId);
-        if (!passwordEncoder.matches(currentPassword, findMember.getPassword())) {
-            throw new BusinessException(ErrorCode.NOT_MATCH_MEMBER, "기존 비밀번호가 일치하지 않습니다.");
-        }
-
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        findMember.changePassword(encodedPassword);
-
-        return findMember;
-    }
-
-    /**
-     * 해당 이메일을 사용하는 회원을 이메일 인증 상태로 변경합니다.
-     * @param email 이메일
-     * @return 회원
-     */
-    public Member verifyEmail(String email) {
-        Member findMember = findByEmail(email);
-        findMember.verifyEmail();
-        return findMember;
-    }
-
-    /**
      * ID가 일치하는 회원을 탈퇴 상태로 변경합니다.
      * @param userId 회원 번호
      * @throws BusinessException
@@ -128,7 +75,7 @@ public class MemberService {
      */
     public Member withdrawal(Long userId) {
         Member findMember = findByUserId(userId);
-        findMember.withdrawal();
+        findMember.withdraw();
         return findMember;
     }
 
@@ -156,10 +103,5 @@ public class MemberService {
         if (existsByNickname) {
             throw new BusinessException(ErrorCode.DUPLICATED_NICKNAME);
         }
-    }
-
-    private void validateRegisterMember(Member member) {
-        checkDuplicateEmails(member.getEmail());
-        checkDuplicateNicknames(member.getNickname());
     }
 }

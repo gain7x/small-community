@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.interfaces;
 
 import com.practice.smallcommunity.config.SecurityConfig;
+import com.practice.smallcommunity.security.TestSecurityConfig;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Import;
 @Documented
 @Inherited
 @AutoConfigureRestDocs
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, TestSecurityConfig.class})
 public @interface RestTest {
 
 }

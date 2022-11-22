@@ -2,9 +2,10 @@ spring:
   profiles:
     group:
       test:
-        - test-env
         - test-auth
         - test-db
+        - test-env
+        - test-oauth2
         - prod-mail
     active: test
   messages:

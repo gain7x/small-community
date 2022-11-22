@@ -1,10 +1,12 @@
 package com.practice.smallcommunity;
 
+import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.application.post.PostService;
 import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.application.reply.ReplyService;
+import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
@@ -30,6 +32,7 @@ public class TestData {
     private static final int POST_COUNT_PER_CATEGORIES = 10;
     private static final int REPLY_COUNT = 5;
 
+    private final LoginService loginService;
     private final MemberService memberService;
     private final CategoryService categoryService;
     private final PostService postService;
@@ -46,24 +49,30 @@ public class TestData {
     private void initMembers() {
         Member admin = Member.builder()
             .email("admin@mail.com")
-            .password("adminPassword")
             .nickname("admin")
             .memberRole(MemberRole.ADMIN)
             .build();
-        admin.verifyEmail();
+        Login adminLogin = Login.builder()
+            .member(admin)
+            .password("adminPassword")
+            .build();
 
-        memberService.register(admin);
+        adminLogin.verifyEmail();
+        loginService.register(adminLogin);
 
         for (int i = 0; i < MEMBER_COUNT; i++) {
             Member member = Member.builder()
                 .email("user" + i + "@mail.com")
-                .password("user" + i + "password")
                 .nickname("nickname" + i)
                 .memberRole(MemberRole.USER)
                 .build();
-            member.verifyEmail();
+            Login login = Login.builder()
+                .member(member)
+                .password("user" + i + "password")
+                .build();
 
-            memberService.register(member);
+            login.verifyEmail();
+            loginService.register(login);
         }
     }
 

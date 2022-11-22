@@ -3,6 +3,7 @@ package com.practice.smallcommunity.interfaces.auth;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -12,7 +13,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.auth.AuthService;
+import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.auth.dto.AuthDto;
+import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.interfaces.RestTest;
@@ -24,7 +27,6 @@ import java.time.temporal.ChronoUnit;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -40,6 +42,9 @@ import org.springframework.test.web.servlet.ResultActions;
 class AuthControllerTest {
 
     @MockBean
+    LoginService loginService;
+
+    @MockBean
     AuthService authService;
 
     @Autowired
@@ -48,30 +53,32 @@ class AuthControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Spy
-    Member dummyMember = DomainGenerator.createMember("A");
-
-    AuthDto dummyAuthDto;
+    Member member;
+    Login login;
+    AuthDto authDto;
 
     @BeforeEach
     void setUp() {
-        when(dummyMember.getId()).thenReturn(1L);
-        dummyAuthDto = AuthDto.builder()
+        member = spy(DomainGenerator.createMember("A"));
+        when(member.getId()).thenReturn(1L);
+
+        login = DomainGenerator.createLogin(member);
+        authDto = AuthDto.builder()
+            .member(member)
             .accessToken("access-token")
             .accessTokenExpires(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
             .refreshToken("refresh-token")
             .refreshTokenExpires(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
-            .member(dummyMember)
             .build();
     }
 
     @Test
     void 로그인() throws Exception {
         //given
-        when(authService.login(dummyMember.getEmail(), dummyMember.getPassword()))
-            .thenReturn(dummyAuthDto);
+        when(loginService.login(member.getEmail(), login.getPassword())).thenReturn(login);
+        when(authService.createAuthentication(member)).thenReturn(authDto);
 
-        LoginRequest request = new LoginRequest(dummyMember.getEmail(), dummyMember.getPassword());
+        LoginRequest request = new LoginRequest(member.getEmail(), login.getPassword());
 
         //when
         ResultActions result = mvc.perform(post("/api/v1/auth")
@@ -98,8 +105,6 @@ class AuthControllerTest {
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
-                    fieldWithPath("lastPasswordChange").type(JsonFieldType.STRING)
-                        .description("마지막 비밀번호 변경일"),
                     fieldWithPath("admin").type(JsonFieldType.BOOLEAN).optional()
                         .description("로그인 회원이 관리자인 경우에만 포함, 값은 TRUE 고정")
                 )));
@@ -109,7 +114,7 @@ class AuthControllerTest {
     void 토큰_새로고침() throws Exception {
         //given
         when(authService.refresh("some-refresh-token"))
-            .thenReturn(dummyAuthDto);
+            .thenReturn(authDto);
 
         //when
         ResultActions result = mvc.perform(post("/api/v1/auth/refresh")
@@ -130,9 +135,7 @@ class AuthControllerTest {
                         .description("리프레시 토큰이 만료되는 시간( Unix Time )"),
                     fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 번호"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명"),
-                    fieldWithPath("lastPasswordChange").type(JsonFieldType.STRING)
-                        .description("마지막 비밀번호 변경일")
+                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명")
                 )));
     }
 

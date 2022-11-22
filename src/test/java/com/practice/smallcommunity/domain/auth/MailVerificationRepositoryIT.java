@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 
 @DataRedisTest
-class MailVerificationRepositoryTestIT extends AbstractRedisContainerTest {
+class MailVerificationRepositoryIT extends AbstractRedisContainerTest {
 
     @Autowired
     MailVerificationRepository mailVerificationRepository;

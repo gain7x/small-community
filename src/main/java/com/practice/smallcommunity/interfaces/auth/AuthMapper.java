@@ -15,6 +15,5 @@ public interface AuthMapper {
     @Mapping(source = "member.id", target = "memberId")
     @Mapping(source = "member.email", target = "email")
     @Mapping(source = "member.nickname", target = "nickname")
-    @Mapping(source = "member.lastPasswordChange", target = "lastPasswordChange")
     LoginResponse toResponse(AuthDto dto);
 }

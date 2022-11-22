@@ -1,11 +1,14 @@
 package com.practice.smallcommunity.utils;
 
 import com.practice.smallcommunity.domain.attachment.UploadFile;
+import com.practice.smallcommunity.domain.auth.oauth2.OAuth2Login;
+import com.practice.smallcommunity.domain.auth.oauth2.OAuth2Platform;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
+import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.notification.Notification;
 import com.practice.smallcommunity.domain.notification.NotificationType;
 import com.practice.smallcommunity.domain.post.Post;
@@ -38,9 +41,23 @@ public abstract class DomainGenerator {
     public static Member createMember(String divider) {
         return Member.builder()
             .email("user" + divider + "@mail.com")
-            .password("password" + divider)
             .nickname("nickname" + divider)
             .memberRole(MemberRole.USER)
+            .build();
+    }
+
+    public static Login createLogin(Member member) {
+        return Login.builder()
+            .member(member)
+            .password("testPassword")
+            .build();
+    }
+
+    public static OAuth2Login createOAuth2Login(Member member, String username, OAuth2Platform platform) {
+        return OAuth2Login.builder()
+            .member(member)
+            .username(username)
+            .platform(platform)
             .build();
     }
 

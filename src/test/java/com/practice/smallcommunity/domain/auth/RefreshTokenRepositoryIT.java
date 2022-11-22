@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 
 @DataRedisTest
-class RefreshTokenRepositoryTestIT extends AbstractRedisContainerTest {
+class RefreshTokenRepositoryIT extends AbstractRedisContainerTest {
 
     @Autowired
     RefreshTokenRepository tokenRepository;

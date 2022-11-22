@@ -32,41 +32,23 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(length = 12, nullable = false, unique = true)
     private String nickname;
-
-    @Column(nullable = false)
-    private LocalDateTime lastPasswordChange;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberRole memberRole;
 
     @Column(nullable = false)
-    private boolean emailVerified;
-
-    @Column(nullable = false)
     private boolean withdrawal;
 
+    private LocalDateTime withdrawnDate;
+
     @Builder
-    public Member(String email, String password, String nickname, MemberRole memberRole) {
+    public Member(String email, String nickname, MemberRole memberRole) {
         this.email = email;
         this.nickname = nickname;
         this.memberRole = memberRole;
-
-        changePassword(password);
-    }
-
-    /**
-     * 암호를 변경하고, 암호 변경일을 갱신합니다.
-     * @param password 새로운 암호
-     */
-    public void changePassword(String password) {
-        this.password = password;
-        lastPasswordChange = LocalDateTime.now();
     }
 
     /**
@@ -85,15 +67,12 @@ public class Member extends BaseTimeEntity {
         this.memberRole = memberRole;
     }
 
-    public void verifyEmail() {
-        this.emailVerified = true;
-    }
-
     /**
      * 회원을 탈퇴 상태로 변경합니다.
      */
-    public void withdrawal() {
+    public void withdraw() {
         this.withdrawal = true;
+        withdrawnDate = LocalDateTime.now();
     }
 
     @Override

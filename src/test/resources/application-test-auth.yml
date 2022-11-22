@@ -10,3 +10,11 @@ jwt:
     expirationMinutes: 30
   refresh-token:
     expirationHours: 24
+
+verification:
+  mail:
+    api: /members/verify
+    # 10분
+    timeoutSecond: 300
+  oauth2:
+    expirationMinutes: 10

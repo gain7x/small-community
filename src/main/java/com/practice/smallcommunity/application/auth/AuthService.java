@@ -10,7 +10,6 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
 import com.practice.smallcommunity.security.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,38 +22,37 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final MemberService memberService;
-    private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
-     * 이메일, 비밀번호가 일치하는 회원을 반환합니다.
-     * @param email 이메일
-     * @param password 비밀번호
-     * @return 회원
-     * @throws BusinessException
-     *          이메일이 일치하는 회원이 존재하지 않는 경우
-     *          이메일이 인증되지 않은 경우
-     *          비밀번호가 일치하지 않는 경우
+     * 회원의 자원에 접근할 수 있는 인증 정보를 반환합니다.
+     * @param member 회원
+     * @return 인증 정보
      */
-    public AuthDto login(String email, String password) {
-        Member findMember = memberService.findByEmail(email);
-        if (!findMember.isEmailVerified()) {
-            throw new BusinessException(ErrorCode.UNVERIFIED_EMAIL);
-        }
+    public AuthDto createAuthentication(Member member) {
+        TokenDto accessToken = jwtProvider.createAccessToken(member);
+        TokenDto refreshToken = jwtProvider.createRefreshToken(member);
 
-        boolean matches = passwordEncoder.matches(password, findMember.getPassword());
-        if (!matches) {
-            throw new BusinessException(ErrorCode.NOT_MATCH_MEMBER);
-        }
+        refreshTokenRepository.save(RefreshToken.builder()
+            .token(refreshToken.getToken())
+            .memberId(member.getId())
+            .expirationHours(jwtProvider.getRefreshTokenExpirationHours())
+            .build());
 
-        return generateLoginInformation(findMember);
+        return AuthDto.builder()
+            .accessToken(accessToken.getToken())
+            .accessTokenExpires(accessToken.getExpires())
+            .refreshToken(refreshToken.getToken())
+            .refreshTokenExpires(refreshToken.getExpires())
+            .member(member)
+            .build();
     }
 
     /**
-     * 리프레시 토큰이 유효하면 새로운 로그인 정보를 반환합니다.
+     * 리프레시 토큰이 유효하면 새로운 인증 정보를 반환합니다.
      * @param refreshToken 리프레시 토큰
-     * @return 로그인 정보
+     * @return 인증 정보
      * @throws BusinessException
      *          갱신이 유효하지 않은 경우
      */
@@ -74,7 +72,7 @@ public class AuthService {
         refreshTokenRepository.deleteById(refreshToken);
         Member findMember = memberService.findByUserId(memberId);
 
-        return generateLoginInformation(findMember);
+        return createAuthentication(findMember);
     }
 
     /**
@@ -84,29 +82,5 @@ public class AuthService {
      */
     public void deleteRefreshToken(String refreshToken) {
         refreshTokenRepository.deleteById(refreshToken);
-    }
-
-    /**
-     * 회원을 기준으로 로그인 정보를 생성합니다.
-     * @param member 회원
-     * @return 로그인 정보
-     */
-    private AuthDto generateLoginInformation(Member member) {
-        TokenDto accessToken = jwtProvider.createAccessToken(member);
-        TokenDto refreshToken = jwtProvider.createRefreshToken(member);
-
-        refreshTokenRepository.save(RefreshToken.builder()
-            .token(refreshToken.getToken())
-            .memberId(member.getId())
-            .expirationHours(jwtProvider.getRefreshTokenExpirationHours())
-            .build());
-
-        return AuthDto.builder()
-            .accessToken(accessToken.getToken())
-            .accessTokenExpires(accessToken.getExpires())
-            .refreshToken(refreshToken.getToken())
-            .refreshTokenExpires(refreshToken.getExpires())
-            .member(member)
-            .build();
     }
 }

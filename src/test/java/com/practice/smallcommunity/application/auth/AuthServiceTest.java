@@ -23,16 +23,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
     @Mock
     MemberService memberService;
-
-    @Mock
-    PasswordEncoder passwordEncoder;
 
     @Mock
     JwtProvider jwtProvider;
@@ -56,69 +52,25 @@ class AuthServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        authService = new AuthService(memberService, passwordEncoder, jwtProvider,
-            refreshTokenRepository);
+        authService = new AuthService(memberService, jwtProvider, refreshTokenRepository);
     }
 
     @Test
-    void 로그인_성공_시_로그인_정보를_반환한다() {
+    void 회원의_자원에_접근할_수_있는_인증_정보를_반환한다() {
         //given
         Member spyMember = spy(dummyMember);
         when(spyMember.getId()).thenReturn(1L);
 
         when(jwtProvider.createAccessToken(spyMember)).thenReturn(dummyAccessToken);
         when(jwtProvider.createRefreshToken(spyMember)).thenReturn(dummyRefreshToken);
-        when(memberService.findByEmail(spyMember.getEmail())).thenReturn(spyMember);
-        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        spyMember.verifyEmail();
 
         //when
-        AuthDto result = authService.login("userA@mail.com", "userPass");
+        AuthDto result = authService.createAuthentication(spyMember);
 
         //then
-        assertThat(result).isNotNull();
-        assertThat(result.getAccessToken()).isEqualTo("new-access-token");
-        assertThat(result.getRefreshToken()).isEqualTo("new-refresh-token");
-        assertThat(result.getMember()).isNotNull();
-    }
-
-    @Test
-    void 로그인_시_회원정보가_없으면_예외를_던진다() {
-        //given
-        when(memberService.findByEmail("some@mail.com"))
-            .thenThrow(new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
-
-        //when
-        //then
-        assertThatThrownBy(() -> authService.login("some@mail.com", "userPass"))
-            .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_MEMBER);
-    }
-
-    @Test
-    void 로그인_시_이메일이_미인증_상태면_예외를_던진다() {
-        //given
-        when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
-
-        //when
-        //then
-        assertThatThrownBy(() -> authService.login("userA@mail.com", "other"))
-            .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNVERIFIED_EMAIL);
-    }
-
-    @Test
-    void 로그인_시_비밀번호가_일치하지_않으면_예외를_던진다() {
-        //given
-        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
-        when(memberService.findByEmail(dummyMember.getEmail())).thenReturn(dummyMember);
-        dummyMember.verifyEmail();
-
-        //when
-        //then
-        assertThatThrownBy(() -> authService.login("userA@mail.com", "other"))
-            .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_MATCH_MEMBER);
+        assertThat(result.getMember()).isEqualTo(spyMember);
+        assertThat(result.getAccessToken()).isEqualTo(dummyAccessToken.getToken());
+        assertThat(result.getRefreshToken()).isEqualTo(dummyRefreshToken.getToken());
     }
 
     @Test

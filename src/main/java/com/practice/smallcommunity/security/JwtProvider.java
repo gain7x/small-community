@@ -19,11 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 /**
  * JWT 발급 및 검증 서비스입니다.
  */
 @RequiredArgsConstructor
+@Component
 public class JwtProvider {
 
     private static final String ROLE_CLAIM = "AUTH";

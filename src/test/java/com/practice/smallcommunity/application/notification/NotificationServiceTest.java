@@ -74,6 +74,7 @@ class NotificationServiceTest {
     @Test
     void 답글_알림을_저장한다() {
         //when
+        when(receiver.getId()).thenReturn(1L);
         Post post = DomainGenerator.createPost(null, receiver, "");
         Reply reply = DomainGenerator.createReply(post, sender, "");
 
@@ -88,6 +89,7 @@ class NotificationServiceTest {
     @Test
     void 투표_알림을_저장한다() {
         //when
+        when(receiver.getId()).thenReturn(1L);
         assertThatNoException().isThrownBy(
             () -> notificationService.notifyVote(receiver, sender, null));
 

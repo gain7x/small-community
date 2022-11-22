@@ -1,7 +1,8 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.interfaces.ErrorResponse;
 import java.io.IOException;
 import java.util.Locale;
 import javax.servlet.ServletException;
@@ -9,19 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @RequiredArgsConstructor
-public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     private final MessageSource ms;
     private final ObjectMapper objectMapper;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException authException) throws IOException, ServletException {
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+        AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
         ErrorResponse errorResponse = ErrorResponse.builder()
             .code(errorCode.getCode())
             .message(getMessage(errorCode))
@@ -33,7 +34,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
     private String getMessage(ErrorCode errorCode) {
-        return ms.getMessage(errorCode.getCode(), null, errorCode.getDefaultMessage(),
-            Locale.KOREA);
+        return ms.getMessage(errorCode.getCode(), null, errorCode.getDefaultMessage(), Locale.KOREA);
     }
 }

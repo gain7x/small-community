@@ -40,7 +40,6 @@ class MemberRepositoryTest {
         //given
         Member member2 = Member.builder()
             .email("userB@mail.com")
-            .password("password")
             .nickname("secondUser")
             .memberRole(MemberRole.USER)
             .build();
@@ -87,7 +86,7 @@ class MemberRepositoryTest {
     @Test
     void 탈퇴상태가_아닌_회원을_이메일로_조회_시_탈퇴상태인_회원은_조회되지_않는다() {
         //given
-        member.withdrawal();
+        member.withdraw();
         memberRepository.save(member);
 
         //when
@@ -114,7 +113,7 @@ class MemberRepositoryTest {
     @Test
     void 탈퇴상태가_아닌_회원을_ID로_조회_시_탈퇴상태인_회원은_조회되지_않는다() {
         //given
-        member.withdrawal();
+        member.withdraw();
         memberRepository.save(member);
 
         //when
