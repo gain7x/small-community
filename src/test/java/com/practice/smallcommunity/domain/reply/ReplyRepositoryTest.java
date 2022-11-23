@@ -135,7 +135,7 @@ class ReplyRepositoryTest {
         replyRepository.save(reply);
 
         //when
-        Page<Reply> result = replyRepository.findByWriterFetchPost(member.getId(),
+        Page<Reply> result = replyRepository.findByWriterFetchJoin(member.getId(),
             PageRequest.of(0, 5));
 
         List<Reply> content = result.getContent();

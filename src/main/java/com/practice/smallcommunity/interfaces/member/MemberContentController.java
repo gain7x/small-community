@@ -32,7 +32,7 @@ public class MemberContentController {
 
     @GetMapping("/replies")
     public PageResponse<MemberContentResponse> findReplies(@CurrentUser Long loginId, Pageable pageable) {
-        Page<Reply> replies = replyRepository.findByWriterFetchPost(loginId, pageable);
+        Page<Reply> replies = replyRepository.findByWriterFetchJoin(loginId, pageable);
 
         return PageResponse.Ok(replies.map(mapper::toContentResponse));
     }

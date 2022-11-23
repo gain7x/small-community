@@ -42,7 +42,7 @@ public class LoginService {
      */
     @Transactional(readOnly = true)
     public Login findByMemberId(Long memberId) {
-        return loginRepository.findByMemberId(memberId)
+        return loginRepository.findByMemberIdFetchJoin(memberId)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
     }
 

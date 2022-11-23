@@ -88,7 +88,7 @@ class PostServiceTest {
     @Test
     void 미삭제상태_게시글을_ID로_조회하고_조회수를_증가시킨다() {
         //given
-        when(postRepository.findPostWithMainText(1L))
+        when(postRepository.findPostFetchJoin(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when
@@ -102,7 +102,7 @@ class PostServiceTest {
     void 게시글을_수정한다() {
         //given
         when(postWriter.getId()).thenReturn(1L);
-        when(postRepository.findPostWithMainText(1L))
+        when(postRepository.findPostFetchJoin(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when
@@ -118,7 +118,7 @@ class PostServiceTest {
     void 게시글을_수정하는_회원이_게시글_작성자가_아니면_예외를_던진다() {
         //given
         when(postWriter.getId()).thenReturn(2L);
-        when(postRepository.findPostWithMainText(1L))
+        when(postRepository.findPostFetchJoin(1L))
             .thenReturn(Optional.of(dummyPost));
 
         //when

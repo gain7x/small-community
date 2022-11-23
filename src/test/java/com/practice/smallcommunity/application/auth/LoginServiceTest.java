@@ -65,7 +65,7 @@ class LoginServiceTest {
     void 로그인_시_이메일이_미인증_상태면_예외를_던진다() {
         //given
         when(memberService.findByEmail(member.getEmail())).thenReturn(member);
-        when(loginRepository.findByMemberId(any())).thenReturn(Optional.of(login));
+        when(loginRepository.findByMemberIdFetchJoin(any())).thenReturn(Optional.of(login));
 
         //when
         //then
@@ -79,7 +79,7 @@ class LoginServiceTest {
         //given
         doReturn(false).when(passwordEncoder).matches(anyString(), anyString());
         when(memberService.findByEmail(member.getEmail())).thenReturn(member);
-        when(loginRepository.findByMemberId(any())).thenReturn(Optional.of(login));
+        when(loginRepository.findByMemberIdFetchJoin(any())).thenReturn(Optional.of(login));
         login.verifyEmail();
 
         //when
@@ -150,7 +150,7 @@ class LoginServiceTest {
         //given
         String currentEncodedPassword = "{noop}testPassword";
         login.changePassword(currentEncodedPassword);
-        when(loginRepository.findByMemberId(1L)).thenReturn(Optional.of(login));
+        when(loginRepository.findByMemberIdFetchJoin(1L)).thenReturn(Optional.of(login));
 
         //when
         Login result = loginService.changePassword(1L, "testPassword", "newPassword");
@@ -163,7 +163,7 @@ class LoginServiceTest {
     void 비밀번호_변경_시_이전_비밀번호가_일치하지_않으면_예외를_던진다() {
         //given
         login.changePassword("{noop}testPassword");
-        when(loginRepository.findByMemberId(1L)).thenReturn(Optional.of(login));
+        when(loginRepository.findByMemberIdFetchJoin(1L)).thenReturn(Optional.of(login));
 
         //when
         //then
@@ -176,7 +176,7 @@ class LoginServiceTest {
     void 이메일을_인증_상태로_변경한다() {
         //given
         when(memberService.findByEmail(member.getEmail())).thenReturn(member);
-        when(loginRepository.findByMemberId(any())).thenReturn(Optional.of(login));
+        when(loginRepository.findByMemberIdFetchJoin(any())).thenReturn(Optional.of(login));
 
         //when
         Login result = loginService.verifyEmail(member.getEmail());

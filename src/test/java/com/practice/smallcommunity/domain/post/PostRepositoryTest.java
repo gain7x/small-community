@@ -116,7 +116,7 @@ class PostRepositoryTest {
         em.clear();
 
         //when
-        Post findItem = postRepository.findPostWithMainText(post.getId()).orElseThrow();
+        Post findItem = postRepository.findPostFetchJoin(post.getId()).orElseThrow();
 
         //then
         assertThat(Hibernate.isInitialized(findItem.getMainText())).isTrue();
@@ -131,7 +131,7 @@ class PostRepositoryTest {
         em.clear();
 
         //when
-        Optional<Post> findItem = postRepository.findPostWithMainText(post.getId());
+        Optional<Post> findItem = postRepository.findPostFetchJoin(post.getId());
 
         //then
         assertThat(findItem).isEmpty();

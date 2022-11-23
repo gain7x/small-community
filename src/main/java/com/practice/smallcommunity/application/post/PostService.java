@@ -62,7 +62,7 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public Post findPostFetchMainText(Long postId) {
-        return postRepository.findPostWithMainText(postId)
+        return postRepository.findPostFetchJoin(postId)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
 

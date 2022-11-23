@@ -83,7 +83,7 @@ class OAuth2LoginRepositoryTest {
         oAuth2LoginRepository.save(oAuth2Login);
 
         //when
-        Optional<OAuth2Login> result = oAuth2LoginRepository.findByUsernameAndPlatform(
+        Optional<OAuth2Login> result = oAuth2LoginRepository.findOneFetchJoin(
             oAuth2Login.getUsername(), oAuth2Login.getPlatform());
 
         //then
@@ -96,7 +96,7 @@ class OAuth2LoginRepositoryTest {
         oAuth2LoginRepository.save(oAuth2Login);
 
         //when
-        OAuth2Login result = oAuth2LoginRepository.findByUsernameAndPlatform(oAuth2Login.getUsername(),
+        OAuth2Login result = oAuth2LoginRepository.findOneFetchJoin(oAuth2Login.getUsername(),
             oAuth2Login.getPlatform()).get();
 
         //then

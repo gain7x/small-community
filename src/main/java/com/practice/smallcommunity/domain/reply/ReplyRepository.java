@@ -26,5 +26,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
      */
     @Query("select r from Reply r where r.writer.id = :writerId and r.enable is true")
     @EntityGraph(attributePaths = "post")
-    Page<Reply> findByWriterFetchPost(@Param("writerId") Long writerId, Pageable pageable);
+    Page<Reply> findByWriterFetchJoin(@Param("writerId") Long writerId, Pageable pageable);
 }

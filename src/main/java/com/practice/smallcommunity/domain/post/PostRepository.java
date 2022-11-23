@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("select p from Post p where p.id = :id and p.enable is true")
     @EntityGraph(attributePaths = {"mainText"})
-    Optional<Post> findPostWithMainText(@Param("id") Long id);
+    Optional<Post> findPostFetchJoin(@Param("id") Long id);
 
     /**
      * 회원이 작성한 게시글 목록을 반환합니다.

@@ -42,7 +42,7 @@ class OAuth2LoginServiceTest {
     @Test
     void OAuth2_사용자_ID와_플랫폼이_일치하는_로그인_정보_조회_시_일치하는_정보가_없으면_예외를_던진다() {
         //given
-        when(oauth2LoginRepository.findByUsernameAndPlatform(any(), any())).thenReturn(Optional.empty());
+        when(oauth2LoginRepository.findOneFetchJoin(any(), any())).thenReturn(Optional.empty());
 
         //when
         //then

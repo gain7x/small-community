@@ -80,7 +80,7 @@ class LoginRepositoryTest {
         loginRepository.save(login);
 
         //when
-        Optional<Login> result = loginRepository.findByMemberId(member.getId());
+        Optional<Login> result = loginRepository.findByMemberIdFetchJoin(member.getId());
 
         //then
         assertThat(result).isPresent();
@@ -92,7 +92,7 @@ class LoginRepositoryTest {
         loginRepository.save(login);
 
         //when
-        Login result = loginRepository.findByMemberId(member.getId()).get();
+        Login result = loginRepository.findByMemberIdFetchJoin(member.getId()).get();
 
         //then
         assertThat(Hibernate.isInitialized(result.getMember())).isTrue();

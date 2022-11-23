@@ -27,7 +27,7 @@ public class OAuth2LoginService {
      *          일치하는 정보가 없는 경우
      */
     public OAuth2Login findOne(String username, OAuth2Platform platform) {
-        return oauth2LoginRepository.findByUsernameAndPlatform(username, platform)
+        return oauth2LoginRepository.findOneFetchJoin(username, platform)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_OAUTH2_LOGIN));
     }
 

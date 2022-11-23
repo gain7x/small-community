@@ -91,7 +91,7 @@ class MemberContentControllerTest {
         //given
         when(post.getId()).thenReturn(1L);
         when(reply.getCreatedDate()).thenReturn(LocalDateTime.now());
-        when(replyRepository.findByWriterFetchPost(eq(1L), any()))
+        when(replyRepository.findByWriterFetchJoin(eq(1L), any()))
             .thenReturn(new PageImpl<>(List.of(reply)));
 
         //when
