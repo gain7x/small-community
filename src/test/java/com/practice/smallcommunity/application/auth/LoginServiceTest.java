@@ -123,7 +123,7 @@ class LoginServiceTest {
     void 회원가입_시_이메일이_중복되면_예외를_던진다() {
         //given
         doThrow(new BusinessException(ErrorCode.DUPLICATED_EMAIL))
-            .when(memberService).checkDuplicateEmails(member.getEmail());
+            .when(memberService).validateRegistration(member);
 
         //when
         //then
@@ -136,7 +136,7 @@ class LoginServiceTest {
     void 회원가입_시_별명이_중복되면_예외를_던진다() {
         //given
         doThrow(new BusinessException(ErrorCode.DUPLICATED_NICKNAME))
-            .when(memberService).checkDuplicateNicknames(member.getNickname());
+            .when(memberService).validateRegistration(member);
 
         //when
         //then

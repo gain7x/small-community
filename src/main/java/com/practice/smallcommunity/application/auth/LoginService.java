@@ -75,10 +75,10 @@ public class LoginService {
      * @param login 등록할 로그인 회원 정보. 단, id 값은 널이어야 합니다.
      * @return 등록된 로그인 정보
      * @throws BusinessException
-     *          등록하려는 정보가 유효하지 않은 경우( 아이디 중복, 이메일 중복, ... )
+     *          등록하려는 정보가 유효하지 않은 경우( 이메일 중복, 별명 중복, ... )
      */
     public Login register(Login login) {
-        validateRegisterMember(login.getMember());
+        memberService.validateRegistration(login.getMember());
 
         String encodePassword = passwordEncoder.encode(login.getPassword());
         login.changePassword(encodePassword);
@@ -119,10 +119,5 @@ public class LoginService {
         Login findLogin = findByMemberId(findMember.getId());
         findLogin.verifyEmail();
         return findLogin;
-    }
-
-    private void validateRegisterMember(Member member) {
-        memberService.checkDuplicateEmails(member.getEmail());
-        memberService.checkDuplicateNicknames(member.getNickname());
     }
 }

@@ -104,4 +104,15 @@ public class MemberService {
             throw new BusinessException(ErrorCode.DUPLICATED_NICKNAME);
         }
     }
+
+    /**
+     * 회원 가입 정보 유효성을 확인합니다.
+     * @param member 가입하는 회원
+     * @throws BusinessException
+     *          회원 정보가 유효하지 않은 경우( 이메일 중복, 별명 중복, ... )
+     */
+    public void validateRegistration(Member member) {
+        checkDuplicateEmails(member.getEmail());
+        checkDuplicateNicknames(member.getNickname());
+    }
 }
