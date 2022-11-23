@@ -5,4 +5,5 @@ DELETE FROM main_text;
 DELETE FROM content;
 DELETE FROM category;
 DELETE FROM member;
-DELETE FROM refresh_token;
+DELETE FROM login;
+DELETE FROM oauth2_login;

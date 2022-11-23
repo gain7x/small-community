@@ -61,12 +61,12 @@ public abstract class DomainGenerator {
             .build();
     }
 
-    public static Post createPost(Category category, Member member, String text) {
+    public static Post createPost(Category category, Member member, String divider) {
         return Post.builder()
             .writer(member)
             .category(category)
-            .title("title")
-            .text(text)
+            .title("title " + divider)
+            .text("text " + divider)
             .build();
     }
 
