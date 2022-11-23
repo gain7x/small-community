@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="IT 제외" type="JUnit" factoryName="JUnit" activateToolWindowBeforeRun="false">
+  <configuration default="false" name="IT 실행" type="JUnit" factoryName="JUnit" activateToolWindowBeforeRun="false">
     <module name="small-community" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
@@ -9,7 +9,7 @@
       <value defaultName="wholeProject" />
     </option>
     <patterns>
-      <pattern testClass=".*Test$" />
+      <pattern testClass=".*IT$" />
     </patterns>
     <method v="2">
       <option name="Make" enabled="true" />
