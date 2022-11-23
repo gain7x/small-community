@@ -12,9 +12,8 @@ import org.springframework.data.redis.core.TimeToLive;
 public class OAuth2RegistrationToken {
 
     @Id
-    private String key;
-
     private String email;
+    private String key;
     private String username;
     private OAuth2Platform platform;
 
@@ -22,7 +21,7 @@ public class OAuth2RegistrationToken {
     private long expirationMinutes;
 
     @Builder
-    public OAuth2RegistrationToken(String key, String email, String username, OAuth2Platform platform,
+    public OAuth2RegistrationToken(String email, String key, String username, OAuth2Platform platform,
         long expirationMinutes) {
         this.key = key;
         this.email = email;

@@ -39,7 +39,7 @@ class OAuth2AuthenticationFailureHandlerTest {
     }
 
     @Test
-    void 던져진_인증_예외가_미가입_예외이면_가입용_토큰을_저장하고_키를_리다이렉트한다() throws ServletException, IOException {
+    void 던져진_인증_예외가_미가입_예외이면_가입용_토큰을_저장하고_접근_정보를_리다이렉트한다() throws ServletException, IOException {
         //given
         SocialUser socialUser = mock(SocialUser.class);
         when(socialUser.getEmail()).thenReturn("test@mail.com");
@@ -57,6 +57,7 @@ class OAuth2AuthenticationFailureHandlerTest {
         verify(oauth2RegistrationTokenService, times(1)).createRegistrationToken(
            eq("test@mail.com"), eq("test"), eq(OAuth2Platform.GOOGLE));
         assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND.value());
-        assertThat(response.getRedirectedUrl()).containsPattern("[&?]response_type=REQUIRED_REGISTRATION[&?]key=");
+        assertThat(response.getRedirectedUrl()).containsPattern(
+            "[&?]response_type=REQUIRED_REGISTRATION[&?]email=test@mail.com[&?]key=registration_token");
     }
 }

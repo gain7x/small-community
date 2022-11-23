@@ -45,15 +45,16 @@ class OAuth2RegisterControllerTest {
         //given
         String registrationKey = "registration-key";
         OAuth2RegistrationToken registrationToken = OAuth2RegistrationToken.builder()
-            .key(registrationKey)
             .email("test@mail.com")
+            .key(registrationKey)
             .username("test")
             .platform(OAuth2Platform.GOOGLE)
             .build();
-        when(oAuth2RegistrationTokenService.findByKey(registrationKey)).thenReturn(registrationToken);
+        when(oAuth2RegistrationTokenService.findOne("test@mail.com", registrationKey)).thenReturn(registrationToken);
 
         //when
         OAuth2RegisterRequest dto = OAuth2RegisterRequest.builder()
+            .email("test@mail.com")
             .key(registrationKey)
             .nickname("tester")
             .build();
@@ -66,6 +67,7 @@ class OAuth2RegisterControllerTest {
         result.andExpect(status().isCreated())
             .andDo(generateDocument("oauth2",
                 requestFields(
+                    fields.withPath("email").type(JsonFieldType.STRING).description("가입 이메일"),
                     fields.withPath("key").type(JsonFieldType.STRING).description("OAuth2 가입용 토큰"),
                     fields.withPath("nickname").type(JsonFieldType.STRING).description("닉네임")
                 )));

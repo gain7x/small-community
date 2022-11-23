@@ -12,6 +12,9 @@ import org.hibernate.validator.constraints.Length;
 public class OAuth2RegisterRequest {
 
     @NotBlank
+    private String email;
+
+    @NotBlank
     private String key;
 
     @NotBlank

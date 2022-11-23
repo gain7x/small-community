@@ -27,7 +27,7 @@ public class OAuth2RegisterController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/oauth2")
     public void register(@Valid @RequestBody OAuth2RegisterRequest dto) {
-        OAuth2RegistrationToken token = oAuth2RegistrationTokenService.findByKey(dto.getKey());
+        OAuth2RegistrationToken token = oAuth2RegistrationTokenService.findOne(dto.getEmail(), dto.getKey());
         Member member = Member.builder()
             .email(token.getEmail())
             .nickname(dto.getNickname())

@@ -25,7 +25,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
     private final OAuth2RegistrationTokenService oauth2RegistrationTokenService;
 
     /**
-     * 인증 예외가 미가입 예외인 경우 OAuth2 사용자의 회원가입용 토큰을 저장하고, 클라이언트가 지정한 URI로 토큰 키를 리다이렉트합니다.
+     * 인증 예외가 미가입 예외인 경우 OAuth2 사용자의 회원가입용 토큰을 저장하고, 클라이언트가 지정한 URI로 토큰 접근 정보를 리다이렉트합니다.
      * @see OAuth2AuthenticationSuccessHandler
      * @see com.practice.smallcommunity.interfaces.member.OAuth2RegisterController
      */
@@ -41,13 +41,14 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
             String key = oauth2RegistrationTokenService.createRegistrationToken(socialUser.getEmail(),
                 socialUser.getUsername(), socialUser.getPlatform());
 
-            redirectToClient(response, oauth2LoginException.getRedirectUri(), key);
+            redirectToClient(response, oauth2LoginException.getRedirectUri(), socialUser.getEmail(), key);
         }
     }
 
-    private void redirectToClient(HttpServletResponse response, String targetUrl, String key) throws IOException {
+    private void redirectToClient(HttpServletResponse response, String targetUrl, String email, String key) throws IOException {
         String uri = UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("response_type", OAuth2ResponseType.REQUIRED_REGISTRATION.name())
+            .queryParam("email", email)
             .queryParam("key", key)
             .build()
             .toUriString();

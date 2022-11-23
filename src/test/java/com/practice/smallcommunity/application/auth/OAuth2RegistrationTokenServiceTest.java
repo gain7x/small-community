@@ -43,28 +43,28 @@ class OAuth2RegistrationTokenServiceTest {
     }
 
     @Test
-    void 키가_일치하는_가입용_토큰을_검색한다() {
+    void 이메일과_키가_일치하는_가입용_토큰을_검색한다() {
         //given
-        when(oAuth2RegistrationTokenRepository.findById("key"))
-            .thenReturn(Optional.of(OAuth2RegistrationToken.builder().build()));
+        when(oAuth2RegistrationTokenRepository.findById("test@mail.com"))
+            .thenReturn(Optional.of(OAuth2RegistrationToken.builder().key("key").build()));
 
         //when
         //then
         assertThatNoException().isThrownBy(() -> {
-            OAuth2RegistrationToken result = oAuth2RegistrationTokenService.findByKey("key");
+            OAuth2RegistrationToken result = oAuth2RegistrationTokenService.findOne("test@mail.com", "key");
             assertThat(result).isNotNull();
         });
     }
 
     @Test
-    void 키가_일치하는_가입용_토큰이_검색되지_않으면_예외를_던진다() {
+    void 이메일과_키가_일치하는_가입용_토큰이_검색되지_않으면_예외를_던진다() {
         //given
         when(oAuth2RegistrationTokenRepository.findById(any()))
             .thenReturn(Optional.empty());
 
         //when
         //then
-        assertThatThrownBy(() -> oAuth2RegistrationTokenService.findByKey("key"))
+        assertThatThrownBy(() -> oAuth2RegistrationTokenService.findOne("test@mail.com", "key"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_OAUTH2_REGISTRATION_KEY);
     }
