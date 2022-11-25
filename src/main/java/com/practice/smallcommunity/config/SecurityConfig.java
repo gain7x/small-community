@@ -57,11 +57,13 @@ public class SecurityConfig implements WebMvcConfigurer {
             .allowedOrigins("*")
             .allowedMethods("POST");
 
-        registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods("*")
-            .allowedHeaders("*")
-            .allowCredentials(true);
+        for (String authorizedDomain : authorizedDomains) {
+            registry.addMapping("/**")
+                .allowedOrigins(authorizedDomain)
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+        }
     }
 
     @Bean

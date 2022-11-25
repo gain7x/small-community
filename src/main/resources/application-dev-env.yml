@@ -5,6 +5,13 @@ spring:
         - dev
 
 server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: keystore.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-alias: temp-ssl
   baseUrl: http://localhost:8080
   api:
     baseUrl: http://localhost:8080/api/v1
