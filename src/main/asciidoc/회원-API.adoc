@@ -7,6 +7,9 @@ operation::oauth2/회원가입[snippets='http-request,request-fields,http-respon
 === 회원가입
 operation::member/회원가입[snippets='http-request,request-fields,http-response']
 
+=== 이메일 인증
+operation::member/이메일_인증[snippets='http-request,request-parameters,http-response']
+
 === 회원 정보 조회
 operation::member/회원정보_조회[snippets='http-request,path-parameters,http-response,response-fields-data-base']
 

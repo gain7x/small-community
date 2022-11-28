@@ -7,20 +7,20 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
-@RedisHash("VerificationNumber")
-public class MailVerification {
+@RedisHash("EmailVerificationToken")
+public class EmailVerificationToken {
 
     @Id
-    private String key;
     private String email;
+    private String key;
 
     @TimeToLive
     private long expirationSeconds;
 
     @Builder
-    public MailVerification(String key, String email, long expirationSeconds) {
-        this.key = key;
+    public EmailVerificationToken(String email, String key, long expirationSeconds) {
         this.email = email;
+        this.key = key;
         this.expirationSeconds = expirationSeconds;
     }
 }

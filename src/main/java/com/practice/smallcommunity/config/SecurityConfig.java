@@ -39,8 +39,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${spring.profiles.active}")
     private String profile;
 
-    @Value("${verification.mail.api}")
-    private String mailVerificationApi;
+    @Value("${verification.email.api}")
+    private String emailVerificationApi;
 
     @Value("${oauth2.authorizedDomains}")
     private String[] authorizedDomains;
@@ -53,7 +53,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping(mailVerificationApi)
+        registry.addMapping(emailVerificationApi)
             .allowedOrigins("*")
             .allowedMethods("POST");
 
@@ -135,7 +135,7 @@ public class SecurityConfig implements WebMvcConfigurer {
             // 회원가입
             .antMatchers(HttpMethod.POST, "/api/v1/oauth2").anonymous()
             .antMatchers(HttpMethod.POST, "/api/v1/members").anonymous()
-            .antMatchers(HttpMethod.POST, mailVerificationApi).anonymous()
+            .antMatchers(HttpMethod.POST, emailVerificationApi).anonymous()
             // 카테고리
             .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
             .antMatchers("/api/v1/categories/**").hasRole("ADMIN")

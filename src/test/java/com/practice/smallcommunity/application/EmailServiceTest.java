@@ -17,7 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.TemplateEngine;
 
 @ExtendWith(MockitoExtension.class)
-class MailServiceTest {
+class EmailServiceTest {
 
     @Mock
     JavaMailSender javaMailSender;
@@ -25,13 +25,13 @@ class MailServiceTest {
     @Mock
     TemplateEngine templateEngine;
 
-    MailService verificationMailService;
+    EmailService verificationEmailService;
 
     String email = "test@mail.com";
 
     @BeforeEach
     void setUp() {
-        verificationMailService = new MailService(javaMailSender, templateEngine);
+        verificationEmailService = new EmailService(javaMailSender, templateEngine);
 
         when(javaMailSender.createMimeMessage())
             .thenReturn(mock(MimeMessage.class));
@@ -43,7 +43,7 @@ class MailServiceTest {
     @Test
     void 메일을_전송한다() {
         //when
-        verificationMailService.send(email, "title", "htmlContent");
+        verificationEmailService.send(email, "title", "htmlContent");
 
         //then
         verify(javaMailSender, times(1)).send(any(MimeMessage.class));

@@ -13,8 +13,8 @@ jwt:
     expirationHours: 336
 
 verification:
-  mail:
-    api: /members/verify
+  email:
+    api: /api/v1/members/verify
     # 10분
     timeoutSecond: 300
   oauth2:

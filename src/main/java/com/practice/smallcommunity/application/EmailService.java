@@ -15,7 +15,7 @@ import org.thymeleaf.context.Context;
 
 @RequiredArgsConstructor
 @Service
-public class MailService {
+public class EmailService {
 
     private final JavaMailSender sender;
 

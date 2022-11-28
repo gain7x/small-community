@@ -8,24 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 
 @DataRedisTest
-class MailVerificationRepositoryIT extends AbstractRedisContainerTest {
+class EmailVerificationTokenRepositoryIT extends AbstractRedisContainerTest {
 
     @Autowired
-    MailVerificationRepository mailVerificationRepository;
+    EmailVerificationTokenRepository emailVerificationTokenRepository;
 
     @Test
     void 저장_및_조회() {
         //given
-        MailVerification verification = MailVerification.builder()
-            .key("key")
+        EmailVerificationToken verification = EmailVerificationToken.builder()
             .email("test@mail.com")
+            .key("key")
             .build();
 
         //when
-        mailVerificationRepository.save(verification);
+        emailVerificationTokenRepository.save(verification);
 
-        MailVerification findItem = mailVerificationRepository.findById(
-            verification.getKey()).orElseThrow();
+        EmailVerificationToken findItem = emailVerificationTokenRepository.findById(
+            verification.getEmail()).orElseThrow();
 
         //then
         assertThat(findItem.getEmail()).isEqualTo("test@mail.com");
