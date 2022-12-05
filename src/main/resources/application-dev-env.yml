@@ -3,6 +3,22 @@ spring:
     activate:
       on-profile:
         - dev
+  datasource:
+    url: jdbc:mysql://localhost:13306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: test
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: 'create-drop'
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      platform: dev
 
 server:
   port: 8443
@@ -12,12 +28,21 @@ server:
     key-store-password: 123456
     key-store-type: PKCS12
     key-alias: temp-ssl
-  baseUrl: http://localhost:8080
-  api:
-    baseUrl: http://localhost:8080/api/v1
-
-file-store:
-  dir: "C:/Small-Community/upload"
 
 logging:
   config: classpath:log4j2-spring-dev.xml
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+dummy-store:
+  root: "C:/Small-Community"
+  attachments: ${dummy-store.root}/attachments
+
+jwt:
+  secret-key: 'DUMMY'
+
+oauth2:
+  authorizedDomains: https://localhost:3000,https://cijtoy.com

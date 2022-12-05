@@ -3,6 +3,19 @@ spring:
     activate:
       on-profile:
         - test
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+          auth: true
+          starttls.enable: true
 
 server:
   port: 8443
@@ -12,12 +25,13 @@ server:
     key-store-password: 123456
     key-store-type: PKCS12
     key-alias: temp-ssl
-  baseUrl: http://localhost:8080
-  api:
-    baseUrl: http://localhost:8080/api/v1
-
-file-store:
-  dir: "C:/Small-Community/upload"
 
 logging:
   config: classpath:log4j2-spring-dev.xml
+
+email:
+  test-target: a7cler@naver.com
+
+dummy-store:
+  root: "C:/Small-Community"
+  attachments: ${dummy-store.root}/attachments

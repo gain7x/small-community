@@ -1,7 +1,6 @@
 package com.practice.smallcommunity.domain.attachment;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
-import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.member.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,29 +26,30 @@ public class UploadFile extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    Member uploader;
+    private Member uploader;
 
     @Column(nullable = false)
     private String bucket;
 
     @Column(nullable = false)
-    private String filename;
+    private String objectKey;
 
     @Column(nullable = false)
     private String url;
 
-    @ManyToOne
-    private Content content;
+    @Column(nullable = false)
+    private String originalFilename;
+
+    @Column(nullable = false)
+    private long fileSize;
 
     @Builder
-    public UploadFile(Member uploader, String bucket, String filename, String url) {
+    public UploadFile(Member uploader, String bucket, String objectKey, String url, String originalFilename, long fileSize) {
         this.uploader = uploader;
         this.bucket = bucket;
-        this.filename = filename;
+        this.objectKey = objectKey;
+        this.originalFilename = originalFilename;
         this.url = url;
-    }
-
-    public void attach(Content content) {
-        this.content = content;
+        this.fileSize = fileSize;
     }
 }

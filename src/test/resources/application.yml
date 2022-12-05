@@ -2,11 +2,32 @@ spring:
   profiles:
     group:
       test:
-        - test-auth
         - test-db
         - test-env
         - test-oauth2
-        - prod-mail
     active: test
   messages:
     basename: messages,errors
+  servlet:
+    multipart:
+      max-file-size: 3MB
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+
+jwt:
+  secret-key: 'DUMMY'
+  access-token:
+    expirationMinutes: 30
+  refresh-token:
+    expirationHours: 24
+
+verification:
+  email:
+    api: /api/v1/members/verify
+    # 10분
+    timeoutSecond: 300
+  oauth2:
+    expirationMinutes: 10

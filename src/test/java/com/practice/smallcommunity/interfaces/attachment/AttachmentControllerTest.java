@@ -20,6 +20,7 @@ import com.practice.smallcommunity.interfaces.WithMockMember;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -31,6 +32,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @RestTest
 @WebMvcTest(AttachmentController.class)
 class AttachmentControllerTest {
+
+    @Value("${spring.servlet.multipart.max-file-size}")
+    String maxFileSize;
 
     @Autowired
     MockMvc mvc;
@@ -73,7 +77,7 @@ class AttachmentControllerTest {
         result.andExpect(status().isCreated())
             .andDo(generateDocument("attachment",
                 requestParts(
-                    partWithName("file").description("이미지 파일")
+                    partWithName("file").description("이미지 파일( 최대 " + maxFileSize + " )")
                 ),
                 responseFields(
                     baseData(),

@@ -13,20 +13,20 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(value = MailSenderAutoConfiguration.class, initializers = ConfigDataApplicationContextInitializer.class)
-public class MailSenderTest {
+public class MailSenderIT {
 
     @Autowired
     JavaMailSender sender;
 
-    @Value("${test.target-mail}")
-    String testMail;
+    @Value("${email.test-target}")
+    String testTargetEmail;
 
     @Disabled
     @Test
     void 메일_전송() throws MessagingException {
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
-        helper.setTo(testMail);
+        helper.setTo(testTargetEmail);
         helper.setSubject("Mail sender test title");
         helper.setText("Mail sender test content");
 

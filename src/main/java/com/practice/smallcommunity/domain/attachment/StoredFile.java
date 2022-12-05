@@ -10,6 +10,8 @@ import lombok.Data;
 public class StoredFile {
 
     private String bucket;
-    private String originalFilename;
+    private String objectKey;
     private String url;
+    private String originalFilename;
+    private long fileSize;
 }

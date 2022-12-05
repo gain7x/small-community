@@ -8,15 +8,25 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
-import com.practice.smallcommunity.infrastructure.LocalFileStore;
+import com.practice.smallcommunity.infrastructure.attachment.LocalFileStore;
 import java.io.File;
 import java.io.IOException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 class FileStoreTest {
 
     FileStore fileStore = new LocalFileStore();
+
+    @BeforeEach
+    void setUp() {
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "https://localhost:8443/api/v1/images");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    }
 
     @Test
     void 파일을_저장한다() throws IOException {

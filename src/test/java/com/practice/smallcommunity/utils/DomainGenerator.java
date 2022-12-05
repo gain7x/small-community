@@ -91,7 +91,8 @@ public abstract class DomainGenerator {
         return UploadFile.builder()
             .uploader(uploader)
             .bucket("Bucket" + divider)
-            .filename("Original" + divider)
+            .objectKey("ObjectKey" + divider)
+            .originalFilename("Original" + divider)
             .url("http://localhost/Bucket" + divider + "/Original" + divider)
             .build();
     }

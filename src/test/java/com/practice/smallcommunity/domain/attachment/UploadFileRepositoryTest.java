@@ -43,7 +43,7 @@ class UploadFileRepositoryTest {
 
         //then
         assertThat(uploadFile.getId()).isEqualTo(findItem.getId());
-        assertThat(uploadFile.getFilename()).isEqualTo(findItem.getFilename());
+        assertThat(uploadFile.getOriginalFilename()).isEqualTo(findItem.getOriginalFilename());
     }
 
     @Test

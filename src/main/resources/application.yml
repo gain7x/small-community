@@ -2,14 +2,31 @@ spring:
   profiles:
     group:
       dev:
-        - dev-auth
-        - dev-db
         - dev-env
-        - prod-mail
+        # 원활한 개발을 위함이며 차후 분리
+        - prod-email
+        - prod-oauth2
+      prod:
+        - prod-env
+        - prod-email
         - prod-oauth2
     active: dev
   messages:
     basename: messages,errors
+  servlet:
+    multipart:
+      max-file-size: 3MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        dialect: com.practice.smallcommunity.infrastructure.CustomMySQLDialect
+  data:
+    web:
+      pageable:
+        max-page-size: 50
 
 management:
   server:
@@ -20,7 +37,7 @@ management:
       exposure:
         exclude: "*"
     web:
-      base-path: /smc-mgnt
+      base-path: /smc-mgmt
       exposure:
         include:
           - info
@@ -28,3 +45,21 @@ management:
   endpoint:
     info.enabled: true
     health.enabled: true
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+
+jwt:
+  access-token:
+    expirationMinutes: 30
+  refresh-token:
+    expirationHours: 336
+
+verification:
+  email:
+    api: /api/v1/members/verify
+    timeoutSecond: 300
+  oauth2:
+    expirationMinutes: 10
