@@ -57,13 +57,11 @@ public class SecurityConfig implements WebMvcConfigurer {
             .allowedOrigins("*")
             .allowedMethods("POST");
 
-        for (String authorizedDomain : authorizedDomains) {
-            registry.addMapping("/**")
-                .allowedOrigins(authorizedDomain)
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-        }
+        registry.addMapping("/**")
+            .allowedOrigins(authorizedDomains)
+            .allowedMethods("*")
+            .allowedHeaders("*")
+            .allowCredentials(true);
     }
 
     @Bean
