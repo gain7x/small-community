@@ -30,7 +30,7 @@ server:
     key-alias: temp-ssl
 
 logging:
-  config: classpath:log4j2-spring-dev.xml
+  config: classpath:log4j2-spring-console.xml
 
 decorator:
   datasource:

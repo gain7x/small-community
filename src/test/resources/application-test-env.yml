@@ -27,7 +27,7 @@ server:
     key-alias: temp-ssl
 
 logging:
-  config: classpath:log4j2-spring-dev.xml
+  config: classpath:log4j2-spring-console.xml
 
 email:
   test-target: a7cler@naver.com
