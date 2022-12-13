@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class OAuth2Login extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "oauth2_login_seq_gen")
     @SequenceGenerator(name = "oauth2_login_seq_gen", sequenceName = "oauth2_login_seq")
     private Long id;
 

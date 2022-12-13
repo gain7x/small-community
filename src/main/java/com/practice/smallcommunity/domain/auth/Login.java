@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 public class Login {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "site_login_seq_gen", sequenceName = "site_login_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "login_seq_gen")
+    @SequenceGenerator(name = "login_seq_gen", sequenceName = "login_seq")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
