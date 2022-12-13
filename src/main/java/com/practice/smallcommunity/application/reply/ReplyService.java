@@ -6,6 +6,7 @@ import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
+import com.practice.smallcommunity.utils.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,7 @@ public class ReplyService {
 
     /**
      * 답글을 삭제 상태로 변경합니다.
+     *  관리자는 본인이 작성하지 않은 답글도 삭제할 수 있습니다.
      * @param replyId 답글 ID
      * @param loginId 답글을 수정하려는 현재 회원 ID
      * @throws BusinessException
@@ -88,7 +90,9 @@ public class ReplyService {
      */
     public void disable(Long replyId, Long loginId) {
         Reply findReply = findEnabledReply(replyId);
-        validateUpdater(findReply, loginId);
+        if (!SecurityUtil.isAdmin()) {
+            validateUpdater(findReply, loginId);
+        }
         findReply.delete();
         findReply.getPost().decreaseReplyCount();
     }
@@ -96,7 +100,7 @@ public class ReplyService {
     private void validateUpdater(Reply reply, Long loginId) {
         Long writerId = reply.getWriter().getId();
         if (!writerId.equals(loginId)) {
-            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR);
         }
     }
 }

@@ -80,7 +80,7 @@ class PostControllerTest {
     @WithMockMember
     void 게시글등록() throws Exception {
         //given
-        when(categoryService.findOne("dev"))
+        when(categoryService.findEnableCategory("dev"))
             .thenReturn(dummyCategory);
 
         when(memberService.findByUserId(1L))
@@ -110,7 +110,8 @@ class PostControllerTest {
 
         //then
         result.andExpect(status().isCreated())
-            .andDo(generateDocument("post", requestFields(
+            .andDo(generateDocument("post",
+                requestFields(
                     fields.withPath("categoryCode").type(JsonFieldType.STRING).description("카테고리 코드"),
                     fields.withPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                     fields.withPath("text").type(JsonFieldType.STRING).description("게시글 내용")

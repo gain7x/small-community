@@ -58,7 +58,7 @@ class PostSearchControllerTest {
         Category spyCategory = spy(category);
         when(spyCategory.getId()).thenReturn(1L);
 
-        when(categoryService.findOne("dev")).thenReturn(spyCategory);
+        when(categoryService.findEnableCategory("dev")).thenReturn(spyCategory);
 
         Member spyMember = spy(this.member);
         when(spyMember.getId()).thenReturn(1L);

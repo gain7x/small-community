@@ -46,9 +46,9 @@ class CategoryServiceTest {
     }
 
     @Test
-    void 등록_시_동일한_이름의_카테고리가_있으면_예외를_던진다() {
+    void 등록_시_동일한_코드의_카테고리가_있으면_예외를_던진다() {
         //given
-        when(categoryRepository.existsByName("개발"))
+        when(categoryRepository.existsByCode("dev"))
             .thenReturn(true);
 
         //when
@@ -86,11 +86,15 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_수정한다() {
         //given
-        when(categoryRepository.findByIdAndEnableIsTrue(1L))
+        when(categoryRepository.findByCode("dev"))
             .thenReturn(Optional.of(category));
 
         //when
-        Category updatedCategory = categoryService.update(1L, "new name", false);
+        Category updateInfo = Category.builder()
+            .name("new name")
+            .enable(false)
+            .build();
+        Category updatedCategory = categoryService.update("dev", updateInfo);
 
         //then
         assertThat(updatedCategory.getName()).isEqualTo("new name");
@@ -100,10 +104,10 @@ class CategoryServiceTest {
     @Test
     void 카테고리를_삭제한다() {
         //given
-        when(categoryRepository.findByIdAndEnableIsTrue(1L))
+        when(categoryRepository.findByCode("dev"))
             .thenReturn(Optional.of(category));
 
         //when
-        assertThatNoException().isThrownBy(() -> categoryService.delete(1L));
+        assertThatNoException().isThrownBy(() -> categoryService.delete("dev"));
     }
 }

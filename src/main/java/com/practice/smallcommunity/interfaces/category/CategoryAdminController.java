@@ -3,8 +3,11 @@ package com.practice.smallcommunity.interfaces.category;
 import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.interfaces.BaseResponse;
+import com.practice.smallcommunity.interfaces.CollectionResponse;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/categories")
-public class CategoryController {
+@RequestMapping("/api/admin/categories")
+public class CategoryAdminController {
 
     private final CategoryService categoryService;
     private final CategoryMapper mapper;
@@ -38,6 +41,16 @@ public class CategoryController {
             result.getId(), result.getCode(), result.getName(), result.isEnable());
     }
 
+    @GetMapping
+    public CollectionResponse<CategoryResponse> findAll() {
+        List<Category> categories = categoryService.findAll();
+        List<CategoryResponse> result = categories.stream()
+            .map(mapper::toResponse)
+            .collect(Collectors.toList());
+
+        return CollectionResponse.Ok(result);
+    }
+
     @GetMapping("/{categoryId}")
     public BaseResponse<CategoryResponse> find(@PathVariable Long categoryId) {
         Category findCategory = categoryService.findOne(categoryId);
@@ -45,19 +58,18 @@ public class CategoryController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{categoryId}")
-    public void update(@PathVariable Long categoryId, @Valid @RequestBody CategoryRequest dto) {
-        Category result = categoryService.update(categoryId, dto.getName(), dto.isEnable());
+    @PatchMapping("/{categoryCode}")
+    public void update(@PathVariable String categoryCode, @Valid @RequestBody CategoryRequest dto) {
+        Category result = categoryService.update(categoryCode, mapper.toEntity(dto));
 
-        log.info("Update the category. id: {}, name: {} -> {}, enable: {} -> {}",
-            categoryId, result.getName(), dto.getName(), result.isEnable(), dto.isEnable());
+        log.info("Update the category. code: {} -> {}", categoryCode, dto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{categoryId}")
-    public void delete(@PathVariable Long categoryId) {
-        categoryService.delete(categoryId);
+    @DeleteMapping("/{categoryCode}")
+    public void delete(@PathVariable String categoryCode) {
+        categoryService.delete(categoryCode);
 
-        log.info("Delete a category. id: {}", categoryId);
+        log.info("Delete a category. id: {}", categoryCode);
     }
 }

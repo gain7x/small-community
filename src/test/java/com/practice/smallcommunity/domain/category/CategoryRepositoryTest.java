@@ -117,15 +117,15 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    void 동일한_이름의_카테고리가_있으면_참을_반환한다() {
+    void 동일한_코드의_카테고리가_있으면_참을_반환한다() {
         //given
         categoryRepository.save(category);
 
         //when
-        boolean existsByName = categoryRepository.existsByName(category.getName());
+        boolean result = categoryRepository.existsByCode(category.getCode());
 
         //then
-        assertThat(existsByName).isTrue();
+        assertThat(result).isTrue();
     }
 
     @Test
@@ -134,7 +134,7 @@ class CategoryRepositoryTest {
         categoryRepository.save(category);
 
         //when
-        boolean existsByName = categoryRepository.existsByName("some category");
+        boolean existsByName = categoryRepository.existsByCode("some category");
 
         //then
         assertThat(existsByName).isFalse();

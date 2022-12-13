@@ -11,9 +11,11 @@ import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.application.post.dto.PostDto;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.domain.post.MainText;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
 import com.practice.smallcommunity.domain.reply.Reply;
+import com.practice.smallcommunity.testutils.TestSecurityUtil;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -32,9 +35,7 @@ class PostServiceTest {
     PostService postService;
 
     Category category = DomainGenerator.createCategory("dev", "개발");
-
     Member postWriter;
-
     Post dummyPost;
 
     @BeforeEach
@@ -42,6 +43,7 @@ class PostServiceTest {
         postService = new PostService(postRepository);
         postWriter = spy(DomainGenerator.createMember("A"));
         dummyPost = spy(DomainGenerator.createPost(category, postWriter, "내용"));
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -86,8 +88,43 @@ class PostServiceTest {
     }
 
     @Test
-    void 미삭제상태_게시글을_ID로_조회하고_조회수를_증가시킨다() {
+    void 미삭제상태_게시글을_본문과_함께_ID로_조회한다() {
         //given
+        when(dummyPost.getMainText()).thenReturn(MainText.builder()
+            .writer(postWriter)
+            .text("본문")
+            .build());
+
+        when(postRepository.findPostFetchJoin(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        Post findPost = postService.findPostFetchMainText(1L);
+
+        //then
+        assertThat(findPost).isNotNull();
+        assertThat(findPost.getTitle()).isEqualTo(dummyPost.getTitle());
+        assertThat(findPost.getMainText()).isNotNull();
+    }
+
+    @Test
+    void 미삭제상태_게시글을_본문과_함께_ID로_조회할_때_해당하는_데이터가_없으면_예외를_던진다() {
+        //given
+        when(postRepository.findPostFetchJoin(1L))
+            .thenReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> postService.findPostFetchMainText(1L))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_POST);
+    }
+
+    @Test
+    void 미삭제상태_게시글을_ID로_조회하고_사용자가_로그인_상태면_조회수를_증가시킨다() {
+        //given
+        TestSecurityUtil.setUserAuthentication();
+
         when(postRepository.findPostFetchJoin(1L))
             .thenReturn(Optional.of(dummyPost));
 
@@ -96,6 +133,19 @@ class PostServiceTest {
 
         //then
         assertThat(findPost.getViews()).isEqualTo(1);
+    }
+
+    @Test
+    void 미삭제상태_게시글을_ID로_조회하고_비회원이면_조회수를_증가시키지_않는다() {
+        //given
+        when(postRepository.findPostFetchJoin(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        Post findPost = postService.viewPost(1L);
+
+        //then
+        assertThat(findPost.getViews()).isEqualTo(0);
     }
 
     @Test
@@ -125,7 +175,7 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.update(1L, 1L,
             new PostDto("new title", "new text")))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.RUNTIME_ERROR);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
@@ -153,7 +203,22 @@ class PostServiceTest {
         //then
         assertThatThrownBy(() -> postService.disable(1L, 1L))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.RUNTIME_ERROR);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
+    }
+
+    @Test
+    void 관리자는_본인이_작성하지_않은_게시글도_삭제할_수_있다() {
+        //given
+        TestSecurityUtil.setAdminAuthentication();
+
+        when(postRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyPost));
+
+        //when
+        postService.disable(1L, 2L);
+
+        //then
+        assertThat(dummyPost.isEnable()).isFalse();
     }
 
     @Test
@@ -187,7 +252,7 @@ class PostServiceTest {
         //then
         assertThatThrownBy(() -> postService.accept(1L, 2L, null))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.RUNTIME_ERROR);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
@@ -225,7 +290,7 @@ class PostServiceTest {
         //then
         assertThatThrownBy(() -> postService.accept(1L, 1L, reply))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.RUNTIME_ERROR);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
@@ -242,6 +307,6 @@ class PostServiceTest {
         //then
         assertThatThrownBy(() -> postService.accept(1L, 1L, reply))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.RUNTIME_ERROR);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 }

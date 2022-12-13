@@ -1,0 +1,26 @@
+[[관리자-API]]
+== 관리자_카테고리
+=== 카테고리 전체 조회
+operation::admin/category/전체_카테고리조회[snippets='http-request,http-response,response-fields-data-collection']
+
+=== 카테고리 조회
+operation::admin/category/카테고리조회[snippets='http-request,path-parameters,http-response,response-fields-data-base']
+
+=== 카테고리 등록
+operation::admin/category/카테고리등록[snippets='http-request,request-fields,http-response']
+
+=== 카테고리 수정
+operation::admin/category/카테고리수정[snippets='http-request,path-parameters,request-fields,http-response']
+
+=== 카테고리 삭제
+operation::admin/category/카테고리삭제[snippets='http-request,path-parameters,http-response']
+
+== 관리자_회원
+=== 회원등록
+operation::admin/member/회원등록[snippets='http-request,request-fields,http-response']
+
+=== 회원 정보 수정
+operation::admin/member/회원정보_수정[snippets='http-request,path-parameters,request-fields,http-response']
+
+=== 회원 강제 탈퇴
+operation::admin/member/회원_강제_탈퇴[snippets='http-request,path-parameters,http-response']

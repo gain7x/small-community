@@ -52,7 +52,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public BaseResponse<PostSimpleResponse> write(@CurrentUser Long loginId, @Valid @RequestBody PostRequest dto) {
-        Category category = categoryService.findOne(dto.getCategoryCode());
+        Category category = categoryService.findEnableCategory(dto.getCategoryCode());
         Member member = memberService.findByUserId(loginId);
 
         if (category.isCudAdminOnly() && !member.getMemberRole().equals(MemberRole.ADMIN)) {

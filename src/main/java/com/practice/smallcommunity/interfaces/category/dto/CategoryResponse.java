@@ -11,4 +11,6 @@ public class CategoryResponse {
 
     private String code;
     private String name;
+    private boolean enable;
+    private boolean cudAdminOnly;
 }

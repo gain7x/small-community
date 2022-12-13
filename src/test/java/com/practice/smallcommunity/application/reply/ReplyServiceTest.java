@@ -13,6 +13,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
+import com.practice.smallcommunity.testutils.TestSecurityUtil;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 class ReplyServiceTest {
@@ -45,6 +47,7 @@ class ReplyServiceTest {
     void setUp() {
         replyService = new ReplyService(replyRepository, notificationService);
         dummyReply = DomainGenerator.createReply(post, member, "답글");
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -140,11 +143,11 @@ class ReplyServiceTest {
         //then
         assertThatThrownBy(() -> replyService.update(1L, 1L, "새로운 내용"))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 
     @Test
-    void 답글을_삭제상태로_만든다() {
+    void 답글을_삭제상태로_변경한다() {
         //given
         when(member.getId()).thenReturn(1L);
         when(replyRepository.findByIdAndEnableIsTrue(1L))
@@ -186,6 +189,21 @@ class ReplyServiceTest {
         //when
         assertThatThrownBy(() -> replyService.disable(1L, 1L))
             .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
+    }
+
+    @Test
+    void 관리자는_본인이_작성하지_않은_답글도_삭제할_수_있다() {
+        //given
+        TestSecurityUtil.setAdminAuthentication();
+
+        when(replyRepository.findByIdAndEnableIsTrue(1L))
+            .thenReturn(Optional.of(dummyReply));
+
+        //when
+        replyService.disable(1L, 1L);
+
+        //then
+        assertThat(dummyReply.isEnable()).isFalse();
     }
 }

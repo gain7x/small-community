@@ -120,6 +120,8 @@ public class SecurityConfig implements WebMvcConfigurer {
             .authorizeRequests()
             // Health Check
             .antMatchers(HttpMethod.GET, "/").permitAll()
+            // 관리자
+            .antMatchers("/api/admin/**").hasRole("ADMIN")
             // CORS
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 인증
@@ -130,7 +132,6 @@ public class SecurityConfig implements WebMvcConfigurer {
             .antMatchers(HttpMethod.POST, emailVerificationApi).anonymous()
             // 카테고리
             .antMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
-            .antMatchers("/api/v1/categories/**").hasRole("ADMIN")
             // 게시글
             .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
             // 답글

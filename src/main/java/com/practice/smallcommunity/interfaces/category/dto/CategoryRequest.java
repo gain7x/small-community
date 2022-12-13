@@ -17,4 +17,6 @@ public class CategoryRequest {
     private String name;
 
     private boolean enable;
+
+    private boolean cudAdminOnly;
 }

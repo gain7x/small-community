@@ -28,7 +28,7 @@ public class PostSearchController {
     @GetMapping
     public PageResponse<BoardResponse> findPosts(@RequestParam String categoryCode,
         @RequestParam(required = false) @Length(min = 2) String title, Pageable pageable) {
-        Category findCategory = categoryService.findOne(categoryCode);
+        Category findCategory = categoryService.findEnableCategory(categoryCode);
         BoardSearchCond cond = BoardSearchCond.builder()
             .categoryId(findCategory.getId())
             .title(title)

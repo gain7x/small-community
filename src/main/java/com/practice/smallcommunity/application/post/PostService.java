@@ -8,6 +8,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostRepository;
 import com.practice.smallcommunity.domain.reply.Reply;
+import com.practice.smallcommunity.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +69,7 @@ public class PostService {
 
     /**
      * 삭제 상태가 아닌 게시글을 조회합니다.
-     *  본문을 페치조인으로 가져오며, 조회수를 1 증가시킵니다.
+     *  본문을 페치조인으로 가져오며, 로그인 회원이 조회한 경우 조회수를 1 증가시킵니다.
      * @param postId 게시글 ID
      * @return 게시글
      * @throws BusinessException
@@ -76,7 +77,10 @@ public class PostService {
      */
     public Post viewPost(Long postId) {
         Post findPost = findPostFetchMainText(postId);
-        findPost.increaseViewCount();
+        if (SecurityUtil.isLoggedIn()) {
+            findPost.increaseViewCount();
+        }
+
         return findPost;
     }
 
@@ -101,6 +105,7 @@ public class PostService {
 
     /**
      * 게시글을 삭제 상태로 변경합니다.
+     *  관리자는 본인이 작성하지 않은 게시글도 삭제할 수 있습니다.
      * @param postId 게시글 ID
      * @param loginId 게시글을 삭제하려는 현재 회원 ID( 작성자 )
      * @throws BusinessException
@@ -109,7 +114,9 @@ public class PostService {
      */
     public void disable(Long postId, Long loginId) {
         Post findPost = findPost(postId);
-        validatePostWriter(findPost, loginId);
+        if (!SecurityUtil.isAdmin()) {
+            validatePostWriter(findPost, loginId);
+        }
         findPost.delete();
     }
 
@@ -133,7 +140,7 @@ public class PostService {
             throw new BusinessException(ErrorCode.EXIST_ACCEPTED_REPLY);
         }
         if (!isReplyWriteToPost(postId, reply) || isReplyWriter(loginId, reply)) {
-            throw new BusinessException(ErrorCode.RUNTIME_ERROR);
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR);
         }
 
         findPost.accept(reply);
@@ -147,9 +154,14 @@ public class PostService {
         return reply.getWriter().getId().equals(loginId);
     }
 
-    private void validatePostWriter(Post post, Long loginId) {
-        if (!post.getWriter().getId().equals(loginId)) {
-            throw new BusinessException(ErrorCode.RUNTIME_ERROR);
+    /**
+     * 회원이 게시글 작성자인지 검증합니다.
+     * @param post    게시글
+     * @param memberId 회원 ID
+     */
+    private void validatePostWriter(Post post, Long memberId) {
+        if (!post.getWriter().getId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR);
         }
     }
 }
