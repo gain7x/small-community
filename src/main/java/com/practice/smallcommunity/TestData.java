@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Profile("dev")
 public class TestData {
 
-    private static final int MEMBER_COUNT = 30;
+    private static final int MEMBER_COUNT = 10;
     private static final int POST_COUNT_PER_CATEGORIES = 10;
     private static final int REPLY_COUNT = 5;
 
