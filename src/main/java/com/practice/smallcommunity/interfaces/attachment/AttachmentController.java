@@ -35,7 +35,7 @@ public class AttachmentController {
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<UploadResponse> uploadImage(@CurrentUser Long loginId, MultipartFile file) {
         if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
-            throw new BusinessException(ErrorCode.RUNTIME_ERROR);
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR);
         }
 
         Member uploader = memberService.findByUserId(loginId);
