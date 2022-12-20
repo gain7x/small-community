@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-class FileStoreTest {
+class LocalFileStoreTest {
 
     FileStore fileStore = new LocalFileStore();
 
