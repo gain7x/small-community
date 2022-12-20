@@ -45,6 +45,7 @@ class JwtAuthenticationFilterTest {
     @BeforeEach
     void beforeEach() {
         jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider);
+        SecurityContextHolder.clearContext();
     }
 
     @Test
