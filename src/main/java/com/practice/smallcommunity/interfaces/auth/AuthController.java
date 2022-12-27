@@ -6,7 +6,7 @@ import com.practice.smallcommunity.application.auth.AuthService;
 import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.domain.auth.Login;
-import com.practice.smallcommunity.interfaces.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
 import com.practice.smallcommunity.interfaces.auth.dto.LoginRequest;
 import com.practice.smallcommunity.interfaces.auth.dto.LoginResponse;
 import javax.servlet.http.HttpServletResponse;

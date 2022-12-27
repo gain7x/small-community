@@ -1,7 +1,6 @@
 package com.practice.smallcommunity.domain.content;
 
 import com.practice.smallcommunity.domain.member.Member;
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,22 +34,5 @@ public class Content {
     @Builder
     public Content(Member member) {
         this.member = member;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Content content = (Content) o;
-        return id.equals(content.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

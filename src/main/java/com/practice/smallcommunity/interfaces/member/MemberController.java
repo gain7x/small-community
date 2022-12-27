@@ -4,7 +4,7 @@ import com.practice.smallcommunity.application.auth.LoginService;
 import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.auth.Login;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.interfaces.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.member.dto.MemberPasswordChangeRequest;
 import com.practice.smallcommunity.interfaces.member.dto.MemberResponse;

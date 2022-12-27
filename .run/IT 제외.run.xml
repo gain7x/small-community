@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IT 제외" type="JUnit" factoryName="JUnit" activateToolWindowBeforeRun="false">
     <module name="small-community" />
+    <extension name="coverage" runner="jacoco" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />

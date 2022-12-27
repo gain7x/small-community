@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.interfaces.common.dto;
 
 
 import lombok.Getter;

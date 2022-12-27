@@ -8,7 +8,7 @@ import com.practice.smallcommunity.domain.attachment.FileStore;
 import com.practice.smallcommunity.domain.attachment.StoredFile;
 import com.practice.smallcommunity.domain.attachment.UploadFile;
 import com.practice.smallcommunity.domain.member.Member;
-import com.practice.smallcommunity.interfaces.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.attachment.dto.UploadResponse;
 import lombok.RequiredArgsConstructor;

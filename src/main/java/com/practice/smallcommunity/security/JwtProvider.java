@@ -46,6 +46,10 @@ public class JwtProvider {
         key = secretKey.getBytes(StandardCharsets.UTF_8);
     }
 
+    public byte[] getKey() {
+        return key;
+    }
+
     public long getRefreshTokenExpirationHours() {
         return refreshTokenExpirationHours;
     }

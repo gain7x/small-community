@@ -99,6 +99,15 @@ class NotificationServiceTest {
     }
 
     @Test
+    void 모든_알림을_읽음_상태로_변경한다() {
+        //when
+        notificationService.readAllUnreadNotifications(1L);
+
+        //then
+        verify(notificationRepository, times(1)).readAllUnreadNotifications(1L);
+    }
+
+    @Test
     void 알림을_읽음_상태로_변경한다() {
         //given
         Notification notification = DomainGenerator.createNotification(receiver, null);
@@ -112,5 +121,20 @@ class NotificationServiceTest {
 
         //then
         assertThat(notification.isRead()).isTrue();
+    }
+
+    @Test
+    void 알림을_읽음_상태로_변경할_때_해당_회원에게_송신된_알림이_아니면_예외를_던진다() {
+        //given
+        Notification notification = DomainGenerator.createNotification(receiver, null);
+
+        when(receiver.getId()).thenReturn(1L);
+        when(notificationRepository.findById(1L))
+            .thenReturn(Optional.of(notification));
+
+        //when
+        assertThatThrownBy(() -> notificationService.read(2L, 1L))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.VALIDATION_ERROR);
     }
 }

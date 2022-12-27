@@ -13,7 +13,7 @@ import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.domain.member.MemberRole;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.reply.Reply;
-import com.practice.smallcommunity.interfaces.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
 import com.practice.smallcommunity.interfaces.CurrentUser;
 import com.practice.smallcommunity.interfaces.content.dto.VoteRequest;
 import com.practice.smallcommunity.interfaces.content.dto.VoteResponse;

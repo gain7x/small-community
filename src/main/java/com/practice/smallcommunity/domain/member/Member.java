@@ -2,7 +2,6 @@ package com.practice.smallcommunity.domain.member;
 
 import com.practice.smallcommunity.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -60,35 +59,10 @@ public class Member extends BaseTimeEntity {
     }
 
     /**
-     * 회원 권한을 변경합니다.
-     * @param memberRole 회원 권한
-     */
-    public void changeMemberRole(MemberRole memberRole) {
-        this.memberRole = memberRole;
-    }
-
-    /**
      * 회원을 탈퇴 상태로 변경합니다.
      */
     public void withdraw() {
         this.withdrawal = true;
         withdrawnDate = LocalDateTime.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Member member = (Member) o;
-        return id.equals(member.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

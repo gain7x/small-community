@@ -4,7 +4,7 @@ import com.practice.smallcommunity.application.notification.NotificationService;
 import com.practice.smallcommunity.domain.notification.Notification;
 import com.practice.smallcommunity.domain.notification.NotificationRepository;
 import com.practice.smallcommunity.interfaces.CurrentUser;
-import com.practice.smallcommunity.interfaces.PageResponse;
+import com.practice.smallcommunity.interfaces.common.dto.PageResponse;
 import com.practice.smallcommunity.interfaces.notification.dto.NotificationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

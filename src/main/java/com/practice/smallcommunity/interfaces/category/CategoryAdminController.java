@@ -2,8 +2,8 @@ package com.practice.smallcommunity.interfaces.category;
 
 import com.practice.smallcommunity.application.category.CategoryService;
 import com.practice.smallcommunity.domain.category.Category;
-import com.practice.smallcommunity.interfaces.BaseResponse;
-import com.practice.smallcommunity.interfaces.CollectionResponse;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.CollectionResponse;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryRequest;
 import com.practice.smallcommunity.interfaces.category.dto.CategoryResponse;
 import java.util.List;

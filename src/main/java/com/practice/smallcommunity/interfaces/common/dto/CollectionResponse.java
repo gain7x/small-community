@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.interfaces.common.dto;
 
 import java.util.Collection;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.practice.smallcommunity.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.application.exception.ErrorCode;
-import com.practice.smallcommunity.interfaces.ErrorResponse;
+import com.practice.smallcommunity.interfaces.common.dto.ErrorResponse;
 import java.io.IOException;
 import java.util.Locale;
 import javax.servlet.ServletException;

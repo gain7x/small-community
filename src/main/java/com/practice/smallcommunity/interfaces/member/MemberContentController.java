@@ -5,7 +5,7 @@ import com.practice.smallcommunity.domain.post.PostRepository;
 import com.practice.smallcommunity.domain.reply.Reply;
 import com.practice.smallcommunity.domain.reply.ReplyRepository;
 import com.practice.smallcommunity.interfaces.CurrentUser;
-import com.practice.smallcommunity.interfaces.PageResponse;
+import com.practice.smallcommunity.interfaces.common.dto.PageResponse;
 import com.practice.smallcommunity.interfaces.member.dto.MemberContentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

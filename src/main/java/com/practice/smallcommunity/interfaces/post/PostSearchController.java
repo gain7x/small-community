@@ -5,7 +5,7 @@ import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.post.Post;
 import com.practice.smallcommunity.domain.post.PostSearchRepository;
 import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
-import com.practice.smallcommunity.interfaces.PageResponse;
+import com.practice.smallcommunity.interfaces.common.dto.PageResponse;
 import com.practice.smallcommunity.interfaces.post.dto.BoardResponse;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;

@@ -1,8 +1,9 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.interfaces.common;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.BusinessExceptions;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.interfaces.common.dto.ErrorResponse;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

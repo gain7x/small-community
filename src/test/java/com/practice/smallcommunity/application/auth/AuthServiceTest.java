@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.auth.dto.AuthDto;
@@ -128,5 +130,14 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.refresh("refresh-token"))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
+    }
+
+    @Test
+    void 리프레시_토큰을_삭제한다() {
+        //when
+        authService.deleteRefreshToken("refresh-token");
+
+        //then
+        verify(refreshTokenRepository, times(1)).deleteById("refresh-token");
     }
 }

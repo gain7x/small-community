@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.application.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -46,6 +47,31 @@ class LoginServiceTest {
     void beforeEach() {
         passwordEncoder = spy(PasswordEncoderFactories.createDelegatingPasswordEncoder());
         loginService = new LoginService(loginRepository, memberService, passwordEncoder);
+    }
+
+    @Test
+    void 엔티티를_ID_기준으로_조회한다() {
+        //given
+        when(loginRepository.findById(1L))
+            .thenReturn(Optional.of(Login.builder()
+                .build()));
+
+        //when
+        assertThatNoException().isThrownBy(() -> loginService.findById(1L));
+    }
+
+    @Test
+    void 아이디와_비밀번호가_일치하는_로그인_정보를_반환한다() {
+        //given
+        String email = login.getMember().getEmail();
+        login.verifyEmail();
+        when(loginRepository.findByMemberIdFetchJoin(any())).thenReturn(Optional.of(login));
+        when(memberService.findByEmail(email)).thenReturn(member);
+        doReturn(true).when(passwordEncoder).matches(anyString(), anyString());
+
+        //when
+        //then
+        assertThatNoException().isThrownBy(() -> loginService.login(email, "testPassword"));
     }
 
     @Test

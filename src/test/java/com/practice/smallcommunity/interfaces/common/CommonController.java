@@ -1,7 +1,11 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.interfaces.common;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.interfaces.common.dto.BaseResponse;
+import com.practice.smallcommunity.interfaces.common.dto.CollectionResponse;
+import com.practice.smallcommunity.interfaces.common.dto.ErrorResponse;
+import com.practice.smallcommunity.interfaces.common.dto.PageResponse;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.PageImpl;

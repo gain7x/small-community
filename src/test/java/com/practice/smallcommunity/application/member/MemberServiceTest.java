@@ -1,6 +1,7 @@
 package com.practice.smallcommunity.application.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
@@ -116,5 +117,70 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.update(1L, newNickname))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_NICKNAME);
+    }
+
+    @Test
+    void 회원을_탈퇴_상태로_변경한다() {
+        //given
+        when(memberRepository.findByIdAndWithdrawalIsFalse(1L))
+            .thenReturn(Optional.of(targetMember));
+
+        //when
+        Member result = memberService.withdrawal(1L);
+
+        //then
+        assertThat(result.isWithdrawal()).isTrue();
+    }
+
+    @Test
+    void 이미_사용중인_이메일이면_예외를_던진다() {
+        //given
+        when(memberRepository.existsByEmail("test@mail.com"))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.checkDuplicateEmails("test@mail.com"))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_EMAIL);
+    }
+
+    @Test
+    void 이미_사용중인_별명이면_예외를_던진다() {
+        //given
+        when(memberRepository.existsByNickname("test"))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.checkDuplicateNicknames("test"))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_NICKNAME);
+    }
+
+    @Test
+    void 가입하는_회원정보의_유효성을_확인한다() {
+        //given
+        when(memberRepository.existsByEmail(targetMember.getEmail()))
+            .thenReturn(false);
+        when(memberRepository.existsByNickname(targetMember.getNickname()))
+            .thenReturn(false);
+
+        //when
+        //then
+        assertThatNoException().isThrownBy(() -> memberService.validateRegistration(targetMember));
+    }
+
+    @Test
+    void 가입하는_회원정보가_유효하지_않은_경우_예외를_던진다() {
+        //given
+        when(memberRepository.existsByEmail(targetMember.getEmail()))
+            .thenReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.validateRegistration(targetMember))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_EMAIL);
     }
 }

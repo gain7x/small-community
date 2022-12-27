@@ -3,6 +3,8 @@ package com.practice.smallcommunity.application.auth;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.application.exception.BusinessException;
@@ -49,6 +51,15 @@ class OAuth2LoginServiceTest {
         assertThatThrownBy(() -> oauth2LoginService.findOne("test", null))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_OAUTH2_LOGIN);
+    }
+
+    @Test
+    void OAuth2_회원을_등록한다() {
+        //when
+        OAuth2Login result = oauth2LoginService.register(oauth2Login);
+
+        //then
+        verify(oauth2LoginRepository, times(1)).save(oauth2Login);
     }
 
     @Test

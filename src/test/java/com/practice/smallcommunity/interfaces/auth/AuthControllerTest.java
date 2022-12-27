@@ -4,11 +4,14 @@ import static com.practice.smallcommunity.interfaces.RestDocsHelper.baseData;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.getConstrainedFields;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -137,6 +140,18 @@ class AuthControllerTest {
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("별명")
                 )));
+    }
+
+    @Test
+    void 로그아웃() throws Exception {
+        //when
+        ResultActions result = mvc.perform(post("/api/v1/auth/logout")
+            .cookie(new Cookie(AuthUtil.REFRESH_TOKEN_COOKIE, "refresh-token")));
+
+        //then
+        result.andExpect(status().isOk())
+            .andExpect(cookie().maxAge(AuthUtil.REFRESH_TOKEN_COOKIE, 0));
+        verify(authService, times(1)).deleteRefreshToken("refresh-token");
     }
 
     @TestConfiguration

@@ -2,7 +2,6 @@ package com.practice.smallcommunity.application.content;
 
 import com.practice.smallcommunity.domain.content.Content;
 import com.practice.smallcommunity.domain.content.VoteHistory;
-import com.practice.smallcommunity.domain.content.VoteHistoryId;
 import com.practice.smallcommunity.domain.content.VoteHistoryRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import java.util.Optional;
@@ -16,11 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class VoteHistoryService {
 
     private final VoteHistoryRepository voteHistoryRepository;
-
-    @Transactional(readOnly = true)
-    public Optional<VoteHistory> findVoteHistory(Member voter, Content content) {
-        return voteHistoryRepository.findById(new VoteHistoryId(voter.getId(), content.getId()));
-    }
 
     /**
      * 컨텐츠 투표 기록을 추가합니다.

@@ -10,6 +10,7 @@ import com.practice.smallcommunity.application.exception.ErrorCode;
 import com.practice.smallcommunity.domain.category.Category;
 import com.practice.smallcommunity.domain.category.CategoryRepository;
 import com.practice.smallcommunity.utils.DomainGenerator;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,54 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.findOne(1L))
             .isInstanceOf(BusinessException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
+    }
+
+    @Test
+    void 활성_상태인_카테고리를_코드_기준으로_조회한다() {
+        //given
+        when(categoryRepository.findByCodeAndEnableIsTrue("dev"))
+            .thenReturn(Optional.of(category));
+
+        //when
+        assertThatNoException().isThrownBy(() -> categoryService.findEnableCategory("dev"));
+    }
+
+    @Test
+    void 활성_상태인_카테고리를_코드_기준으로_조회할_때_찾지_못한_경우_예외를_던진다() {
+        //given
+        when(categoryRepository.findByCodeAndEnableIsTrue("dev"))
+            .thenReturn(Optional.empty());
+
+        //when
+        assertThatThrownBy(() -> categoryService.findEnableCategory("dev"))
+            .isInstanceOf(BusinessException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
+    }
+
+    @Test
+    void 활성_상태인_모든_카테고리를_조회한다() {
+        //given
+        when(categoryRepository.findAllByEnableIsTrue())
+            .thenReturn(List.of(category));
+
+        //when
+        List<Category> result = categoryService.findEnableCategories();
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Test
+    void 모든_카테고리를_조회한다() {
+        //given
+        when(categoryRepository.findAll())
+            .thenReturn(List.of(category));
+
+        //when
+        List<Category> result = categoryService.findAll();
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test

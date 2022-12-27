@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.interfaces;
+package com.practice.smallcommunity.interfaces.common;
 
 import static com.practice.smallcommunity.interfaces.RestDocsHelper.generateDocument;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -6,6 +6,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.practice.smallcommunity.interfaces.RestTest;
+import com.practice.smallcommunity.interfaces.WithMockMember;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
