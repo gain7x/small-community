@@ -42,6 +42,7 @@ public class EmailVerificationService {
         emailVerificationTokenRepository.save(verificationToken);
 
         String verificationUri = ServletUriComponentsBuilder.fromContextPath(request)
+            .scheme("https")
             .path(verificationApi)
             .queryParam("email", verificationToken.getEmail())
             .queryParam("key", verificationToken.getKey())
