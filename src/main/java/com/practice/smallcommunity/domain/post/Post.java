@@ -43,7 +43,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 75, nullable = false)
     private String title;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL, orphanRemoval = true)

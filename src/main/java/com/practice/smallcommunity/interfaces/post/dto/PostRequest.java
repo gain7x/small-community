@@ -15,7 +15,7 @@ public class PostRequest {
     private String categoryCode;
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 75)
     private String title;
 
     @NotBlank

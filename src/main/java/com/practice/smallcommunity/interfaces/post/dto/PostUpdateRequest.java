@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 public class PostUpdateRequest {
 
     @NotBlank
-    @Length(max = 20)
+    @Length(max = 75)
     private String title;
 
     @NotBlank
