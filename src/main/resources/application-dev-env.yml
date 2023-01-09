@@ -4,7 +4,7 @@ spring:
       on-profile:
         - dev
   datasource:
-    url: jdbc:mysql://localhost:13306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://localhost:13306/test?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8
     username: root
     password: test
   jpa:
