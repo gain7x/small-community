@@ -111,7 +111,7 @@ public class LoginService {
 
     /**
      * 이메일이 일치하는 로그인 정보를 이메일 인증 상태로 변경합니다.
-     * @param email ID
+     * @param email 이메일
      * @return 로그인 정보
      */
     public Login verifyEmail(String email) {
@@ -119,5 +119,24 @@ public class LoginService {
         Login findLogin = findByMemberId(findMember.getId());
         findLogin.verifyEmail();
         return findLogin;
+    }
+
+    /**
+     * 미인증 데이터를 삭제합니다.
+     * @param email 이메일
+     * @return 삭제 여부
+     */
+    public boolean deleteEmailIfNotVerified(String email) {
+        try {
+            Member findMember = memberService.findByEmail(email);
+            Login findLogin = findByMemberId(findMember.getId());
+            if (!findLogin.isEmailVerified()) {
+                loginRepository.delete(findLogin);
+                return true;
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return false;
     }
 }

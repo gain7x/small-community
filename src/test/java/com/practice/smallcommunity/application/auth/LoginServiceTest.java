@@ -40,7 +40,7 @@ class LoginServiceTest {
 
     LoginService loginService;
 
-    Member member = DomainGenerator.createMember("A");
+    Member member = spy(DomainGenerator.createMember("A"));
     Login login = DomainGenerator.createLogin(member);
 
     @BeforeEach()
@@ -209,5 +209,47 @@ class LoginServiceTest {
 
         //then
         assertThat(result.isEmailVerified()).isTrue();
+    }
+
+    @Test
+    void 미인증_회원정보를_삭제한다() {
+        //given
+        when(memberService.findByEmail(member.getEmail())).thenReturn(member);
+        when(member.getId()).thenReturn(1L);
+        when(loginRepository.findByMemberIdFetchJoin(1L)).thenReturn(Optional.of(login));
+
+        //when
+        boolean result = loginService.deleteEmailIfNotVerified(member.getEmail());
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 미인증_회원정보_삭제_시_인증된_회원이면_false를_반환한다() {
+        //given
+        when(memberService.findByEmail(member.getEmail())).thenReturn(member);
+        when(member.getId()).thenReturn(1L);
+        when(loginRepository.findByMemberIdFetchJoin(1L)).thenReturn(Optional.of(login));
+        login.verifyEmail();
+
+        //when
+        boolean result = loginService.deleteEmailIfNotVerified(member.getEmail());
+
+        //then
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void 미인증_회원정보_삭제_시_조회되는_정보가_없으면_false를_반환한다() {
+        //given
+        when(memberService.findByEmail(member.getEmail()))
+            .thenThrow(new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
+
+        //when
+        boolean result = loginService.deleteEmailIfNotVerified(member.getEmail());
+
+        //then
+        assertThat(result).isFalse();
     }
 }

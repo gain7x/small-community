@@ -65,7 +65,16 @@ public class RegisterController {
             .password(dto.getPassword())
             .build();
 
-        loginService.register(login);
+        try{
+            loginService.register(login);
+        } catch (BusinessException e) {
+            if (e.getErrorCode().equals(ErrorCode.DUPLICATED_EMAIL)) {
+                loginService.deleteEmailIfNotVerified(member.getEmail());
+                loginService.register(login);
+            } else {
+                throw e;
+            }
+        }
         emailVerificationService.sendVerificationMail(request, dto.getEmail(), dto.getRedirectUri());
 
         log.info("Member has been signed up. id: {}, email: {}", member.getId(), member.getEmail());
