@@ -120,6 +120,8 @@ public class SecurityConfig implements WebMvcConfigurer {
             .authorizeRequests()
             // Health Check
             .antMatchers(HttpMethod.GET, "/").permitAll()
+            // REST Docs
+            .antMatchers(HttpMethod.GET, "/docs/**").permitAll()
             // 관리자
             .antMatchers("/api/admin/**").hasRole("ADMIN")
             // CORS
