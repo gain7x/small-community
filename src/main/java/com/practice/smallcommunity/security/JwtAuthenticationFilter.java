@@ -29,9 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         SecurityContext context = SecurityContextHolder.getContext();
         if (context.getAuthentication() == null) {
-            String jwtToken = getJwtToken(request);
-            if (StringUtils.hasText(jwtToken)) {
-                Authentication authentication = jwtProvider.getAuthentication(jwtToken);
+            String jwt = getBearerToken(request);
+            if (StringUtils.hasText(jwt)) {
+                Authentication authentication = jwtProvider.authenticate(jwt);
                 context.setAuthentication(authentication);
             }
         }
@@ -42,12 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * 클라이언트 요청에 Bearer 토큰이 있으면 토큰을 반환합니다.
      * @param request 클라이언트 요청
-     * @return 토큰( 'Bearer ' 문자열은 제외 )
+     * @return 토큰이 존재하면 'Bearer ' 문자열을 제외한 토큰 문자열, 아니면 null
      */
-    private String getJwtToken(HttpServletRequest request) {
+    private String getBearerToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.length() > 7 && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;

@@ -3,7 +3,6 @@ package com.practice.smallcommunity.security;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.dto.TokenDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -44,14 +43,6 @@ public class JwtProvider {
     @PostConstruct
     public void init() {
         key = secretKey.getBytes(StandardCharsets.UTF_8);
-    }
-
-    public byte[] getKey() {
-        return key;
-    }
-
-    public long getRefreshTokenExpirationHours() {
-        return refreshTokenExpirationHours;
     }
 
     /**
@@ -100,50 +91,11 @@ public class JwtProvider {
     }
 
     /**
-     * 토큰의 주인을 반환합니다.
-     *  토큰의 서명만 검증하며 만료일은 신경쓰지 않습니다.
-     * @param token JWT
-     * @return 토큰의 주인( 회원 번호 )
-     * @throws IllegalArgumentException
-     *          토큰이 유효하지 않거나, 주인이 설정되지 않은 경우
-     */
-    public Long getSubject(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token);
-
-            return Long.parseLong(claims.getBody().getSubject());
-        } catch (ExpiredJwtException e) {
-            return Long.parseLong(e.getClaims().getSubject());
-        } catch (Exception e) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.", e);
-        }
-    }
-
-    /**
-     * 토큰이 유효하면 true를, 유효하지 않으면 false를 반환합니다.
-     * @param token JWT
-     * @return 토큰이 유효하면 true,아니면 false
-     */
-    public boolean isValid(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token);
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
      * 토큰이 유효하면 토큰 데이터를 기반으로 인증 객체를 생성하여 반환합니다.
      * @param token JWT
      * @return 토큰이 유효하면 인증 객체, 실패 시 null
      */
-    public Authentication getAuthentication(String token) {
+    public Authentication authenticate(String token) {
         try {
             Jws<Claims> claims = Jwts.parser()
                 .setSigningKey(key)

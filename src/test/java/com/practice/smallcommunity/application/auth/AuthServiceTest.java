@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -83,7 +84,8 @@ class AuthServiceTest {
 
         when(jwtProvider.createAccessToken(spyMember)).thenReturn(dummyAccessToken);
         when(jwtProvider.createRefreshToken(spyMember)).thenReturn(dummyRefreshToken);
-        when(jwtProvider.getSubject(anyString())).thenReturn(1L);
+        when(jwtProvider.authenticate(anyString()))
+            .thenReturn(new UsernamePasswordAuthenticationToken(1L, null, null));
         when(refreshTokenRepository.existsById(anyString())).thenReturn(true);
         when(memberService.findByUserId(1L)).thenReturn(spyMember);
 
@@ -98,20 +100,8 @@ class AuthServiceTest {
     }
 
     @Test
-    void 재발급_시_액세스_토큰이_유효하지_않으면_예외를_던진다() {
-        //given
-        when(jwtProvider.getSubject(anyString()))
-            .thenThrow(new IllegalArgumentException(""));
-
-        //when
-        //then
-        assertThatThrownBy(() -> authService.refresh("refresh-token"))
-            .isInstanceOf(BusinessException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_ACCESS_TOKEN);
-    }
-
-    @Test
     void 재발급_시_리프레시_토큰이_유효하지_않으면_예외를_던진다() {
+        //given
         //when
         //then
         assertThatThrownBy(() -> authService.refresh("refresh-token"))
@@ -122,6 +112,9 @@ class AuthServiceTest {
     @Test
     void 재발급_시_리프레시_토큰이_DB에_없으면_예외를_던진다() {
         //given
+        when(jwtProvider.authenticate(anyString()))
+            .thenReturn(new UsernamePasswordAuthenticationToken(1L, null, null));
+
         when(refreshTokenRepository.existsById("refresh-token"))
             .thenReturn(false);
 

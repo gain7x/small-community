@@ -1,15 +1,18 @@
 package com.practice.smallcommunity.application.auth;
 
-import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.application.auth.dto.AuthDto;
 import com.practice.smallcommunity.application.exception.BusinessException;
 import com.practice.smallcommunity.application.exception.ErrorCode;
+import com.practice.smallcommunity.application.member.MemberService;
 import com.practice.smallcommunity.domain.auth.RefreshToken;
 import com.practice.smallcommunity.domain.auth.RefreshTokenRepository;
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.JwtProvider;
 import com.practice.smallcommunity.security.dto.TokenDto;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +36,12 @@ public class AuthService {
     public AuthDto createAuthentication(Member member) {
         TokenDto accessToken = jwtProvider.createAccessToken(member);
         TokenDto refreshToken = jwtProvider.createRefreshToken(member);
+        long validHours = ChronoUnit.HOURS.between(refreshToken.getExpires().toInstant(), Instant.now());
 
         refreshTokenRepository.save(RefreshToken.builder()
             .token(refreshToken.getToken())
             .memberId(member.getId())
-            .expirationHours(jwtProvider.getRefreshTokenExpirationHours())
+            .expirationHours(validHours)
             .build());
 
         return AuthDto.builder()
@@ -57,12 +61,11 @@ public class AuthService {
      *          갱신이 유효하지 않은 경우
      */
     public AuthDto refresh(String refreshToken) {
-        Long memberId;
-        try {
-            memberId = jwtProvider.getSubject(refreshToken);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
+        Authentication authentication = jwtProvider.authenticate(refreshToken);
+        if (authentication == null) {
+            throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
+        Long memberId = (Long) authentication.getPrincipal();
 
         boolean isValidRefreshToken = refreshTokenRepository.existsById(refreshToken);
         if (!isValidRefreshToken) {

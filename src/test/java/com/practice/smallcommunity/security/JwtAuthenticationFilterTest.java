@@ -51,7 +51,7 @@ class JwtAuthenticationFilterTest {
     @Test
     void 토큰이_있으면_인증객체를_등록한다() throws ServletException, IOException {
         when(jwtProvider.createAccessToken(dummyMember)).thenReturn(dummyAccessToken);
-        when(jwtProvider.getAuthentication(dummyAccessToken.getToken()))
+        when(jwtProvider.authenticate(dummyAccessToken.getToken()))
             .thenReturn(new UsernamePasswordAuthenticationToken("userA", null, null));
 
         TokenDto token = jwtProvider.createAccessToken(dummyMember);
