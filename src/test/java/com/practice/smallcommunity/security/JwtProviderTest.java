@@ -1,35 +1,30 @@
 package com.practice.smallcommunity.security;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import com.practice.smallcommunity.domain.member.Member;
 import com.practice.smallcommunity.security.dto.TokenDto;
 import com.practice.smallcommunity.utils.DomainGenerator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class JwtProviderTest {
 
-    JwtProvider jwtProvider = new JwtProvider();
+    JwtProvider jwtProvider = new JwtProvider(new JwtProperties("secretKey", 30, 336));
 
     @Spy
     Member dummyMember = DomainGenerator.createMember("A");
-
-    @BeforeEach
-    void setUp() {
-        jwtProvider.init();
-    }
 
     private String createInvalidToken() {
         Date expires = Date.from(

@@ -9,7 +9,7 @@ public class TestSecurityConfig {
 
     @Bean
     public JwtProvider jwtProvider() {
-        return new JwtProvider();
+        return new JwtProvider(new JwtProperties("secretKey", 30, 336));
     }
 
     @Bean

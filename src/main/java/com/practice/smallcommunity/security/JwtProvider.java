@@ -6,19 +6,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
 
 /**
  * JWT 발급 및 검증 서비스입니다.
@@ -29,21 +27,7 @@ public class JwtProvider {
 
     private static final String ROLE_CLAIM = "AUTH";
 
-    @Value("${jwt.secret-key}")
-    private String secretKey = "dummy";
-
-    @Value("${jwt.access-token.expirationMinutes}")
-    private long accessTokenExpirationMinutes = 30;
-
-    @Value("${jwt.refresh-token.expirationHours}")
-    private long refreshTokenExpirationHours = 24;
-
-    private byte[] key;
-
-    @PostConstruct
-    public void init() {
-        key = secretKey.getBytes(StandardCharsets.UTF_8);
-    }
+    private final JwtProperties properties;
 
     /**
      * 회원 정보를 기반으로 액세스 토큰을 생성하여 반환합니다.
@@ -52,10 +36,10 @@ public class JwtProvider {
      */
     public TokenDto createAccessToken(Member member) {
         Date expires = Date.from(
-            Instant.now().plus(accessTokenExpirationMinutes, ChronoUnit.MINUTES));
+            Instant.now().plus(properties.getAccessTokenExpirationMinutes(), ChronoUnit.MINUTES));
 
         String token = Jwts.builder()
-            .signWith(SignatureAlgorithm.HS512, key)
+            .signWith(SignatureAlgorithm.HS512, properties.getSecretKey())
             .setIssuedAt(new Date())
             .setSubject(member.getId().toString())
             .setExpiration(expires)
@@ -74,10 +58,10 @@ public class JwtProvider {
      */
     public TokenDto createRefreshToken(Member member) {
         Date expires = Date.from(
-            Instant.now().plus(refreshTokenExpirationHours, ChronoUnit.HOURS));
+            Instant.now().plus(properties.getRefreshTokenExpirationHours(), ChronoUnit.HOURS));
 
         String token = Jwts.builder()
-            .signWith(SignatureAlgorithm.HS512, key)
+            .signWith(SignatureAlgorithm.HS512, properties.getSecretKey())
             .setIssuedAt(new Date())
             .setSubject(member.getId().toString())
             .setExpiration(expires)
@@ -98,7 +82,7 @@ public class JwtProvider {
     public Authentication authenticate(String token) {
         try {
             Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(key)
+                .setSigningKey(properties.getSecretKey())
                 .parseClaimsJws(token);
 
             Claims body = claims.getBody();

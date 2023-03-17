@@ -19,10 +19,8 @@ cloud:
 
 jwt:
   secret-key: 'DUMMY'
-  access-token:
-    expirationMinutes: 30
-  refresh-token:
-    expirationHours: 24
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-Hours: 24
 
 verification:
   email:

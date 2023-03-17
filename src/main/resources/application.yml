@@ -52,10 +52,8 @@ cloud:
       static: ap-northeast-2
 
 jwt:
-  access-token:
-    expirationMinutes: 30
-  refresh-token:
-    expirationHours: 336
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-hours: 336
 
 verification:
   email:
