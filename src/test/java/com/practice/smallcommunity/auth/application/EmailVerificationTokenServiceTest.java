@@ -1,20 +1,10 @@
 package com.practice.smallcommunity.auth.application;
 
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.practice.smallcommunity.infrastructure.EmailService;
-import com.practice.smallcommunity.common.exception.BusinessException;
-import com.practice.smallcommunity.common.exception.ErrorCode;
 import com.practice.smallcommunity.auth.domain.EmailVerificationToken;
 import com.practice.smallcommunity.auth.domain.EmailVerificationTokenRepository;
-import java.util.Optional;
+import com.practice.smallcommunity.common.exception.BusinessException;
+import com.practice.smallcommunity.common.exception.ErrorCode;
+import com.practice.smallcommunity.infrastructure.TemplateMailSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +13,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class EmailVerificationTokenServiceTest {
 
@@ -30,13 +28,13 @@ class EmailVerificationTokenServiceTest {
     EmailVerificationTokenRepository emailVerificationTokenRepository;
 
     @Mock
-    EmailService emailService;
+    TemplateMailSender mailSender;
 
     EmailVerificationService verificationNumberService;
 
     @BeforeEach
     void setUp() {
-        verificationNumberService = new EmailVerificationService(emailVerificationTokenRepository, emailService);
+        verificationNumberService = new EmailVerificationService(emailVerificationTokenRepository, mailSender);
     }
 
     @Test
@@ -55,7 +53,7 @@ class EmailVerificationTokenServiceTest {
 
         //then
         verify(emailVerificationTokenRepository, times(1)).save(any());
-        verify(emailService, times(1)).send(eq(email), anyString(), anyString(), any());
+        verify(mailSender, times(1)).send(eq(email), anyString(), anyString(), any());
     }
 
     @Test

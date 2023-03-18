@@ -1,25 +1,26 @@
 package com.practice.smallcommunity.auth.application;
 
-import com.practice.smallcommunity.infrastructure.EmailService;
-import com.practice.smallcommunity.common.exception.BusinessException;
-import com.practice.smallcommunity.common.exception.ErrorCode;
 import com.practice.smallcommunity.auth.domain.EmailVerificationToken;
 import com.practice.smallcommunity.auth.domain.EmailVerificationTokenRepository;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
+import com.practice.smallcommunity.common.exception.BusinessException;
+import com.practice.smallcommunity.common.exception.ErrorCode;
+import com.practice.smallcommunity.infrastructure.TemplateMailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class EmailVerificationService {
 
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
-    private final EmailService emailService;
+    private final TemplateMailSender mailSender;
 
     @Value("${verification.email.timeoutSecond}")
     private long mailVerificationTimeout = 60;
@@ -34,24 +35,24 @@ public class EmailVerificationService {
      */
     public void sendVerificationMail(HttpServletRequest request, String email, String redirectUri) {
         EmailVerificationToken verificationToken = EmailVerificationToken.builder()
-            .email(email)
-            .key(UUID.randomUUID().toString())
-            .expirationSeconds(mailVerificationTimeout)
-            .build();
+                .email(email)
+                .key(UUID.randomUUID().toString())
+                .expirationSeconds(mailVerificationTimeout)
+                .build();
 
         emailVerificationTokenRepository.save(verificationToken);
 
         String verificationUri = ServletUriComponentsBuilder.fromContextPath(request)
-            .scheme("https")
-            .path(verificationApi)
-            .queryParam("email", verificationToken.getEmail())
-            .queryParam("key", verificationToken.getKey())
-            .queryParam("redirectUri", redirectUri)
-            .toUriString();
+                .scheme("https")
+                .path(verificationApi)
+                .queryParam("email", verificationToken.getEmail())
+                .queryParam("key", verificationToken.getKey())
+                .queryParam("redirectUri", redirectUri)
+                .toUriString();
         HashMap<String, Object> model = new HashMap<>();
         model.put("action", verificationUri);
 
-        emailService.send(email, "작은 커뮤니티 인증 메일", "email/verify-email-template", model);
+        mailSender.send(email, "작은 커뮤니티 인증 메일", "email/verify-email-template", model);
     }
 
     /**
