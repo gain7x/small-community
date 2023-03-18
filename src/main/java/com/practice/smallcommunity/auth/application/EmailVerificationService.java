@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,26 +32,31 @@ public class EmailVerificationService {
      * @param email 인증 대상 이메일
      * @param redirectUri 인증 성공 후 리다이렉트하는 URI
      */
-    public void sendVerificationMail(HttpServletRequest request, String email, String redirectUri) {
-        EmailVerificationToken verificationToken = EmailVerificationToken.builder()
-                .email(email)
-                .key(UUID.randomUUID().toString())
-                .expirationSeconds(mailVerificationTimeout)
-                .build();
-
-        emailVerificationTokenRepository.save(verificationToken);
-
-        String verificationUri = ServletUriComponentsBuilder.fromContextPath(request)
-                .scheme("https")
-                .path(verificationApi)
-                .queryParam("email", verificationToken.getEmail())
-                .queryParam("key", verificationToken.getKey())
-                .queryParam("redirectUri", redirectUri)
-                .toUriString();
-        HashMap<String, Object> model = new HashMap<>();
-        model.put("action", verificationUri);
+    public void sendVerificationMail(String email, String redirectUri) {
+        EmailVerificationToken token = createToken(email);
+        String verificationUri = makeVerificationUri(token, redirectUri);
+        Map<String, Object> model = Map.of("action", verificationUri);
 
         mailSender.send(email, "작은 커뮤니티 인증 메일", "email/verify-email-template", model);
+    }
+
+    private EmailVerificationToken createToken(String email) {
+        return emailVerificationTokenRepository.save(
+                EmailVerificationToken.builder()
+                        .email(email)
+                        .key(UUID.randomUUID().toString())
+                        .expirationSeconds(mailVerificationTimeout)
+                        .build());
+    }
+
+    private String makeVerificationUri(EmailVerificationToken token, String redirectUri) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .scheme("https")
+                .path(verificationApi)
+                .queryParam("email", token.getEmail())
+                .queryParam("key", token.getKey())
+                .queryParam("redirectUri", redirectUri)
+                .toUriString();
     }
 
     /**

@@ -11,7 +11,6 @@ import com.practice.smallcommunity.member.MemberRole;
 import com.practice.smallcommunity.member.interfaces.dto.EmailVerificationRequest;
 import com.practice.smallcommunity.member.interfaces.dto.MemberRegisterRequest;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +53,7 @@ public class RegisterController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/members")
-    public void register(HttpServletRequest request, @Valid @RequestBody MemberRegisterRequest dto) {
+    public void register(@Valid @RequestBody MemberRegisterRequest dto) {
         Member member = Member.builder()
             .email(dto.getEmail())
             .nickname(dto.getNickname())
@@ -75,7 +74,7 @@ public class RegisterController {
                 throw e;
             }
         }
-        emailVerificationService.sendVerificationMail(request, dto.getEmail(), dto.getRedirectUri());
+        emailVerificationService.sendVerificationMail(dto.getEmail(), dto.getRedirectUri());
 
         log.info("Member has been signed up. id: {}, email: {}", member.getId(), member.getEmail());
     }

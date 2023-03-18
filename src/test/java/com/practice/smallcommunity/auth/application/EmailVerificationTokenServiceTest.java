@@ -12,6 +12,8 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 
@@ -41,19 +43,28 @@ class EmailVerificationTokenServiceTest {
     void 인증_메일을_전송한다() {
         //given
         when(emailVerificationTokenRepository.save(any()))
-            .thenAnswer(AdditionalAnswers.returnsFirstArg());
+                .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setScheme("https");
+        request.setServerPort(8443);
         request.setRequestURI("/api/v1/members");
+
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
+
         String email = "test@mail.com";
         String redirectUri = "https://localhost:3000";
 
         //when
-        verificationNumberService.sendVerificationMail(request, email, redirectUri);
+        verificationNumberService.sendVerificationMail(email, redirectUri);
 
         //then
         verify(emailVerificationTokenRepository, times(1)).save(any());
-        verify(mailSender, times(1)).send(eq(email), anyString(), anyString(), any());
+        verify(mailSender, times(1)).send(eq(email), anyString(), anyString(), argThat(arg -> {
+            String action = arg.get("action").toString();
+            return action.startsWith("https://localhost:8443/");
+        }));
     }
 
     @Test
