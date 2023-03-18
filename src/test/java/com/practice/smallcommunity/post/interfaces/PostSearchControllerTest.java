@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.practice.smallcommunity.category.CategoryService;
 import com.practice.smallcommunity.category.Category;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.post.domain.PostSearchRepository;
 import com.practice.smallcommunity.post.domain.dto.BoardSearchCond;

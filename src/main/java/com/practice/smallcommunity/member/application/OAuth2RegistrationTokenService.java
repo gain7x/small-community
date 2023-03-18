@@ -1,10 +1,10 @@
-package com.practice.smallcommunity.auth.application;
+package com.practice.smallcommunity.member.application;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationToken;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationTokenRepository;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationToken;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationTokenRepository;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

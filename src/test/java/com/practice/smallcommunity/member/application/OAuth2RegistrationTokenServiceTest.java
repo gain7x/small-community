@@ -1,23 +1,20 @@
-package com.practice.smallcommunity.auth.application;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+package com.practice.smallcommunity.member.application;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationToken;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationTokenRepository;
-import java.util.Optional;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationToken;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OAuth2RegistrationTokenServiceTest {

@@ -12,10 +12,10 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.member.MemberService;
+import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.auth.domain.Login;
 import com.practice.smallcommunity.auth.domain.LoginRepository;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.testutils.DomainGenerator;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

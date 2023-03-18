@@ -2,14 +2,14 @@ package com.practice.smallcommunity;
 
 import com.practice.smallcommunity.auth.application.LoginService;
 import com.practice.smallcommunity.category.CategoryService;
-import com.practice.smallcommunity.member.MemberService;
+import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.post.application.PostService;
 import com.practice.smallcommunity.post.application.dto.PostDto;
 import com.practice.smallcommunity.reply.ReplyService;
 import com.practice.smallcommunity.auth.domain.Login;
 import com.practice.smallcommunity.category.Category;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.reply.Reply;
 import java.util.List;

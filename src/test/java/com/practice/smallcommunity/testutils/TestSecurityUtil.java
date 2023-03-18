@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.testutils;
 
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import java.util.List;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

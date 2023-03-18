@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.utils;
 
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

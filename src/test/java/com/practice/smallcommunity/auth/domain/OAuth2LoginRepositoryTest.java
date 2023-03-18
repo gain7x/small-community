@@ -2,11 +2,9 @@ package com.practice.smallcommunity.auth.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2LoginRepository;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRepository;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRepository;
 import com.practice.smallcommunity.testutils.DomainGenerator;
 import java.util.List;
 import java.util.Optional;

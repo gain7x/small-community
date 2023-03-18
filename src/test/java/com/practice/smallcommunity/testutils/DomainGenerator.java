@@ -1,13 +1,13 @@
 package com.practice.smallcommunity.testutils;
 
 import com.practice.smallcommunity.attachment.domain.UploadFile;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.auth.domain.OAuth2Login;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import com.practice.smallcommunity.category.Category;
 import com.practice.smallcommunity.content.domain.Content;
 import com.practice.smallcommunity.content.domain.VoteHistory;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import com.practice.smallcommunity.auth.domain.Login;
 import com.practice.smallcommunity.notification.Notification;
 import com.practice.smallcommunity.notification.NotificationType;

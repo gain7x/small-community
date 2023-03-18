@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.auth.application.LoginService;
-import com.practice.smallcommunity.member.MemberService;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.application.MemberService;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.testutils.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;
 import com.practice.smallcommunity.testutils.interfaces.WithMockMember;

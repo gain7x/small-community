@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.smallcommunity.auth.application.OAuth2LoginService;
-import com.practice.smallcommunity.auth.application.OAuth2RegistrationTokenService;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationToken;
+import com.practice.smallcommunity.member.application.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationToken;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;
 import com.practice.smallcommunity.member.interfaces.dto.OAuth2RegisterRequest;
 import org.junit.jupiter.api.Test;

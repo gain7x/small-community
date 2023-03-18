@@ -1,13 +1,13 @@
 package com.practice.smallcommunity.member.interfaces;
 
-import com.practice.smallcommunity.auth.application.EmailVerificationService;
+import com.practice.smallcommunity.member.application.EmailVerificationService;
 import com.practice.smallcommunity.auth.application.LoginService;
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.auth.domain.EmailVerificationToken;
+import com.practice.smallcommunity.member.domain.EmailVerificationToken;
 import com.practice.smallcommunity.auth.domain.Login;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import com.practice.smallcommunity.member.interfaces.dto.EmailVerificationRequest;
 import com.practice.smallcommunity.member.interfaces.dto.MemberRegisterRequest;
 import java.io.IOException;

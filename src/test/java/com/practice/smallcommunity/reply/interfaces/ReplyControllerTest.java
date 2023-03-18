@@ -20,12 +20,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.member.MemberService;
+import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.post.application.PostService;
 import com.practice.smallcommunity.reply.ReplyService;
 import com.practice.smallcommunity.content.VoteService;
 import com.practice.smallcommunity.category.Category;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.reply.Reply;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;

@@ -3,7 +3,7 @@ package com.practice.smallcommunity.content;
 import com.practice.smallcommunity.content.domain.Content;
 import com.practice.smallcommunity.content.domain.VoteHistory;
 import com.practice.smallcommunity.content.domain.VoteHistoryRepository;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -20,7 +20,7 @@ import com.practice.smallcommunity.auth.application.LoginService;
 import com.practice.smallcommunity.auth.application.dto.AuthDto;
 import com.practice.smallcommunity.auth.interfaces.dto.LoginRequest;
 import com.practice.smallcommunity.auth.domain.Login;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.testutils.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;
 import com.practice.smallcommunity.testutils.DomainGenerator;

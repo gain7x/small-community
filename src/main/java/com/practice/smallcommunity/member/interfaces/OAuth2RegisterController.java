@@ -1,11 +1,11 @@
 package com.practice.smallcommunity.member.interfaces;
 
 import com.practice.smallcommunity.auth.application.OAuth2LoginService;
-import com.practice.smallcommunity.auth.application.OAuth2RegistrationTokenService;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2RegistrationToken;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRole;
+import com.practice.smallcommunity.member.application.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.auth.domain.OAuth2Login;
+import com.practice.smallcommunity.member.domain.OAuth2RegistrationToken;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRole;
 import com.practice.smallcommunity.member.interfaces.dto.OAuth2RegisterRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

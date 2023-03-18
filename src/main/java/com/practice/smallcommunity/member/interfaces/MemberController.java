@@ -1,9 +1,9 @@
 package com.practice.smallcommunity.member.interfaces;
 
 import com.practice.smallcommunity.auth.application.LoginService;
-import com.practice.smallcommunity.member.MemberService;
+import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.auth.domain.Login;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.common.interfaces.dto.BaseResponse;
 import com.practice.smallcommunity.common.interfaces.CurrentUser;
 import com.practice.smallcommunity.member.interfaces.dto.MemberPasswordChangeRequest;

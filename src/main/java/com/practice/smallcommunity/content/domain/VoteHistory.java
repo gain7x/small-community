@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.content.domain;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

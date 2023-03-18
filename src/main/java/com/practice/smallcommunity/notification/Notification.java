@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.notification;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import javax.persistence.Column;
 import javax.persistence.Entity;

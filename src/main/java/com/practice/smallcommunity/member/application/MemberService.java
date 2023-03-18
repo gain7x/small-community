@@ -1,7 +1,9 @@
-package com.practice.smallcommunity.member;
+package com.practice.smallcommunity.member.application;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
+import com.practice.smallcommunity.member.domain.MemberRepository;
+import com.practice.smallcommunity.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

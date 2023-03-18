@@ -3,7 +3,7 @@ package com.practice.smallcommunity.security.converter;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import com.practice.smallcommunity.security.user.SocialUser;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

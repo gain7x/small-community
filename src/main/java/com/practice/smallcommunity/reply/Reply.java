@@ -2,7 +2,7 @@ package com.practice.smallcommunity.reply;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
 import com.practice.smallcommunity.content.domain.Content;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

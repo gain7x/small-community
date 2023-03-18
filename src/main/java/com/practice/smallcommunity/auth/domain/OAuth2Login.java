@@ -1,7 +1,7 @@
-package com.practice.smallcommunity.auth.domain.oauth2;
+package com.practice.smallcommunity.auth.domain;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

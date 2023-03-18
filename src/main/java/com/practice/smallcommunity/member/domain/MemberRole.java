@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.member;
+package com.practice.smallcommunity.member.domain;
 
 public enum MemberRole {
     USER,

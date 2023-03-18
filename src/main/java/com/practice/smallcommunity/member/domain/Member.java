@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.member;
+package com.practice.smallcommunity.member.domain;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
 import java.time.LocalDateTime;

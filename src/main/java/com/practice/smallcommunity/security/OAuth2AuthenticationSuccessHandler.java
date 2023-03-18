@@ -8,7 +8,7 @@ import com.practice.smallcommunity.auth.application.AuthService;
 import com.practice.smallcommunity.auth.application.OAuth2LoginService;
 import com.practice.smallcommunity.auth.application.dto.AuthDto;
 import com.practice.smallcommunity.common.exception.BusinessException;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
+import com.practice.smallcommunity.auth.domain.OAuth2Login;
 import com.practice.smallcommunity.security.converter.DelegatingSocialUserConverter;
 import com.practice.smallcommunity.security.converter.SocialUserConverter;
 import com.practice.smallcommunity.security.exception.NotRegisteredOAuth2LoginException;

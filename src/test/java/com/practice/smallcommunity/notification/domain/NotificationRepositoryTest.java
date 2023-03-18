@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.practice.smallcommunity.category.Category;
 import com.practice.smallcommunity.category.CategoryRepository;
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRepository;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRepository;
 import com.practice.smallcommunity.notification.Notification;
 import com.practice.smallcommunity.notification.NotificationRepository;
 import com.practice.smallcommunity.post.domain.Post;

@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.auth.domain;
 
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

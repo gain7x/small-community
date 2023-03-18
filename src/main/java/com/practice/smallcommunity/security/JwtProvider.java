@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.security;
 
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.security.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

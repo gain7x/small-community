@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.auth.domain;
+package com.practice.smallcommunity.member.domain;
 
 import org.springframework.data.repository.CrudRepository;
 

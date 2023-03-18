@@ -2,9 +2,6 @@ package com.practice.smallcommunity.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRepository;
-import com.practice.smallcommunity.member.MemberRole;
 import com.practice.smallcommunity.testutils.DomainGenerator;
 import java.util.List;
 import java.util.Optional;

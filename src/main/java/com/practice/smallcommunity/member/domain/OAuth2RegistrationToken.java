@@ -1,6 +1,7 @@
-package com.practice.smallcommunity.auth.domain.oauth2;
+package com.practice.smallcommunity.member.domain;
 
 import java.util.concurrent.TimeUnit;
+
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;

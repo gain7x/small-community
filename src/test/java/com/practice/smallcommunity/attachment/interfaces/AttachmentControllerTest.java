@@ -12,7 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.practice.smallcommunity.attachment.AttachmentService;
-import com.practice.smallcommunity.member.MemberService;
+import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.attachment.domain.FileStore;
 import com.practice.smallcommunity.attachment.domain.StoredFile;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;

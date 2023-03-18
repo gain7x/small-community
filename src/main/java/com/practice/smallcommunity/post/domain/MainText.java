@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.post.domain;
 
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

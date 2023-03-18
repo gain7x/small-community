@@ -1,11 +1,11 @@
-package com.practice.smallcommunity.auth.domain;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package com.practice.smallcommunity.member.domain;
 
 import com.practice.smallcommunity.testutils.AbstractRedisContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataRedisTest
 class EmailVerificationTokenRepositoryIT extends AbstractRedisContainerTest {

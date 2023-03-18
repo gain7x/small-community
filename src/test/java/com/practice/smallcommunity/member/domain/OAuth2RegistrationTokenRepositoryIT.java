@@ -1,12 +1,13 @@
-package com.practice.smallcommunity.auth.domain.oauth2;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package com.practice.smallcommunity.member.domain;
 
 import com.practice.smallcommunity.testutils.AbstractRedisContainerTest;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataRedisTest
 class OAuth2RegistrationTokenRepositoryIT extends AbstractRedisContainerTest {

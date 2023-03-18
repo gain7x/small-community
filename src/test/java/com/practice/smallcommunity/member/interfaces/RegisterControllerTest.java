@@ -13,11 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.smallcommunity.auth.application.EmailVerificationService;
+import com.practice.smallcommunity.member.application.EmailVerificationService;
 import com.practice.smallcommunity.auth.application.LoginService;
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.auth.domain.EmailVerificationToken;
+import com.practice.smallcommunity.member.domain.EmailVerificationToken;
 import com.practice.smallcommunity.auth.domain.Login;
 import com.practice.smallcommunity.testutils.interfaces.RestDocsHelper.ConstrainedFields;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;

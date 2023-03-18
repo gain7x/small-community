@@ -1,6 +1,8 @@
-package com.practice.smallcommunity.auth.domain.oauth2;
+package com.practice.smallcommunity.auth.domain;
 
 import java.util.Optional;
+
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

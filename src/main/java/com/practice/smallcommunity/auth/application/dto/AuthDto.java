@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.auth.application.dto;
 
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,7 +2,7 @@ package com.practice.smallcommunity.security;
 
 import static com.practice.smallcommunity.security.OAuth2AuthenticationUtil.clearAuthenticationAttributes;
 
-import com.practice.smallcommunity.auth.application.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.member.application.OAuth2RegistrationTokenService;
 import com.practice.smallcommunity.member.interfaces.OAuth2RegisterController;
 import com.practice.smallcommunity.security.exception.NotRegisteredOAuth2LoginException;
 import com.practice.smallcommunity.security.user.SocialUser;

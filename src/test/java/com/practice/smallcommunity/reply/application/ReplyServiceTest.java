@@ -9,7 +9,7 @@ import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
 import com.practice.smallcommunity.notification.NotificationService;
 import com.practice.smallcommunity.category.Category;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.reply.ReplyService;
 import com.practice.smallcommunity.reply.Reply;

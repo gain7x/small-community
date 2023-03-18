@@ -1,10 +1,10 @@
-package com.practice.smallcommunity.auth.application;
+package com.practice.smallcommunity.member.application;
 
-import com.practice.smallcommunity.auth.domain.EmailVerificationToken;
-import com.practice.smallcommunity.auth.domain.EmailVerificationTokenRepository;
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
 import com.practice.smallcommunity.infrastructure.TemplateMailSender;
+import com.practice.smallcommunity.member.domain.EmailVerificationToken;
+import com.practice.smallcommunity.member.domain.EmailVerificationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

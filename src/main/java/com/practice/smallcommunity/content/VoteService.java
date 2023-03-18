@@ -3,7 +3,7 @@ package com.practice.smallcommunity.content;
 import com.practice.smallcommunity.notification.NotificationService;
 import com.practice.smallcommunity.reply.ReplyService;
 import com.practice.smallcommunity.post.application.PostService;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.reply.Reply;
 import lombok.RequiredArgsConstructor;

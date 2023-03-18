@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.auth.domain.oauth2;
+package com.practice.smallcommunity.member.domain;
 
 public enum OAuth2Platform {
     GOOGLE("google"),

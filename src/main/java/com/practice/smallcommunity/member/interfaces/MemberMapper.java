@@ -5,7 +5,7 @@ import com.practice.smallcommunity.reply.Reply;
 import com.practice.smallcommunity.member.interfaces.dto.MemberContentResponse;
 import com.practice.smallcommunity.member.interfaces.dto.MemberResponse;
 import com.practice.smallcommunity.member.interfaces.dto.MemberRegisterRequest;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;

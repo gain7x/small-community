@@ -2,10 +2,10 @@ package com.practice.smallcommunity.auth.application;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.member.MemberService;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2LoginRepository;
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.member.application.MemberService;
+import com.practice.smallcommunity.auth.domain.OAuth2Login;
+import com.practice.smallcommunity.auth.domain.OAuth2LoginRepository;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

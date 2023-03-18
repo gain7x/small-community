@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.security.user;
 
-import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import java.util.Map;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

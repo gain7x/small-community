@@ -2,8 +2,8 @@ package com.practice.smallcommunity.attachment.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.practice.smallcommunity.member.Member;
-import com.practice.smallcommunity.member.MemberRepository;
+import com.practice.smallcommunity.member.domain.Member;
+import com.practice.smallcommunity.member.domain.MemberRepository;
 import com.practice.smallcommunity.testutils.DomainGenerator;
 import java.util.List;
 import javax.persistence.EntityManager;

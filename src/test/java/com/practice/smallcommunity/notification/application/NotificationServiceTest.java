@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.practice.smallcommunity.common.exception.BusinessException;
 import com.practice.smallcommunity.common.exception.ErrorCode;
-import com.practice.smallcommunity.member.Member;
+import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.notification.NotificationService;
 import com.practice.smallcommunity.notification.Notification;
 import com.practice.smallcommunity.notification.NotificationRepository;
