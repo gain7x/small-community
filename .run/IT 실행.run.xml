@@ -10,7 +10,7 @@
       <value defaultName="wholeProject" />
     </option>
     <patterns>
-      <pattern testClass=".*IT$" />
+      <pattern testClass=".*smallcommunity.*IT$" />
     </patterns>
     <method v="2">
       <option name="Make" enabled="true" />

@@ -2,7 +2,8 @@ package com.practice.smallcommunity.security;
 
 import static com.practice.smallcommunity.security.OAuth2AuthenticationUtil.clearAuthenticationAttributes;
 
-import com.practice.smallcommunity.application.auth.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.auth.application.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.member.interfaces.OAuth2RegisterController;
 import com.practice.smallcommunity.security.exception.NotRegisteredOAuth2LoginException;
 import com.practice.smallcommunity.security.user.SocialUser;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
     /**
      * 인증 예외가 미가입 예외인 경우 OAuth2 사용자의 회원가입용 토큰을 저장하고, 클라이언트가 지정한 URI로 토큰 접근 정보를 리다이렉트합니다.
      * @see OAuth2AuthenticationSuccessHandler
-     * @see com.practice.smallcommunity.interfaces.member.OAuth2RegisterController
+     * @see OAuth2RegisterController
      */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

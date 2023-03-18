@@ -1,8 +1,8 @@
 package com.practice.smallcommunity.security;
 
-import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.member.Member;
 import com.practice.smallcommunity.security.dto.TokenDto;
-import com.practice.smallcommunity.utils.DomainGenerator;
+import com.practice.smallcommunity.testutils.DomainGenerator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;

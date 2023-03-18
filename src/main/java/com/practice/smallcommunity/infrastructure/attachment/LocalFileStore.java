@@ -1,7 +1,7 @@
 package com.practice.smallcommunity.infrastructure.attachment;
 
-import com.practice.smallcommunity.domain.attachment.FileStore;
-import com.practice.smallcommunity.domain.attachment.StoredFile;
+import com.practice.smallcommunity.attachment.domain.FileStore;
+import com.practice.smallcommunity.attachment.domain.StoredFile;
 import java.io.File;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;

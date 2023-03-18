@@ -3,9 +3,9 @@ package com.practice.smallcommunity.security;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.domain.member.Member;
+import com.practice.smallcommunity.member.Member;
 import com.practice.smallcommunity.security.dto.TokenDto;
-import com.practice.smallcommunity.utils.DomainGenerator;
+import com.practice.smallcommunity.testutils.DomainGenerator;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

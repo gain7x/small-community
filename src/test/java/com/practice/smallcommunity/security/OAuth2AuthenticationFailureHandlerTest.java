@@ -7,8 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.practice.smallcommunity.application.auth.OAuth2RegistrationTokenService;
-import com.practice.smallcommunity.domain.auth.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.auth.application.OAuth2RegistrationTokenService;
+import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
 import com.practice.smallcommunity.security.exception.NotRegisteredOAuth2LoginException;
 import com.practice.smallcommunity.security.user.SocialUser;
 import java.io.IOException;

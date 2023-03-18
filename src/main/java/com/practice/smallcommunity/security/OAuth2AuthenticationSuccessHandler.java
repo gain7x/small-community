@@ -1,14 +1,14 @@
 package com.practice.smallcommunity.security;
 
-import static com.practice.smallcommunity.interfaces.auth.AuthUtil.setRefreshTokenCookie;
+import static com.practice.smallcommunity.auth.interfaces.AuthUtil.setRefreshTokenCookie;
 import static com.practice.smallcommunity.security.OAuth2AuthenticationUtil.clearAuthenticationAttributes;
 import static com.practice.smallcommunity.security.OAuth2AuthenticationUtil.getRedirectUri;
 
-import com.practice.smallcommunity.application.auth.AuthService;
-import com.practice.smallcommunity.application.auth.OAuth2LoginService;
-import com.practice.smallcommunity.application.auth.dto.AuthDto;
-import com.practice.smallcommunity.application.exception.BusinessException;
-import com.practice.smallcommunity.domain.auth.oauth2.OAuth2Login;
+import com.practice.smallcommunity.auth.application.AuthService;
+import com.practice.smallcommunity.auth.application.OAuth2LoginService;
+import com.practice.smallcommunity.auth.application.dto.AuthDto;
+import com.practice.smallcommunity.common.exception.BusinessException;
+import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Login;
 import com.practice.smallcommunity.security.converter.DelegatingSocialUserConverter;
 import com.practice.smallcommunity.security.converter.SocialUserConverter;
 import com.practice.smallcommunity.security.exception.NotRegisteredOAuth2LoginException;

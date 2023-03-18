@@ -1,10 +1,10 @@
 package com.practice.smallcommunity.infrastructure;
 
-import static com.practice.smallcommunity.domain.post.QPost.post;
+import static com.practice.smallcommunity.post.domain.QPost.post;
 
-import com.practice.smallcommunity.domain.post.Post;
-import com.practice.smallcommunity.domain.post.PostSearchRepository;
-import com.practice.smallcommunity.domain.post.dto.BoardSearchCond;
+import com.practice.smallcommunity.post.domain.Post;
+import com.practice.smallcommunity.post.domain.PostSearchRepository;
+import com.practice.smallcommunity.post.domain.dto.BoardSearchCond;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

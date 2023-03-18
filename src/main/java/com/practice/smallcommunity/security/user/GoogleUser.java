@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.security.user;
 
-import com.practice.smallcommunity.domain.auth.oauth2.OAuth2Platform;
+import com.practice.smallcommunity.auth.domain.oauth2.OAuth2Platform;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class GoogleUser extends AbstractSocialUser {

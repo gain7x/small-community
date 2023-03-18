@@ -2,8 +2,8 @@ package com.practice.smallcommunity.infrastructure.attachment;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.practice.smallcommunity.domain.attachment.FileStore;
-import com.practice.smallcommunity.domain.attachment.StoredFile;
+import com.practice.smallcommunity.attachment.domain.FileStore;
+import com.practice.smallcommunity.attachment.domain.StoredFile;
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
