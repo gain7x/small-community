@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.notification;
+package com.practice.smallcommunity.notification.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

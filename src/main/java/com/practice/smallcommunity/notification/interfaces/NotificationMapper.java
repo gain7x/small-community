@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.notification.interfaces;
 
-import com.practice.smallcommunity.notification.Notification;
+import com.practice.smallcommunity.notification.domain.Notification;
 import com.practice.smallcommunity.notification.interfaces.dto.NotificationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

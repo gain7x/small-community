@@ -1,4 +1,4 @@
-package com.practice.smallcommunity.notification;
+package com.practice.smallcommunity.notification.domain;
 
 import com.practice.smallcommunity.common.domain.BaseTimeEntity;
 import com.practice.smallcommunity.member.domain.Member;

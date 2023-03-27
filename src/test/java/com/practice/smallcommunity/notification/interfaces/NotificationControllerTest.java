@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.practice.smallcommunity.notification.NotificationService;
 import com.practice.smallcommunity.member.domain.Member;
-import com.practice.smallcommunity.notification.Notification;
-import com.practice.smallcommunity.notification.NotificationRepository;
-import com.practice.smallcommunity.notification.NotificationType;
+import com.practice.smallcommunity.notification.domain.Notification;
+import com.practice.smallcommunity.notification.domain.NotificationRepository;
+import com.practice.smallcommunity.notification.domain.NotificationType;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.testutils.interfaces.RestTest;
 import com.practice.smallcommunity.testutils.interfaces.WithMockMember;

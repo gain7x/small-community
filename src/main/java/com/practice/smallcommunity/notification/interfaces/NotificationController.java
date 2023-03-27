@@ -1,8 +1,8 @@
 package com.practice.smallcommunity.notification.interfaces;
 
 import com.practice.smallcommunity.notification.NotificationService;
-import com.practice.smallcommunity.notification.Notification;
-import com.practice.smallcommunity.notification.NotificationRepository;
+import com.practice.smallcommunity.notification.domain.Notification;
+import com.practice.smallcommunity.notification.domain.NotificationRepository;
 import com.practice.smallcommunity.common.interfaces.CurrentUser;
 import com.practice.smallcommunity.common.interfaces.dto.PageResponse;
 import com.practice.smallcommunity.notification.interfaces.dto.NotificationResponse;

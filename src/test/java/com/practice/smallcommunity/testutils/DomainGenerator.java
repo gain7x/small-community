@@ -10,8 +10,8 @@ import com.practice.smallcommunity.content.domain.VoteHistory;
 import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.member.domain.MemberRole;
 import com.practice.smallcommunity.auth.domain.Login;
-import com.practice.smallcommunity.notification.Notification;
-import com.practice.smallcommunity.notification.NotificationType;
+import com.practice.smallcommunity.notification.domain.Notification;
+import com.practice.smallcommunity.notification.domain.NotificationType;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.reply.Reply;
 

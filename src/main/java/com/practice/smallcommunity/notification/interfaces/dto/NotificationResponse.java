@@ -1,6 +1,6 @@
 package com.practice.smallcommunity.notification.interfaces.dto;
 
-import com.practice.smallcommunity.notification.NotificationType;
+import com.practice.smallcommunity.notification.domain.NotificationType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

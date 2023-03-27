@@ -6,8 +6,6 @@ import com.practice.smallcommunity.category.Category;
 import com.practice.smallcommunity.category.CategoryRepository;
 import com.practice.smallcommunity.member.domain.Member;
 import com.practice.smallcommunity.member.domain.MemberRepository;
-import com.practice.smallcommunity.notification.Notification;
-import com.practice.smallcommunity.notification.NotificationRepository;
 import com.practice.smallcommunity.post.domain.Post;
 import com.practice.smallcommunity.post.domain.PostRepository;
 import com.practice.smallcommunity.testutils.DomainGenerator;
