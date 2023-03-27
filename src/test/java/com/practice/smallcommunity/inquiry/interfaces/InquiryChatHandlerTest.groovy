@@ -93,7 +93,7 @@ class InquiryChatHandlerTest extends Specification {
             inquirerId == inquirer.id
             senderId == inquirer.id
             content == chat.content
-            createdAt == chat.createdDate
+            createdDate == chat.createdDate
         }
     }
 
@@ -122,7 +122,7 @@ class InquiryChatHandlerTest extends Specification {
             inquirerId == inquirer.id
             senderId == sender.id
             content == chat.content
-            createdAt == chat.createdDate
+            createdDate == chat.createdDate
         }
     }
 
