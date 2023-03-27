@@ -7,11 +7,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class InquiryChatMessage {
+@AllArgsConstructor
+public class InquiryChatResponse {
 
-    private Long inquirerId;
+    private Long id;
     private Long senderId;
     private String content;
     private LocalDateTime createdDate;

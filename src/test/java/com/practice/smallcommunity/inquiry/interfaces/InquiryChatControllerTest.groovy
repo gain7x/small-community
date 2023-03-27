@@ -15,14 +15,24 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.request.RequestDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import spock.lang.Specification
 
+import java.time.LocalDateTime
+
+import static com.practice.smallcommunity.testutils.DomainGenerator.*
 import static com.practice.smallcommunity.testutils.interfaces.RestDocsHelper.*
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import static org.springframework.restdocs.request.RequestDocumentation.*
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -39,6 +49,9 @@ class InquiryChatControllerTest extends Specification {
     @SpringBean
     private InquiryChatHandler inquiryChatHandler = Mock()
 
+    @SpringBean
+    private InquiryChatRepository inquiryChatRepository = Mock()
+
     @Autowired
     private ObjectMapper objectMapper
 
@@ -46,14 +59,45 @@ class InquiryChatControllerTest extends Specification {
     MockMvc mvc
 
     @WithMockMember
-    def "회원의 문의 채팅"() throws Exception {
+    def "문의 채팅 내역 조회"() throws Exception {
+        given:
+        Member inquirer = Spy(createMember("A"))
+        inquirer.id >> 1L
+        InquiryChat chat = Spy(createInquiryChat(inquirer, inquirer, "문의 내용 1"))
+        chat.id >> 1L
+        chat.createdDate >> LocalDateTime.now()
+        inquiryChatRepository.searchInquiryChats(1L, _ as Pageable) >> new PageImpl<>(List.of(chat))
+
+        when:
+        ResultActions result = mvc.perform(get("/api/v1/members/inquiries")
+                .param("page", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+
+        then:
+        result.andExpect(status().isOk())
+                .andDo(generateDocument("inquiry",
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호")
+                        ),
+                        responseFields(
+                                pageData(),
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("문의 채팅 ID"),
+                                fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("문의 회원 ID"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("채팅 내용"),
+                                fieldWithPath("createdDate").type(JsonFieldType.STRING).description("채팅 생성 시간")
+                        )))
+    }
+
+    @WithMockMember
+    def "문의 채팅 전송"() throws Exception {
         given:
         Long inquirerId = 1L
-        Member inquirer = Spy(DomainGenerator.createMember("A"))
+        Member inquirer = Spy(createMember("A"))
         inquirer.id >> inquirerId
         memberService.findByUserId(inquirerId) >> inquirer
         inquiryChatService.saveChat(inquirer, inquirer, "문의 내용") >>
-                DomainGenerator.createInquiryChat(inquirer, inquirer, "문의 내용")
+                createInquiryChat(inquirer, inquirer, "문의 내용")
 
         when:
         InquiryChatRequest req = new InquiryChatRequest("문의 내용")
@@ -77,5 +121,14 @@ class InquiryChatControllerTest extends Specification {
                 it.content == content
             }
         })
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+
+        @Bean
+        InquiryChatMapper inquiryChatMapper() {
+            return new InquiryChatMapperImpl()
+        }
     }
 }

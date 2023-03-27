@@ -18,7 +18,7 @@ public class InquiryChatHandler {
                 .inquirerId(chat.getInquirer().getId())
                 .senderId(chat.getSender().getId())
                 .content(chat.getContent())
-                .createdAt(chat.getCreatedDate())
+                .createdDate(chat.getCreatedDate())
                 .build();
 
         messagingTemplate.convertAndSend("/topic/inquiry", message);
