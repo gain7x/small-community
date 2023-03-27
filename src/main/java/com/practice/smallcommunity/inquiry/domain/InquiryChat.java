@@ -19,10 +19,10 @@ public class InquiryChat extends BaseTimeEntity {
     @SequenceGenerator(name = "inquiry_chat_seq_gen", sequenceName = "inquiry_chat_seq")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member inquirer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member sender;
 
     @Column(nullable = false)
