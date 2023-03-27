@@ -207,6 +207,39 @@
 
 	<build>
 		<plugins>
+			<!-- Spock 프레임워크로 작성한 테스트를 실행하기 위해 필요 -->
+			<plugin>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>2.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>compileTests</goal>
+						</goals>
+						<!-- 기본적으로 ~/main/groovy 하위만 인식하기 때문에 추가 구성 진행 -->
+						<configuration>
+							<sources>
+								<source>
+									<directory>${project.basedir}/src/main/java</directory>
+									<includes>
+										<include>**/*.groovy</include>
+									</includes>
+								</source>
+							</sources>
+							<testSources>
+								<testSource>
+									<directory>${project.basedir}/src/test/java</directory>
+									<includes>
+										<include>**/*.groovy</include>
+									</includes>
+								</testSource>
+							</testSources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Jacoco -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
