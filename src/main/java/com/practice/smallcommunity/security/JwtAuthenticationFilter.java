@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import static com.practice.smallcommunity.utils.SecurityUtil.extractBearerToken;
+
 /**
  * JWT 토큰 검증 후 인증 객체를 저장하는 필터입니다.
  */
@@ -45,11 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @return 토큰이 존재하면 'Bearer ' 문자열을 제외한 토큰 문자열, 아니면 null
      */
     private String getBearerToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.length() > 7 && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        return extractBearerToken(request.getHeader("Authorization"));
     }
 }
