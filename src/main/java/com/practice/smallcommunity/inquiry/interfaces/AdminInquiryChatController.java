@@ -22,7 +22,7 @@ public class AdminInquiryChatController {
     private final InquiryChatHandler inquiryChatHandler;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{inquirerId}/inquiry")
+    @PostMapping("/{inquirerId}/inquiries")
     public void adminChat(@CurrentUser Long loginId,
                           @PathVariable("inquirerId") Long inquirerId,
                           @Valid @RequestBody InquiryChatRequest dto) {

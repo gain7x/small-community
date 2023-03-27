@@ -3,6 +3,7 @@ package com.practice.smallcommunity.inquiry.interfaces
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.practice.smallcommunity.inquiry.InquiryChatService
 import com.practice.smallcommunity.inquiry.domain.InquiryChat
+import com.practice.smallcommunity.inquiry.domain.InquiryChatRepository
 import com.practice.smallcommunity.inquiry.interfaces.dto.InquiryChatRequest
 import com.practice.smallcommunity.member.application.MemberService
 import com.practice.smallcommunity.member.domain.Member
@@ -12,6 +13,8 @@ import com.practice.smallcommunity.testutils.interfaces.WithMockMember
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.test.web.servlet.MockMvc
@@ -54,7 +57,7 @@ class InquiryChatControllerTest extends Specification {
 
         when:
         InquiryChatRequest req = new InquiryChatRequest("문의 내용")
-        ResultActions result = mvc.perform(post("/api/v1/members/inquiry")
+        ResultActions result = mvc.perform(post("/api/v1/members/inquiries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req))
                 .accept(MediaType.APPLICATION_JSON))

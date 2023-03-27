@@ -67,7 +67,7 @@ class AdminInquiryChatControllerTest extends Specification {
         when:
         InquiryChatRequest req = new InquiryChatRequest(content)
         ResultActions result = mvc.perform(
-                RestDocumentationRequestBuilders.post("/api/admin/members/{inquirerId}/inquiry", inquirerId)
+                RestDocumentationRequestBuilders.post("/api/admin/members/{inquirerId}/inquiries", inquirerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req))
                         .accept(MediaType.APPLICATION_JSON))

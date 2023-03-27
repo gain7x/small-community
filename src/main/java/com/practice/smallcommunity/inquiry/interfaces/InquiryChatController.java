@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/members/inquiry")
+@RequestMapping("/api/v1/members/inquiries")
 public class InquiryChatController {
 
     private final MemberService memberService;
