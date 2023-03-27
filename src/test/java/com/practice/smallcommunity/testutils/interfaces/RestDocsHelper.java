@@ -20,7 +20,11 @@ public abstract class RestDocsHelper {
     }
 
     public static RestDocumentationResultHandler generateDocument(String domain, Snippet... snippets) {
-        return MockMvcRestDocumentation.document(domain + "/{method-name}",
+        return generateDocument(domain, "{method-name}", snippets);
+    }
+
+    public static RestDocumentationResultHandler generateDocument(String domain, String name, Snippet... snippets) {
+        return MockMvcRestDocumentation.document(domain + "/" + name,
             operationRequest -> Preprocessors.prettyPrint().preprocess(operationRequest),
             operationResponse -> Preprocessors.prettyPrint().preprocess(operationResponse),
             snippets
