@@ -76,7 +76,7 @@ class InquiryChatControllerTest extends Specification {
 
         then:
         result.andExpect(status().isOk())
-                .andDo(generateDocument("inquiry",
+                .andDo(generateDocument("inquiry", "문의 채팅 내역 조회",
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")
                         ),
@@ -90,7 +90,7 @@ class InquiryChatControllerTest extends Specification {
     }
 
     @WithMockMember
-    def "문의 채팅 전송"() throws Exception {
+    def "문의 채팅 저장"() throws Exception {
         given:
         Long inquirerId = 1L
         Member inquirer = Spy(createMember("A"))
@@ -109,7 +109,7 @@ class InquiryChatControllerTest extends Specification {
         then:
         ConstrainedFields fields = getConstrainedFields(InquiryChatRequest.class)
         result.andExpect(status().isCreated())
-                .andDo(generateDocument("inquiry",
+                .andDo(generateDocument("inquiry", "문의 채팅 저장",
                         requestFields(
                                 fields.withPath("content").type(JsonFieldType.STRING).description("문의 내용")
                         )))

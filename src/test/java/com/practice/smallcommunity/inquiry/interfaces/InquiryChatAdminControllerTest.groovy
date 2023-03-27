@@ -62,7 +62,7 @@ class InquiryChatAdminControllerTest extends Specification {
     MockMvc mvc
 
     @WithMockMember(roles = "ADMIN")
-    def "회원의 문의 채팅 조회"() throws Exception {
+    def "회원의 문의 채팅 내역 조회"() throws Exception {
         given:
         Long senderId = 1L
         Long inquirerId = 2L
@@ -83,7 +83,7 @@ class InquiryChatAdminControllerTest extends Specification {
 
         then:
         result.andExpect(status().isOk())
-        .andDo(generateDocument("admin/inquiry",
+        .andDo(generateDocument("admin/inquiry", "회원의 문의 채팅 내역 조회",
                 pathParameters(
                         parameterWithName("inquirerId").description("문의 회원 ID")
                 ),
@@ -101,7 +101,7 @@ class InquiryChatAdminControllerTest extends Specification {
     }
 
     @WithMockMember(roles = "ADMIN")
-    def "문의 채팅"() throws Exception {
+    def "문의 채팅 저장"() throws Exception {
         given:
         Long senderId = 1L
         Long inquirerId = 2L
@@ -129,7 +129,7 @@ class InquiryChatAdminControllerTest extends Specification {
         then:
         RestDocsHelper.ConstrainedFields fields = getConstrainedFields(InquiryChatRequest.class)
         result.andExpect(status().isCreated())
-                .andDo(generateDocument("admin/inquiry",
+                .andDo(generateDocument("admin/inquiry", "문의 채팅 저장",
                         pathParameters(
                                 parameterWithName("inquirerId").description("문의 회원 ID")
                         ),
