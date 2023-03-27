@@ -2,6 +2,7 @@ package com.practice.smallcommunity.testutils;
 
 import com.practice.smallcommunity.attachment.domain.UploadFile;
 import com.practice.smallcommunity.auth.domain.OAuth2Login;
+import com.practice.smallcommunity.inquiry.domain.InquiryChat;
 import com.practice.smallcommunity.member.domain.OAuth2Platform;
 import com.practice.smallcommunity.category.Category;
 import com.practice.smallcommunity.content.domain.Content;
@@ -95,5 +96,13 @@ public abstract class DomainGenerator {
             .originalFilename("Original" + divider)
             .url("http://localhost/Bucket" + divider + "/Original" + divider)
             .build();
+    }
+
+    public static InquiryChat createInquiryChat(Member inquirer, Member sender, String content) {
+        return InquiryChat.builder()
+                .inquirer(inquirer)
+                .sender(sender)
+                .content(content)
+                .build();
     }
 }

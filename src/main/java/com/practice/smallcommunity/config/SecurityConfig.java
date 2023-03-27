@@ -140,6 +140,8 @@ public class SecurityConfig implements WebMvcConfigurer {
             .antMatchers(HttpMethod.GET, "/api/v1/replies/**").permitAll()
             // 파일
             .antMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
+            // 웹 소켓
+            .antMatchers(HttpMethod.GET, "/ws/**").permitAll()
             .anyRequest().authenticated();
     }
 }
