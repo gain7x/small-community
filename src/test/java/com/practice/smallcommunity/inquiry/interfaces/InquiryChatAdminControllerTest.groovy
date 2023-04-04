@@ -93,7 +93,7 @@ class InquiryChatAdminControllerTest extends Specification {
                 responseFields(
                         pageData(),
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("문의 채팅 ID"),
-                        fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("문의 회원 ID"),
+                        fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("채팅 전송자 ID"),
                         fieldWithPath("content").type(JsonFieldType.STRING).description("채팅 내용"),
                         fieldWithPath("createdDate").type(JsonFieldType.STRING).description("채팅 생성 시간")
                 )

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class InquiryChatMessage {
 
+    private Long id;
     private Long inquirerId;
     private Long senderId;
     private String content;
