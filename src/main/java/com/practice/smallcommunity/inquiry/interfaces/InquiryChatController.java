@@ -32,7 +32,7 @@ public class InquiryChatController {
     public PageResponse<InquiryChatResponse> chats(@CurrentUser Long loginId,
                                                    @RequestParam(defaultValue = "0") int page) {
         PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<InquiryChat> chats = inquiryChatRepository.searchInquiryChats(loginId, pageRequest);
+        Page<InquiryChat> chats = inquiryChatRepository.findChatsByInquirerId(loginId, pageRequest);
         return PageResponse.Ok(chats.map(mapper::toResponse));
     }
 

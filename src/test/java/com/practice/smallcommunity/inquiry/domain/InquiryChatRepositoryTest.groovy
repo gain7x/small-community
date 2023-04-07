@@ -4,9 +4,13 @@ package com.practice.smallcommunity.inquiry.domain
 import com.practice.smallcommunity.member.domain.Member
 import com.practice.smallcommunity.member.domain.MemberRepository
 import com.practice.smallcommunity.testutils.DomainGenerator
+import org.hibernate.Hibernate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.data.domain.PageRequest
 import spock.lang.Specification
+
+import javax.persistence.EntityManager
 
 @DataJpaTest
 class InquiryChatRepositoryTest extends Specification {
@@ -17,6 +21,9 @@ class InquiryChatRepositoryTest extends Specification {
     @Autowired
     MemberRepository memberRepository
 
+    @Autowired
+    EntityManager em
+
     Member inquirer = DomainGenerator.createMember("A")
 
     def setup() {
@@ -25,11 +32,7 @@ class InquiryChatRepositoryTest extends Specification {
 
     def "문의 채팅을 저장한다"() {
         given:
-        def item = InquiryChat.builder()
-                .inquirer(inquirer)
-                .sender(inquirer)
-                .content("문의 내용")
-                .build()
+        def item = DomainGenerator.createInquiryChat(inquirer, inquirer, "문의 내용")
 
         when:
         def savedItem = inquiryChatRepository.save(item)
@@ -45,11 +48,7 @@ class InquiryChatRepositoryTest extends Specification {
 
     def "문의 채팅을 조회한다"() {
         given:
-        def item = InquiryChat.builder()
-                .inquirer(inquirer)
-                .sender(inquirer)
-                .content("문의 내용")
-                .build()
+        def item = DomainGenerator.createInquiryChat(inquirer, inquirer, "문의 내용")
 
         when:
         def savedItem = inquiryChatRepository.save(item)
@@ -66,11 +65,7 @@ class InquiryChatRepositoryTest extends Specification {
 
     def "문의 채팅을 삭제한다"() {
         given:
-        def item = InquiryChat.builder()
-                .inquirer(inquirer)
-                .sender(inquirer)
-                .content("문의 내용")
-                .build()
+        def item = DomainGenerator.createInquiryChat(inquirer, inquirer, "문의 내용")
 
         when:
         def savedItem = inquiryChatRepository.save(item)
@@ -78,5 +73,31 @@ class InquiryChatRepositoryTest extends Specification {
 
         then:
         inquiryChatRepository.findById(savedItem.id).isEmpty()
+    }
+
+    def "각 사용자의 최근 채팅을 조회한다"() {
+        given:
+        def inquirer2 = DomainGenerator.createMember("B")
+        memberRepository.save(inquirer2)
+        def latestItem1
+        def latestItem2
+        for (i in 0..<3) {
+            latestItem1 = DomainGenerator.createInquiryChat(inquirer, inquirer, "문의 내용")
+            latestItem2 = DomainGenerator.createInquiryChat(inquirer2, inquirer2, "문의 내용")
+            inquiryChatRepository.save(latestItem1)
+            inquiryChatRepository.save(latestItem2)
+        }
+        em.flush()
+        em.clear()
+
+        when:
+        def pageRequest = PageRequest.of(0, 5)
+        def chats = inquiryChatRepository.findEachInquirerLatestChatFetchJoin(pageRequest)
+
+        then:
+        chats.content.size() == 2
+        chats.content.inquirer.id.containsAll([inquirer.id, inquirer2.id])
+        chats.content.id.containsAll([latestItem1.id, latestItem2.id])
+        chats.content.forEach(chat -> Hibernate.isInitialized(chat.inquirer))
     }
 }

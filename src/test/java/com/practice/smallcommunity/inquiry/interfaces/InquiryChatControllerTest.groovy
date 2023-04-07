@@ -7,7 +7,6 @@ import com.practice.smallcommunity.inquiry.domain.InquiryChatRepository
 import com.practice.smallcommunity.inquiry.interfaces.dto.InquiryChatRequest
 import com.practice.smallcommunity.member.application.MemberService
 import com.practice.smallcommunity.member.domain.Member
-import com.practice.smallcommunity.testutils.DomainGenerator
 import com.practice.smallcommunity.testutils.interfaces.RestTest
 import com.practice.smallcommunity.testutils.interfaces.WithMockMember
 import org.spockframework.spring.SpringBean
@@ -19,7 +18,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.request.RequestDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import spock.lang.Specification
@@ -66,7 +64,7 @@ class InquiryChatControllerTest extends Specification {
         InquiryChat chat = Spy(createInquiryChat(inquirer, inquirer, "문의 내용 1"))
         chat.id >> 1L
         chat.createdDate >> LocalDateTime.now()
-        inquiryChatRepository.searchInquiryChats(1L, _ as Pageable) >> new PageImpl<>(List.of(chat))
+        inquiryChatRepository.findChatsByInquirerId(1L, _ as Pageable) >> new PageImpl<>(List.of(chat))
 
         when:
         ResultActions result = mvc.perform(get("/api/v1/members/inquiries")
@@ -78,14 +76,14 @@ class InquiryChatControllerTest extends Specification {
         result.andExpect(status().isOk())
                 .andDo(generateDocument("inquiry", "문의 채팅 내역 조회",
                         requestParameters(
-                                parameterWithName("page").description("페이지 번호")
+                                parameterWithName("page").description("페이지 번호(0번이 가장 최근 채팅)")
                         ),
                         responseFields(
                                 pageData(),
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("문의 채팅 ID"),
                                 fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("채팅 전송자 ID"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("채팅 내용"),
-                                fieldWithPath("createdDate").type(JsonFieldType.STRING).description("채팅 생성 시간")
+                                fieldWithPath("createdDate").type(JsonFieldType.STRING).description("채팅 생성 시간(내림차순 정렬)")
                         )))
     }
 

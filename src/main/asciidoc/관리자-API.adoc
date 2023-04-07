@@ -26,6 +26,9 @@ operation::admin/member/회원정보_수정[snippets='http-request,path-paramete
 operation::admin/member/회원_강제_탈퇴[snippets='http-request,path-parameters,http-response']
 
 == 관리자_문의
+=== 각 회원별 최근 문의 채팅 조회
+operation::admin/inquiry/각 회원별 최근 문의 채팅 조회[snippets="http-request,http-response,response-fields-data-page"]
+
 === 회원의 문의 채팅 내역 조회
 operation::admin/inquiry/회원의 문의 채팅 내역 조회[snippets="http-request,path-parameters,request-parameters,http-response,response-fields-data-page"]
 
