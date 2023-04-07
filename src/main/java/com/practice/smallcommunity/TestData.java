@@ -2,6 +2,7 @@ package com.practice.smallcommunity;
 
 import com.practice.smallcommunity.auth.application.LoginService;
 import com.practice.smallcommunity.category.CategoryService;
+import com.practice.smallcommunity.inquiry.InquiryChatService;
 import com.practice.smallcommunity.member.application.MemberService;
 import com.practice.smallcommunity.post.application.PostService;
 import com.practice.smallcommunity.post.application.dto.PostDto;
@@ -31,12 +32,14 @@ public class TestData {
     private static final int MEMBER_COUNT = 10;
     private static final int POST_COUNT_PER_CATEGORIES = 10;
     private static final int REPLY_COUNT = 5;
+    private static final int INQUIRY_CHAT_COUNT = 3;
 
     private final LoginService loginService;
     private final MemberService memberService;
     private final CategoryService categoryService;
     private final PostService postService;
     private final ReplyService replyService;
+    private final InquiryChatService inquiryChatService;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
@@ -44,6 +47,7 @@ public class TestData {
         initCategories();
         initPosts();
         initReplies();
+        initInquiryChats();
     }
 
     private void initMembers() {
@@ -139,6 +143,19 @@ public class TestData {
                 .build();
 
             replyService.add(reply);
+        }
+    }
+
+    private void initInquiryChats() {
+        Member admin = memberService.findByEmail("admin@mail.com");
+
+        for (int i = 0; i < (MEMBER_COUNT / 2); i++) {
+            String userEmail = "user" + i + "@mail.com";
+            Member member = memberService.findByEmail(userEmail);
+            for (int j = 0; j < INQUIRY_CHAT_COUNT; j++) {
+                inquiryChatService.saveChat(member, member, "회원의" + j + "번째 채팅");
+            }
+            inquiryChatService.saveChat(member, admin, "관리자의 채팅");
         }
     }
 }
